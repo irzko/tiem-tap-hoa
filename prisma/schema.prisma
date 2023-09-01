@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  password     String
+  phone        String?        @unique
+  role         String         @default("USER")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Order        Order[]
+  Cart         Cart[]
+  Address      Address[]
+  Payment      Payment[]
+  Review       Review[]
+  CouponUser   CouponUser[]
+  Notification Notification[]
+}
+
+model Category {
+  id              Int           @id @default(autoincrement())
+  name            String        @unique
+  group           CategoryGroup @relation(fields: [categoryGroupId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  Product         Product[]
+  categoryGroupId Int
+}
+
+model CategoryGroup {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Category  Category[]
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  description String
+  price       Float
+  image       String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  OrderItem   OrderItem[]
+  CartItem    CartItem[]
+  Review      Review[]
+}
+
+model Order {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  OrderItem    OrderItem[]
+  PaymentItem  PaymentItem[]
+  OrderStatus  OrderStatus[]
+  OrderPayment OrderPayment[]
+  OrderAddress OrderAddress[]
+}
+
+model OrderItem {
+  id              Int               @id @default(autoincrement())
+  order           Order             @relation(fields: [orderId], references: [id])
+  orderId         Int
+  product         Product           @relation(fields: [productId], references: [id])
+  productId       Int
+  quantity        Int
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  OrderItemStatus OrderItemStatus[]
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  CartItem  CartItem[]
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  cartId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  address      String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  OrderAddress OrderAddress[]
+}
+
+model Payment {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  PaymentItem  PaymentItem[]
+  OrderPayment OrderPayment[]
+}
+
+model PaymentItem {
+  id        Int      @id @default(autoincrement())
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  paymentId Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Coupon {
+  id         Int          @id @default(autoincrement())
+  code       String       @unique
+  discount   Float
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  CouponUser CouponUser[]
+}
+
+model CouponUser {
+  id        Int      @id @default(autoincrement())
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  couponId  Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderStatus {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderPayment {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  paymentId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderAddress {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  address   Address  @relation(fields: [addressId], references: [id])
+  addressId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItemStatus {
+  id          Int       @id @default(autoincrement())
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+  orderItemId Int
+  status      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
