@@ -1,30 +1,12 @@
 "use client";
-import { CategoryGroup } from "@/lib/types";
+import { CategoryGroup, Category } from "@/lib/types";
 import { useEffect, useState } from "react";
 
-const CategoryGroup = ({ categoryGroup }: { categoryGroup: CategoryGroup }) => {
-  return (
-    <div className="flex items-center mb-4">
-      <input
-        id={categoryGroup.id}
-        type="radio"
-        value={categoryGroup.id}
-        name="categoryGroup"
-        className="hidden peer"
-      ></input>
-      <label
-        htmlFor={categoryGroup.id}
-        className="text-sm font-medium peer-checked:text-blue-600 text-gray-900 dark:text-gray-300"
-      >
-        {categoryGroup.name}
-      </label>
-    </div>
-  );
-};
-
 const Page = () => {
-  const [showFormAddGroup, setShowFormAddGroup] = useState(false);
   const [categoryGroups, setCategoryGroups] = useState<CategoryGroup[]>([]);
+  const [selectedCategoryGroup, setSelectedCategoryGroup] =
+    useState<string>("");
+  const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
     fetch("/api/category-group")
       .then((res) => res.json())
@@ -33,79 +15,126 @@ const Page = () => {
       });
   }, []);
 
-  const handleClick = () => {
-    setShowFormAddGroup(!showFormAddGroup);
-    const releventDiv = document.getElementById("add-category-group");
+  const onCategoryGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedCategoryGroup(value);
+    fetch(`/api/category-group/${value}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+      });
   };
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
       <div className="z-10 w-full sm:max-w-3xl bg-gray-50 dark:bg-gray-700">
-        {/* <div className="flex flex-col items-center justify-center space-y-3 border-b border-b-gray-200 dark:border-b-gray-600 px-4 py-6 pt-8 text-center sm:px-16">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Chỉnh sửa ngành hàng
-          </h3>
-        </div> */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex flex-col">
-            <div className="flex justify-between bg-white dark:bg-gray-800">
-              <h3>Chọn nhóm</h3>
-              <button
-                onClick={() => {
-                  setShowFormAddGroup(!showFormAddGroup);
-                  document.querySelector(
-                    "#add-category-group"
-                  )?.scrollIntoView();
-                }}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div className="flex justify-between bg-white dark:bg-gray-800">
-            <h3>Chọn nhóm</h3>
-            <button onClick={() => setShowFormAddGroup(!showFormAddGroup)}>
-              +
-            </button>
-          </div>
-          <div className="h-96 px-3 pb-4 overflow-auto">
-            {categoryGroups.map((categoryGroup) => (
-              <CategoryGroup
-                key={categoryGroup.id}
-                categoryGroup={categoryGroup}
-              />
-            ))}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                fetch("/api/category-group", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ name: e.currentTarget.name }),
-                }).then((res) => {
-                  if (res.ok) {
-                    console.log("ok");
-
-                    window.location.reload();
-                  } else {
-                    alert("Có lỗi xảy ra");
-                  }
-                });
-              }}
-              className={`${showFormAddGroup ? "block" : "hidden"}`}
+        <div className="grid grid-cols-2 gap-2 p-2">
+          <form>
+            <label
+              htmlFor="category-group"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              <input
-                id="add-category-group"
-                name="name"
-                type="text"
-                placeholder="Nhập tên nhóm"
-                required
-              ></input>
-              <button>Thêm</button>
-            </form>
-          </div>
+              Nhóm ngành
+            </label>
+            <select
+              defaultValue={selectedCategoryGroup}
+              onChange={onCategoryGroupChange}
+              id="category-group"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option hidden disabled></option>
+              {categoryGroups.map((categoryGroup) => (
+                <option key={categoryGroup.id} value={categoryGroup.id}>
+                  {categoryGroup.name}
+                </option>
+              ))}
+            </select>
+          </form>
+
+          <form>
+            <label
+              htmlFor="category"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Ngành hàng
+            </label>
+            <select
+              {...(selectedCategoryGroup === "" && { disabled: true })}
+              id="category"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option hidden></option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </form>
+        </div>
+
+        <div className="grid grid-cols-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              fetch("/api/category-group", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name: e.currentTarget.name }),
+              }).then((res) => {
+                if (res.ok) {
+                  console.log("ok");
+
+                  window.location.reload();
+                } else {
+                  alert("Có lỗi xảy ra");
+                }
+              });
+            }}
+          >
+            <input
+              id="add-category-group"
+              name="name"
+              type="text"
+              placeholder="Nhập tên nhóm"
+              required
+            ></input>
+            <button>Thêm</button>
+          </form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              fetch("/api/category", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  name: e.currentTarget["category-name"].value,
+                  group: selectedCategoryGroup,
+                }),
+              }).then((res) => {
+                if (res.ok) {
+                  console.log("ok");
+
+                  window.location.reload();
+                } else {
+                  alert("Có lỗi xảy ra");
+                }
+              });
+            }}
+          >
+            <input
+              id="add-category"
+              name="category-name"
+              type="text"
+              placeholder="Nhập tên ngành hàng"
+              required
+            ></input>
+            <button>Thêm</button>
+          </form>
         </div>
       </div>
     </div>
