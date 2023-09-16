@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Spinner from "./spinner";
+import Spinner from "./layouts/spinner";
+import InputField from "./layouts/input-field";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +16,7 @@ export default function LoginForm() {
       onSubmit={(e) => {
         e.preventDefault();
         setLoading(true);
+
         signIn("credentials", {
           redirect: false,
           email: e.currentTarget.email.value,
@@ -24,46 +25,31 @@ export default function LoginForm() {
         }).then(({ error }) => {
           if (error) {
             setLoading(false);
-            toast.error(error);
           } else {
-            router.refresh();
-            router.push("/dashboard");
+            setTimeout(() => {
+              router.push("/dashboard");
+            }, 1000);
           }
         });
       }}
-      className="flex flex-col space-y-4 bg-white dark:bg-gray-900 px-4 py-8 sm:px-16"
+      className="flex flex-col space-y-4 bg-white dark:bg-gray-900 px-4 py-8 sm:px-8  "
     >
-      <div>
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="password"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Mật khẩu
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
+      <InputField
+        id="email"
+        name="email"
+        label="Email"
+        type="email"
+        autoComplete="email"
+        required
+      />
+
+      <InputField
+        id="password"
+        name="password"
+        type="password"
+        label="Mật khẩu"
+        required
+      />
       <button
         disabled={loading}
         className={`${
@@ -75,11 +61,10 @@ export default function LoginForm() {
         {loading ? <Spinner /> : <p>Đăng nhập</p>}
       </button>
       <p className="text-center text-sm text-gray-900 dark:text-white">
-        Bạn chưa có tài khoản?{" "}
-        <Link href="/register" className="font-semibold text-blue-600">
-          Tạo tài khoản
-        </Link>{" "}
-        miễn phí.
+        Bạn chưa có tài khoản?&nbsp;
+        <Link href="/signup" className="font-semibold text-blue-600">
+          Đăng ký
+        </Link>
       </p>
     </form>
   );

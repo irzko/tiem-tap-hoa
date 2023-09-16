@@ -1,28 +1,36 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
-};
-
 export default async function middleware(req: NextRequest) {
-  // Get the pathname of the request (e.g. /, /protected)
-  const path = req.nextUrl.pathname;
-
-  // If it's the root path, just render it
-  if (path === "/") {
-    return NextResponse.next();
-  }
+  const { pathname } = req.nextUrl;
 
   const session = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (!session && path !== "/login" && path !== "/register") {
-    return NextResponse.redirect(new URL("/login", req.url));
-  } else if (session && (path === "/login" || path === "/register")) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+  if (!session) {
+    if (pathname.startsWith("/dashboard")) {
+      return NextResponse.rewrite(new URL("/", req.url));
+    }
+  } else {
+    if (pathname === "/login" || pathname === "/signup") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    } else if (pathname === "/") {
+      return NextResponse.rewrite(new URL("/dashboard", req.url));
+    }
+  }
+
+  if (pathname.startsWith("/login")) {
+    return NextResponse.rewrite(new URL("/", req.url));
+  }
+
+  // if (pathname.startsWith("/dashboard")) {
+  //   return NextResponse.rewrite(new URL("/", req.url));
+  // }
+
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
   }
 
   return NextResponse.next();

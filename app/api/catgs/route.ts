@@ -2,10 +2,10 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { name, group } = await req.json();
-  const exists = await prisma.category.findUnique({
+  const { category_name } = await req.json();
+  const exists = await prisma.categories.findUnique({
     where: {
-      name,
+      category_name,
     },
   });
   if (exists) {
@@ -14,21 +14,18 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   } else {
-    const category = await prisma.category.create({
+    const categories = await prisma.categories.create({
       data: {
-        name,
-        group: {
-          connect: {
-            id: parseInt(group),
-          },
-        },
+        category_name,
       },
     });
-    return NextResponse.json(category);
+    return NextResponse.json(categories);
   }
 }
 
 export async function GET() {
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.categories.findMany();
   return NextResponse.json(categories);
 }
+
+// Path: app\api\category-group\route.ts

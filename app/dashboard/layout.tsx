@@ -8,7 +8,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Navbar />
       <Sidebar />
-      <main>{children}</main>
+      <main>
+        <div className="p-4 sm:ml-64">
+          <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+            {children}
+          </div>
+        </div>
+      </main>
     </SidebarProvider>
   );
 }

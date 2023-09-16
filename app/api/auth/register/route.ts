@@ -3,23 +3,23 @@ import { hash } from "bcrypt";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { name, email, phone, password } = await req.json();
-  const exists = await prisma.user.findUnique({
+  const { fullName, email, phone, password } = await req.json();
+  const exists = await prisma.users.findUnique({
     where: {
       email,
     },
   });
   if (exists) {
-    return NextResponse.json({ error: "User already exists" }, { status: 400 });
+    return NextResponse.json({ error: "users already exists" }, { status: 400 });
   } else {
-    const user = await prisma.user.create({
+    const users = await prisma.users.create({
       data: {
-        name,
+        fullName,
         phone,
         email,
         password: await hash(password, 10),
       },
     });
-    return NextResponse.json(user);
+    return NextResponse.json(users);
   }
 }

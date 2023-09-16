@@ -1,12 +1,8 @@
-// These styles apply to every route in the application
 import "@/styles/globals.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "react-hot-toast";
-// import AuthStatus from "@/components/auth-status";
-import { Suspense } from "react";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
-import clsx from "clsx";
+import ToastContainer from "@/components/toast-container";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,10 +31,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={clsx(inter.variable, "bg-white dark:bg-gray-900")}>
-        <Toaster />
-        <Suspense fallback="Loading...">{/* <AuthStatus /> */}</Suspense>
+    <html lang="vi">
+      <body className={`${inter.variable} bg-white dark:bg-gray-900`}>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
