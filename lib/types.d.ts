@@ -3,6 +3,9 @@ interface ICategory {
   category_name: string;
   created_at: Date;
   updatedAt: Date;
+  _count: {
+    Subcategories: number;
+  };
 }
 
 interface ISubcategory {

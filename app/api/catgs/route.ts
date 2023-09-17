@@ -24,7 +24,18 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  const categories = await prisma.categories.findMany();
+  const categories = await prisma.categories.findMany({
+    orderBy: {
+      category_name: "asc",
+    },
+    include: {
+      _count: {
+        select: {
+          Subcategories: true,
+        }, // Count of Subcategories
+      }
+    }
+  });
   return NextResponse.json(categories);
 }
 
