@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {
   const { category_name } = await req.json();
@@ -23,20 +23,35 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
-  const categories = await prisma.categories.findMany({
-    orderBy: {
-      category_name: "asc",
-    },
-    include: {
-      _count: {
-        select: {
-          Subcategories: true,
-        }, // Count of Subcategories
-      }
-    }
-  });
-  return NextResponse.json(categories);
+export async function GET(req: NextRequest) {
+  const query = req.nextUrl.searchParams.get("search");
+  console.log(query);
+  
+  if (query) {
+    const categories = await prisma.categories.findUnique({
+      where: {
+        category_name: {
+          containt
+        },
+        }
+      },
+    });
+    return NextResponse.json(categories);
+  } else {
+    const categories = await prisma.categories.findMany({
+      orderBy: {
+        category_name: "asc",
+      },
+      include: {
+        _count: {
+          select: {
+            Subcategories: true,
+          }, // Count of Subcategories
+        },
+      },
+    });
+    return NextResponse.json(categories);
+  }
 }
 
 export async function DELETE(req: Request) {

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 export default function TableHeader({
   toggle,
@@ -7,6 +7,22 @@ export default function TableHeader({
   toggle: boolean;
   setToggle: Dispatch<SetStateAction<boolean>>;
 }) {
+  const [data, setData] = useState<ICategory[]>([]);
+  const [t, setT] = useState<NodeJS.Timeout>();
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (t) clearTimeout(t);
+    setT(
+      setTimeout(() => {
+        fetch(`/api/catgs?search=${e.target.value}`, {
+          method: "GET",
+        })
+          .then((res) => res.json())
+          .then((data) => setData(data));
+      }, 750)
+    );
+  };
+  console.log(data);
+  
   return (
     <div>
       <div className="relative bg-white border-b dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-t-lg">
@@ -37,6 +53,7 @@ export default function TableHeader({
                   id="simple-search"
                   className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Tìm kiếm danh mục"
+                  onChange={onChange}
                   required
                 />
               </div>
