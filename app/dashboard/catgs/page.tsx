@@ -1,8 +1,8 @@
 "use client";
 import AddCategoryModal from "@/components/add-category-modal";
+import CategoryActionModal from "@/components/category-action-modal";
 import TableHeader from "@/components/layouts/table-header";
-import Link from "next/link";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
 const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
@@ -14,56 +14,65 @@ export default function Page() {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
-  const [toggleAddCategoryModal, setToggleAddCategoryModal] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedCategories([...selectedCategories, e.target.name]);
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== e.target.name)
-      );
-    }
-  }
-  console.log(selectedCategories);
-  
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
 
   return (
-    <div>
-      <TableHeader
-        toggle={toggleAddCategoryModal}
-        setToggle={setToggleAddCategoryModal}
-      />
-      <form>
-        <ul className="font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-          {categories?.map((category) => (
-            <li
-              key={category.category_id}
-              className="flex w-full capitalize pl-4 items-center border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
-            >
-              <input
-                id={`${category.category_id}`}
-                name={`${category.category_id}`}
-                type="checkbox"
-                onChange={handleChange}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-              ></input>
-
-              <Link
-                className="w-full py-3.5 ml-4 text-sm font-medium text-gray-900 dark:text-gray-300"
-                href={`/dashboard/catgs/${category.category_id}`}
+    <>
+      {categories && (
+        <div>
+          <ul className="font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+            <TableHeader
+              toggle={showAddCategoryModal}
+              setToggle={setShowAddCategoryModal}
+            />
+            {categories?.map((category) => (
+              <li
+                key={category.category_id}
+                className="flex w-full items-center  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               >
-                <span>{category.category_name.toLowerCase()}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </form>
-      <AddCategoryModal
-        toggle={toggleAddCategoryModal}
-        setToggle={setToggleAddCategoryModal}
-      />
-    </div>
+                <button
+                  id={category.category_id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setShowCategoryActionModal(true);
+                  }}
+                  className="w-full flex justify-between items-center px-4 py-3.5 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+                >
+                  {category.category_name}
+                  <svg
+                    className="w-3.5 h-3.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 8 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"
+                    />
+                  </svg>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <AddCategoryModal
+            toggle={showAddCategoryModal}
+            setToggle={setShowAddCategoryModal}
+          />
+          <CategoryActionModal
+            showModal={showCategoryActionModal}
+            setShowModal={setShowCategoryActionModal}
+            category={selectedCategory}
+          />
+        </div>
+      )}
+    </>
   );
 }
