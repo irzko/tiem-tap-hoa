@@ -9,7 +9,7 @@ export async function GET(
 
   const categories = await prisma.subcategories.findMany({
     where: {
-      category_id: parseInt(categoryId),
+      category_id: categoryId,
     },
   });
   return NextResponse.json(categories);

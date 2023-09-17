@@ -12,7 +12,7 @@ export default function Sidebar() {
           isSidebarOpenOnSmallScreens ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <div className="h-full px-3 pb-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
             <li>
               <Link
@@ -76,7 +76,7 @@ export default function Sidebar() {
                     <Link href="/dashboard/product/new">Thêm Sản Phẩm</Link>
                   </li>
                   <li className="text-gray-500 dark:text-gray-400 mb-4">
-                    <Link href="/dashboard/manage-categories">
+                    <Link href="/dashboard/catgs">
                       Quản Lý Danh Mục Sản Phẩm
                     </Link>
                   </li>

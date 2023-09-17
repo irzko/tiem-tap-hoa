@@ -25,13 +25,10 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/", req.url));
   }
 
-  // if (pathname.startsWith("/dashboard")) {
-  //   return NextResponse.rewrite(new URL("/", req.url));
-  // }
 
-  if (pathname.startsWith("/api")) {
-    return NextResponse.next();
-  }
+  // if (pathname.startsWith("/api")) {
+  //   return NextResponse.next();
+  // }
 
   return NextResponse.next();
 }

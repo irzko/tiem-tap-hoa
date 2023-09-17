@@ -1,31 +1,28 @@
-import Image from "next/image";
-import Link from "next/link";
-import RegisterForm from "@/components/signup-form";
+import SignUpForm from "@/components/signup-form";
+import React from "react";
 
-export default function SignUp() {
+function SignUp() {
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <div className="z-10 w-full sm:max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-700">
-        <div className="flex flex-col items-center justify-center space-y-3 border-b border-b-gray-200 dark:border-b-gray-600 px-4 py-6 pt-8 text-center sm:px-16">
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              priority
-              alt="Logo"
-              className="h-10 w-10 rounded-full"
-              width={20}
-              height={20}
-            />
-          </Link>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Đăng ký
-          </h3>
-          {/* <p className="text-sm text-gray-500">
-            Create an account with your email and password
-          </p> */}
+    <section className="bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a
+          href="#"
+          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+        >
+          {/* <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"> */}
+          Tiệm tạp hoá
+        </a>
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Tạo tài khoản mới
+            </h1>
+            <SignUpForm />
+          </div>
         </div>
-        <RegisterForm />
       </div>
-    </div>
+    </section>
   );
 }
+
+export default SignUp;

@@ -32,7 +32,7 @@ export default function LoginForm() {
           }
         });
       }}
-      className="flex flex-col space-y-4 bg-white dark:bg-gray-900 px-4 py-8 sm:px-8  "
+      className="space-y-4 md:space-y-6 flex flex-col"
     >
       <InputField
         id="email"
@@ -50,6 +50,32 @@ export default function LoginForm() {
         label="Mật khẩu"
         required
       />
+      <div className="flex items-center justify-between">
+        <div className="flex items-start">
+          <div className="flex items-center h-5">
+            <input
+              id="remember"
+              aria-describedby="remember"
+              type="checkbox"
+              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label
+              htmlFor="remember"
+              className="text-gray-500 dark:text-gray-300"
+            >
+              Ghi nhớ tôi
+            </label>
+          </div>
+        </div>
+        <a
+          href="#"
+          className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+        >
+          Quên mật khẩu?
+        </a>
+      </div>
       <button
         disabled={loading}
         className={`${
@@ -62,7 +88,10 @@ export default function LoginForm() {
       </button>
       <p className="text-center text-sm text-gray-900 dark:text-white">
         Bạn chưa có tài khoản?&nbsp;
-        <Link href="/signup" className="font-semibold text-blue-600">
+        <Link
+          href="/signup"
+          className="font-semibold text-blue-600 dark:text-blue-500"
+        >
           Đăng ký
         </Link>
       </p>

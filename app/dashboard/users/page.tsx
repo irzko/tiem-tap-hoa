@@ -38,11 +38,11 @@ export default async function Users() {
               }`}
             >
               <td className="px-6 py-4">{user.user_id}</td>
-              <td className="px-6 py-4">{user.fullName}</td>
+              <td className="px-6 py-4">{user.full_name}</td>
               <td className="px-6 py-4">{user.email}</td>
-              <td className="px-6 py-4">{user.phone}</td>
+              <td className="px-6 py-4">{user.phone_number}</td>
               {/* <td className="pl-20">{user.address}</td> */}
-              <td className="px-6 py-4">{user.createdAt.toLocaleString()}</td>
+              <td className="px-6 py-4">{user.created_at.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

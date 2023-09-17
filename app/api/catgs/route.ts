@@ -27,5 +27,3 @@ export async function GET() {
   const categories = await prisma.categories.findMany();
   return NextResponse.json(categories);
 }
-
-// Path: app\api\category-group\route.ts

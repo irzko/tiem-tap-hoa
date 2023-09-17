@@ -8,7 +8,7 @@ export async function GET(
   const subcategoryId = params.subcatgId;
   const subcategory = await prisma.subcategories.findUnique({
     where: {
-      subcategory_id: parseInt(subcategoryId),
+      subcategory_id: subcategoryId,
     },
   });
 

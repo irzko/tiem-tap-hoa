@@ -3,9 +3,11 @@ import CategorySelect from "./components/category-select";
 
 export default function Page() {
   return (
-    <form>
-      <h2 className="text-gray-900 dark:text-white">Thông tin cơ bản</h2>
-      <div className="mb-6 grid md:grid-cols-6 md:gap-6">
+    <form className="space-y-4 md:space-y-6">
+      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        Thêm sản phẩm mới
+      </h1>
+      <div className="grid md:grid-cols-6 md:gap-6">
         <label
           htmlFor="product-name"
           className="mb-2 col-span-1 text-sm  flex items-center md:justify-end font-medium text-gray-900 dark:text-white"
@@ -25,7 +27,7 @@ export default function Page() {
         <CategorySelect />
       </div>
 
-      <div className="flex items-start mb-6">
+      <div className="flex items-start">
         <div className="flex items-center h-5">
           <input
             id="remember"

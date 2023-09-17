@@ -61,12 +61,12 @@ const TextField = ({
   );
 };
 
-const RegisterForm = () => {
+const SignUpForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
-      fullName: "",
+      full_name: "",
       email: "",
       password: "",
     },
@@ -91,7 +91,7 @@ const RegisterForm = () => {
       });
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required("Tên không được để trống"),
+      full_name: Yup.string().required("Tên không được để trống"),
       email: Yup.string()
         .email("Địa chỉ email không hợp lệ")
         .required("Email không được để trống"),
@@ -103,11 +103,11 @@ const RegisterForm = () => {
 
   return (
     <FormikProvider value={formik}>
-      <Form className="flex flex-col space-y-4 bg-white dark:bg-gray-900 px-4 py-8 sm:px-8">
+      <Form className="space-y-4 md:space-y-6 flex flex-col">
         <TextField
           label="Tên đầy đủ"
-          id="fullName"
-          name="fullName"
+          id="full_name"
+          name="full_name"
           type="text"
         />
         <TextField label="Email" id="email" name="email" type="text" />
@@ -164,4 +164,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default SignUpForm;

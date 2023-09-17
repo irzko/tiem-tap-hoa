@@ -71,7 +71,7 @@ export default function Navbar() {
               </span>
             </a>
           </div>
-          
+
           <div className="flex items-center">
             <IdButton />
           </div>

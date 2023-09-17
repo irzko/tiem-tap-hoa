@@ -8,23 +8,9 @@ export async function GET(
   const categoryId = params.catgId;
   const category = await prisma.categories.findUnique({
     where: {
-      category_id: parseInt(categoryId),
+      category_id: categoryId,
     },
   });
 
   return NextResponse.json(category);
 }
-
-// export async function GET(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const id = params.id;
-//   const categories = await prisma.subcategories.findMany({
-//     where: {
-//       category_id: parseInt(id),
-//     },
-//   });
-
-//   return NextResponse.json(categories);
-// }

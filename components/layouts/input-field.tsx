@@ -21,7 +21,7 @@ const InputField = ({
   placeholder?: string;
   required?: boolean;
   classnames?: string;
-  label: string;
+  label?: string;
   type?: React.HTMLInputTypeAttribute;
   value?: string | number | readonly string[];
   onChange?: React.ChangeEventHandler<HTMLInputElement>;

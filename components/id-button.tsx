@@ -24,7 +24,7 @@ export default function IdButton() {
 
   return (
     <>
-      {session && (
+      {session ? (
         <div className="flex items-center ml-3">
           <div className="relative">
             <button
@@ -100,6 +100,8 @@ export default function IdButton() {
             </div>
           </div>
         </div>
+      ) : (
+        <div className="relative w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"></div>
       )}
     </>
   );
