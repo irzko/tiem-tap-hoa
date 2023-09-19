@@ -1,4 +1,4 @@
-import InputField from "@/components/layouts/input-field";
+import InputField from "@/components/common/input-field";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { mutate } from "swr";
 
@@ -6,10 +6,12 @@ export default function RenameCategoryModal({
   showModal,
   setShowModal,
   category,
+  apiUrl,
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   category?: ICategory;
+  apiUrl: string;
 }) {
   const [categoryName, setCategoryName] = useState<string>();
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function RenameCategoryModal({
   }, [category]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetch("/api/catgs", {
+    fetch(apiUrl, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -29,10 +31,9 @@ export default function RenameCategoryModal({
     }).then((res) => {
       if (res.ok) {
         setShowModal(false);
-        mutate("/api/catgs");
+        mutate(apiUrl);
       }
     });
-    console.log(e.currentTarget.category_name.value);
   };
   return (
     <div

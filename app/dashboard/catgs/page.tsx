@@ -1,37 +1,43 @@
 "use client";
 import AddCategoryModal from "@/components/add-category-modal";
 import CategoryActionModal from "@/components/category-action-modal";
-import TableHeader from "@/components/layouts/table-header";
-import { useState } from "react";
+import TableHeader from "@/components/table-header";
+import { useEffect, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
 const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
+const apiUrl = "/api/catgs";
 
 export default function Page() {
-  const { data: categories } = useSWR("/api/catgs", categoriesFetcher, {
+  const { data } = useSWR(apiUrl, categoriesFetcher, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
-
   const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+  const [categories, setCategories] = useState<ICategory[]>();
+  useEffect(() => {
+    setCategories(data as ICategory[]);
+  }, [data]);
 
   return (
     <>
       {categories && (
         <div>
-          <ul className="font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+          <ul className="font-medium text-gray-900 bg-white border border-gray-200 last:rounded-lg rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
             <TableHeader
+              data={data}
               toggle={showAddCategoryModal}
               setToggle={setShowAddCategoryModal}
+              setData={setCategories}
             />
             {categories?.map((category) => (
               <li
                 key={category.category_id}
-                className="flex w-full items-center border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+                className="flex w-full items-center  border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               >
                 <button
                   id={category.category_id}
@@ -40,7 +46,7 @@ export default function Page() {
                     setSelectedCategory(category);
                     setShowCategoryActionModal(true);
                   }}
-                  className="w-full flex justify-between items-center px-4 py-3.5 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+                  className="w-full flex justify-between border-b items-center px-4 py-3.5 font-medium text-left border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
                 >
                   <span>
                     {category.category_name}
@@ -68,10 +74,12 @@ export default function Page() {
             ))}
           </ul>
           <AddCategoryModal
+            apiUrl={apiUrl}
             toggle={showAddCategoryModal}
             setToggle={setShowAddCategoryModal}
           />
           <CategoryActionModal
+            apiUrl={apiUrl}
             showModal={showCategoryActionModal}
             setShowModal={setShowCategoryActionModal}
             category={selectedCategory}

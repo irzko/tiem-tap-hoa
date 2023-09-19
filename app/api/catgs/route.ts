@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/libs/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {
@@ -25,15 +25,23 @@ export async function POST(req: Request) {
 
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("search");
-  console.log(query);
-  
+
   if (query) {
-    const categories = await prisma.categories.findUnique({
+    const categories = await prisma.categories.findMany({
       where: {
         category_name: {
-          containt
+          contains: query,
         },
-        }
+      },
+      orderBy: {
+        category_name: "asc",
+      },
+      include: {
+        _count: {
+          select: {
+            Subcategories: true,
+          }, // Count of Subcategories
+        },
       },
     });
     return NextResponse.json(categories);

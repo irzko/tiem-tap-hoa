@@ -1,4 +1,4 @@
-import InputField from "@/components/layouts/input-field";
+import InputField from "@/components/common/input-field";
 import CategorySelect from "./components/category-select";
 
 export default function Page() {

@@ -4,8 +4,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Spinner from "./layouts/spinner";
-import InputField from "./layouts/input-field";
+import Spinner from "./common/spinner";
+import InputField from "./common/input-field";
+import Button from "./common/button";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -76,16 +77,9 @@ export default function LoginForm() {
           Quên mật khẩu?
         </a>
       </div>
-      <button
-        disabled={loading}
-        className={`${
-          loading
-            ? "cursor-not-allowed border-gray-200 bg-gray-100"
-            : "border-black bg-blue-700 text-white hover:bg-blue-800 dark:hover:bg-blue-700"
-        } focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:focus:ring-blue-800`}
-      >
-        {loading ? <Spinner /> : <p>Đăng nhập</p>}
-      </button>
+      <Button disabled={loading}>
+        {loading ? <Spinner fill="#fff"/> : <p>Đăng nhập</p>}
+      </Button>
       <p className="text-center text-sm text-gray-900 dark:text-white">
         Bạn chưa có tài khoản?&nbsp;
         <Link

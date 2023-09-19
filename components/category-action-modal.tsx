@@ -6,10 +6,12 @@ export default function CategoryActionModal({
   showModal,
   setShowModal,
   category,
+  apiUrl,
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   category?: ICategory;
+  apiUrl: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -50,7 +52,7 @@ export default function CategoryActionModal({
                 <span className="sr-only">Close modal</span>
               </button>
             </div>
-            <div className="font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white">
+            <div className="font-medium text-gray-900 border dark:text-white dark:bg-gray-700 rounded-lg bg-white dark:border-gray-600 border-gray-200">
               <button
                 onClick={() => {
                   setShowModal(false);
@@ -104,11 +106,13 @@ export default function CategoryActionModal({
         </div>
       </div>
       <DeleteCategoryModal
+        apiUrl={apiUrl}
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         category={category}
       />
       <RenameCategoryModal
+        apiUrl={apiUrl}
         showModal={showRenameModal}
         setShowModal={setShowRenameModal}
         category={category}

@@ -1,8 +1,39 @@
 import InputField from "@/components/common/input-field";
-import { Dispatch, SetStateAction } from "react";
-import { mutate } from "swr";
+import { Dispatch, SetStateAction, useState } from "react";
+import useSWR, { Fetcher, mutate } from "swr";
+import Button from "./common/button";
 
-export default function AddCategoryModal({
+const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
+  fetch(url).then((res) => res.json());
+const DropdownCategories = () => {
+  const { data: categories } = useSWR("/api/catgs", categoriesFetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+  return (
+    <div>
+      <select
+        defaultValue=""
+        id="subcategory_id"
+        name="subcategory_id"
+        required
+        className="bg-gray-50 border-2 col-span-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 outline-none focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option disabled value="">
+          Chọn nhóm ngành
+        </option>
+        {categories?.map((category) => (
+          <option key={category.category_id} value={category.category_id}>
+            {category.category_name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+export default function AddSubcategoryModal({
   toggle,
   setToggle,
   apiUrl,
@@ -19,7 +50,8 @@ export default function AddCategoryModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        category_name: e.currentTarget.category_name.value,
+        subcategory_name: e.currentTarget.subcategory_name.value,
+        category_id: e.currentTarget.subcategory_id.value,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -67,17 +99,14 @@ export default function AddCategoryModal({
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
+              <DropdownCategories />
               <InputField
-                id="category_name"
-                name="category_name"
+                id="subcategory_name"
+                name="subcategory_name"
                 label="Tên danh mục"
                 required
               />
-
-              <button
-                type="submit"
-                className="text-white flex items-center justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
+              <Button type="submit">
                 <svg
                   className="mr-1 -ml-1 w-6 h-6"
                   fill="currentColor"
@@ -91,7 +120,7 @@ export default function AddCategoryModal({
                   ></path>
                 </svg>
                 Thêm danh mục mới
-              </button>
+              </Button>
             </div>
           </form>
         </div>

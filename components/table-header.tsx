@@ -1,28 +1,36 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import Button from "./common/button";
+
+function search(arr: ICategory[], str: string) {
+  const stringNotSigned = vietnameseToAscii(str);
+  const result: ICategory[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    const string = vietnameseToAscii(arr[i].category_name);
+    if (string.includes(stringNotSigned)) {
+      result.push(arr[i]);
+    }
+  }
+  return result;
+}
 
 export default function TableHeader({
   toggle,
   setToggle,
+  data,
+  setData,
 }: {
   toggle: boolean;
+  data: ICategory[] | undefined;
   setToggle: Dispatch<SetStateAction<boolean>>;
+  setData: Dispatch<SetStateAction<ICategory[] | undefined>>;
 }) {
-  const [data, setData] = useState<ICategory[]>([]);
-  const [t, setT] = useState<NodeJS.Timeout>();
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (t) clearTimeout(t);
-    setT(
-      setTimeout(() => {
-        fetch(`/api/catgs?search=${e.target.value}`, {
-          method: "GET",
-        })
-          .then((res) => res.json())
-          .then((data) => setData(data));
-      }, 750)
-    );
+    if (e.target.value === "") return setData(data);
+    const result = search(data || [], e.target.value);
+    setData(result);
   };
-  console.log(data);
-  
+
   return (
     <div>
       <div className="relative bg-white border-b dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-t-lg">
@@ -60,11 +68,8 @@ export default function TableHeader({
             </form>
           </div>
           <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-            <button
-              type="button"
-              onClick={() => setToggle(!toggle)}
-              className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            >
+            <Button type="button" onClick={() => setToggle(!toggle)}>
+              {" "}
               <svg
                 className="w-3.5 h-3.5 mr-2"
                 aria-hidden="true"
@@ -81,7 +86,7 @@ export default function TableHeader({
                 />
               </svg>
               Thêm danh mục
-            </button>
+            </Button>
           </div>
         </div>
       </div>

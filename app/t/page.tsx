@@ -1,4 +1,4 @@
-import InputField from "@/components/layouts/input-field";
+import InputField from "@/components/common/input-field";
 import React from "react";
 
 function Page() {

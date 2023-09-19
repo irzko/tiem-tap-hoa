@@ -5,13 +5,15 @@ export default function DeleteCategoryModal({
   showModal,
   setShowModal,
   category,
+  apiUrl,
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   category?: ICategory;
+  apiUrl: string;
 }) {
   const handleDelete = () => {
-    fetch(`/api/catgs`, {
+    fetch(apiUrl, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export default function DeleteCategoryModal({
     }).then((res) => {
       if (res.ok) {
         setShowModal(false);
-        mutate("/api/catgs");
+        mutate(apiUrl);
       }
     });
   };
@@ -49,18 +51,22 @@ export default function DeleteCategoryModal({
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
             <span className="sr-only">Close modal</span>
           </button>
-          <h3 className="text-lg text-center font-semibold text-gray-900 dark:text-white">Xác nhận xoá danh mục</h3>
+          <h3 className="text-lg text-center font-semibold text-gray-900 dark:text-white">
+            Xác nhận xoá danh mục
+          </h3>
           <p className="mb-4 text-center text-gray-500 dark:text-gray-300">
             Bạn có chắc chắn muốn xóa danh mục này?
           </p>
-          <div className="mb-4 font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white px-4 py-3.5">{category?.category_name}</div>
+          <div className="mb-4 font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white px-4 py-3.5">
+            {category?.category_name}
+          </div>
           <div className="flex justify-center items-center space-x-4">
             <button
               onClick={() => setShowModal(false)}

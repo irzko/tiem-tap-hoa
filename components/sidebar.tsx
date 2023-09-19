@@ -1,6 +1,6 @@
 import { useSidebarContext } from "@/context/SidebarContext";
 import Link from "next/link";
-import Accordion from "./layouts/accordion";
+import Accordion from "./common/accordion";
 export default function Sidebar() {
   const { isOpenOnSmallScreens: isSidebarOpenOnSmallScreens } =
     useSidebarContext();
