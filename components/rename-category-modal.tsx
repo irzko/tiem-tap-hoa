@@ -13,9 +13,9 @@ export default function RenameCategoryModal({
   category?: ICategory;
   apiUrl: string;
 }) {
-  const [categoryName, setCategoryName] = useState<string>();
+  const [categoryName, setCategoryName] = useState<string>("");
   useEffect(() => {
-    setCategoryName(category?.category_name);
+    setCategoryName(category?.category_name || "");
   }, [category]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

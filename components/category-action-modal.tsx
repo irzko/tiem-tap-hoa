@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import DeleteCategoryModal from "./detete-category-modal";
 import RenameCategoryModal from "./rename-category-modal";
+import Button from "./common/button";
+import Link from "next/link";
 
 export default function CategoryActionModal({
   showModal,
@@ -10,7 +12,7 @@ export default function CategoryActionModal({
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ISubcategory;
+  category?: ICategory;
   apiUrl: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -77,6 +79,7 @@ export default function CategoryActionModal({
                 </svg>
                 Đổi tên danh mục
               </button>
+
               <button
                 onClick={() => {
                   setShowDeleteModal(true);
@@ -101,6 +104,14 @@ export default function CategoryActionModal({
                 </svg>
                 Xoá danh mục
               </button>
+            </div>
+            <div className="mt-6">
+              <Link
+                className="w-full flex flex-col "
+                href={`/dashboard/subcatgs?category_id=${category?.category_id}`}
+              >
+                <Button>Xem danh mục con</Button>
+              </Link>
             </div>
           </div>
         </div>

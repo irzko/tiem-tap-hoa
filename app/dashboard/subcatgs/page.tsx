@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import AddSubcategoryModal from "@/components/add-subcategory-modal";
 import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
@@ -7,7 +7,7 @@ import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Button from "@/components/common/button";
 import Select from "@/components/common/select";
 import InputField from "@/components/common/input-field";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function search(arr: ISubcategory[], str: string) {
   const stringNotSigned = vietnameseToAscii(str);
@@ -25,31 +25,34 @@ function TableHeader({
   toggle,
   filteredData,
   categories,
-  categoryIdDefault = "",
+  categoryId,
   setToggle,
   setData,
   setFilteredData,
+  setCategoryId,
 }: {
   toggle: boolean;
   filteredData?: ISubcategory[];
-  categoryIdDefault?: string;
+  categoryId?: string;
   setToggle: Dispatch<SetStateAction<boolean>>;
   setData: Dispatch<SetStateAction<ISubcategory[] | undefined>>;
   setFilteredData: Dispatch<SetStateAction<ISubcategory[] | undefined>>;
   categories?: ICategory[];
+  setCategoryId: Dispatch<SetStateAction<string | undefined>>;
 }) {
-  const [categoryId, setCategoryId] = useState<string>();
-  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams()!;
 
-  useEffect(() => {
-    const categoryId = searchParams.has("category_id")
-      ? searchParams.get("category_id")
-      : "all";
-    if (categoryId) {
-      setCategoryId(categoryId);
-    }
-    console.log(categoryId);
-  }, [searchParams]);
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") return setData(filteredData);
@@ -59,7 +62,7 @@ function TableHeader({
 
   const onCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-
+    router.push(pathname + "?" + createQueryString("category_id", value));
     setCategoryId(value);
     fetch(`/api/catgs/${value}/subcatgs`)
       .then((res) => res.json())
@@ -459,42 +462,59 @@ const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
 export default function Page() {
-  const apiUrl = "/api/subcatgs";
-  const { data } = useSWR(apiUrl, subcategoriesFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
-
-  const { data: categories } = useSWR(`/api/catgs/`, categoriesFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<ISubcategory>();
   const [subcategories, setSubcategories] = useState<ISubcategory[]>();
   const [filteredData, setFilteredData] = useState<ISubcategory[]>();
+  const [categoryId, setCategoryId] = useState<string>();
+  const apiUrl = "/api/subcatgs";
+
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    setSubcategories(data);
-    setFilteredData(data);
-  }, [data]);
+    const categoryId = searchParams.get("category_id");
+    if (categoryId) {
+      setCategoryId(categoryId);
+      fetch(`/api/catgs/${categoryId}/subcatgs`)
+        .then((res) => res.json())
+        .then((data?: ISubcategory[]) => {
+          setFilteredData(data);
+          setSubcategories(data);
+        });
+    } else {
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then((data?: ISubcategory[]) => {
+          setFilteredData(data);
+          setSubcategories(data);
+        });
+    }
+  }, [searchParams]);
+
+  const { data: categories } = useSWR(`/api/catgs/`, categoriesFetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return (
     <>
       {subcategories && (
-        <div>
-          <ul className="font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-            <TableHeader
-              filteredData={filteredData}
-              setFilteredData={setFilteredData}
-              categories={categories}
-              toggle={showAddCategoryModal}
-              setToggle={setShowAddCategoryModal}
-              setData={setSubcategories}
-            />
+        <div className="font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+          <TableHeader
+            categoryId={categoryId}
+            setCategoryId={setCategoryId}
+            filteredData={filteredData}
+            setFilteredData={setFilteredData}
+            categories={categories}
+            toggle={showAddCategoryModal}
+            setToggle={setShowAddCategoryModal}
+            setData={setSubcategories}
+          />
+
+          <ul>
             {subcategories?.map((subcategory) => (
               <li
                 key={subcategory.subcategory_id}
