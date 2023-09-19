@@ -10,7 +10,7 @@ export default function CategoryActionModal({
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
+  category?: ISubcategory;
   apiUrl: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);

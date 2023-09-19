@@ -1,6 +1,5 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
-
 interface ButtonProps
   extends DetailedHTMLProps<
     ButtonHTMLAttributes<HTMLButtonElement>,
@@ -13,16 +12,16 @@ interface ButtonProps
 export default function Button({
   children,
   color = "primary",
-  type,
   disabled,
-  onClick,
+  ...props
 }: ButtonProps) {
   let buttonColor = "";
   let disabledButtonColor = "";
   switch (color) {
     case "primary": {
-      buttonColor = "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 focus:ring-blue-300";
-      disabledButtonColor = "text-white bg-blue-400 dark:bg-blue-500"
+      buttonColor =
+        "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 focus:ring-blue-300";
+      disabledButtonColor = "text-white bg-blue-400 dark:bg-blue-500";
       break;
     }
     // case "secondary": {
@@ -31,23 +30,20 @@ export default function Button({
     //   break;
     // }
     case "danger": {
-      buttonColor = "text-white bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900";
+      buttonColor =
+        "text-white bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900";
       disabledButtonColor = "text-white bg-red-400 dark:bg-red-500";
       break;
     }
-
   }
   return (
     <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`font-medium rounded-lg text-sm px-5 py-2.5 flex items-center ${
+      {...props}
+      className={`font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center ${
         disabled
           ? `cursor-not-allowed ${disabledButtonColor}`
           : `focus:ring-4 focus:outline-none ${buttonColor}`
       }`}
-      // className="text-white flex items-center justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
       {children}
     </button>

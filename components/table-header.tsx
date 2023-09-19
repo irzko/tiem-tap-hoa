@@ -2,9 +2,9 @@ import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Button from "./common/button";
 
-function search(arr: ICategory[], str: string) {
+function search(arr: ISubcategory[], str: string) {
   const stringNotSigned = vietnameseToAscii(str);
-  const result: ICategory[] = [];
+  const result: ISubcategory[] = [];
   for (let i = 0; i < arr.length; i++) {
     const string = vietnameseToAscii(arr[i].category_name);
     if (string.includes(stringNotSigned)) {
@@ -21,9 +21,9 @@ export default function TableHeader({
   setData,
 }: {
   toggle: boolean;
-  data: ICategory[] | undefined;
+  data: ISubcategory[] | undefined;
   setToggle: Dispatch<SetStateAction<boolean>>;
-  setData: Dispatch<SetStateAction<ICategory[] | undefined>>;
+  setData: Dispatch<SetStateAction<ISubcategory[] | undefined>>;
 }) {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") return setData(data);

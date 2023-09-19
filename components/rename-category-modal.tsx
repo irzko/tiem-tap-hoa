@@ -10,7 +10,7 @@ export default function RenameCategoryModal({
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
+  category?: ISubcategory;
   apiUrl: string;
 }) {
   const [categoryName, setCategoryName] = useState<string>();

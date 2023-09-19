@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import Button from "./common/button";
 
-const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
+const categoriesFetcher: Fetcher<ISubcategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 const DropdownCategories = () => {
   const { data: categories } = useSWR("/api/catgs", categoriesFetcher, {

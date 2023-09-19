@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import LabelField from "./label-field";
+import InputLabel from "./input-label";
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
@@ -7,23 +7,13 @@ interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
 }
 
-
-
 const InputField = ({
-  ["aria-describedby"]: ariaDescribedby,
-  autoComplete,
   id,
-  helperText,
-  name,
-  placeholder = " ",
-  required,
+  placeholder = "",
   color = "primary",
-  type,
-  value,
-  onChange,
-  onSubmit,
-  onBlur,
   label,
+  helperText,
+  ...props
 }: InputFieldProps) => {
   let inputColor = "";
   let labelColor = "";
@@ -46,25 +36,22 @@ const InputField = ({
     }
   }
 
+  
+
   return (
     <div className="relative">
       <input
-        autoComplete={autoComplete}
-        type={type}
-        id={id}
-        name={name}
-        className={`block rounded-lg px-2.5 pb-1 pt-4 w-full text-sm border-2 appearance-none focus:outline-none focus:ring-0 peer ${
+        {...props}
+        className={`block rounded-lg px-2.5 w-full text-sm border-2 appearance-none focus:outline-none focus:ring-0 peer ${
           label ? "pb-1 pt-4" : "py-2.5"
         } ${inputColor}}`}
         placeholder={placeholder}
-        required={required}
-        value={value}
-        onChange={onChange}
-        onSubmit={onSubmit}
-        aria-describedby={ariaDescribedby}
-        onBlur={onBlur}
       ></input>
-      {label && <LabelField htmlFor={id} labelColor={labelColor}>{label}</LabelField>}
+      {label && (
+        <InputLabel htmlFor={id} labelColor={labelColor}>
+          {label}
+        </InputLabel>
+      )}
       {helperText && (
         <p
           id={`${id}-feedback`}

@@ -1,8 +1,9 @@
 "use client";
+import Select from "@/components/common/select";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
-const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
+const categoriesFetcher: Fetcher<ISubcategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
 const CategorySelect = () => {
@@ -14,7 +15,7 @@ const CategorySelect = () => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
-
+  //
   const onCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedCategories(value);
@@ -34,12 +35,11 @@ const CategorySelect = () => {
         >
           Nhóm ngành
         </label>
-        <select
+        <Select
           defaultValue=""
           onChange={onCategoryChange}
           id="category"
           required
-          className="bg-gray-50 border-2 col-span-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 outline-none focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <option disabled value="">
             Chọn nhóm ngành
@@ -49,7 +49,7 @@ const CategorySelect = () => {
               {category.category_name}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       <div
