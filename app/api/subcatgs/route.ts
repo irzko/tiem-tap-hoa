@@ -2,7 +2,7 @@ import prisma from "@/libs/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {
-  const { subcategory_name } = await req.json();
+  const { subcategory_name, category_id } = await req.json();
   const exists = await prisma.subcategories.findUnique({
     where: {
       subcategory_name,
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
   } else {
     const subcategories = await prisma.subcategories.create({
       data: {
+        category_id,
         subcategory_name,
       },
     });

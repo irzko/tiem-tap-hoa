@@ -2,38 +2,13 @@ import InputField from "@/components/common/input-field";
 import { Dispatch, SetStateAction, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import Button from "./common/button";
+import Select from "./common/select";
 
-const categoriesFetcher: Fetcher<ISubcategory[], string> = (url) =>
+const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
-const DropdownCategories = () => {
-  const { data: categories } = useSWR("/api/catgs", categoriesFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
-  return (
-    <div>
-      <select
-        defaultValue=""
-        id="subcategory_id"
-        name="subcategory_id"
-        required
-        className="bg-gray-50 border-2 col-span-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 outline-none focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option disabled value="">
-          Chọn nhóm ngành
-        </option>
-        {categories?.map((category) => (
-          <option key={category.category_id} value={category.category_id}>
-            {category.category_name}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
 
 export default function AddSubcategoryModal({
+  categories,
   toggle,
   setToggle,
   apiUrl,
@@ -41,9 +16,11 @@ export default function AddSubcategoryModal({
   toggle: boolean;
   setToggle: Dispatch<SetStateAction<boolean>>;
   apiUrl: string;
+  categories?: ICategory[];
 }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     fetch(apiUrl, {
       method: "POST",
       headers: {
@@ -51,7 +28,7 @@ export default function AddSubcategoryModal({
       },
       body: JSON.stringify({
         subcategory_name: e.currentTarget.subcategory_name.value,
-        category_id: e.currentTarget.subcategory_id.value,
+        category_id: e.currentTarget.category_id.value,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -99,7 +76,24 @@ export default function AddSubcategoryModal({
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
-              <DropdownCategories />
+              <Select
+                defaultValue=""
+                id="category_id"
+                name="category_id"
+                required
+              >
+                <option disabled value="">
+                  Chọn nhóm ngành
+                </option>
+                {categories?.map((category) => (
+                  <option
+                    key={category.category_id}
+                    value={category.category_id}
+                  >
+                    {category.category_name}
+                  </option>
+                ))}
+              </Select>
               <InputField
                 id="subcategory_name"
                 name="subcategory_name"

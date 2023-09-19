@@ -9,7 +9,7 @@ export default function DeleteCategoryModal({
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ISubcategory;
+  category?: ICategory;
   apiUrl: string;
 }) {
   const handleDelete = () => {

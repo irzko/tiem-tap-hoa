@@ -7,10 +7,22 @@ export async function GET(
 ) {
   const categoryId = params.catgId;
 
-  const categories = await prisma.subcategories.findMany({
-    where: {
-      category_id: categoryId,
-    },
-  });
-  return NextResponse.json(categories);
+  if (categoryId === "all") {
+    const categories = await prisma.subcategories.findMany({
+      orderBy: {
+        subcategory_name: "asc",
+      },
+    });
+    return NextResponse.json(categories);
+  } else {
+    const categories = await prisma.subcategories.findMany({
+      where: {
+        category_id: categoryId,
+      },
+      orderBy: {
+        subcategory_name: "asc",
+      },
+    });
+    return NextResponse.json(categories);
+  }
 }
