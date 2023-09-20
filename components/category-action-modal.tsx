@@ -108,7 +108,7 @@ export default function CategoryActionModal({
             <div className="mt-6">
               <Link
                 className="w-full flex flex-col "
-                href={`/dashboard/subcatgs?category_id=${category?.category_id}`}
+                href={`/dashboard/subcatgs/${category?.category_id}`}
               >
                 <Button>Xem danh mục con</Button>
               </Link>

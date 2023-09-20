@@ -14,4 +14,15 @@ interface ISubcategory {
   category_id: string;
   created_at: Date;
   updatedAt: Date;
+  _count: {
+    Subsubcategories: number;
+  };
+}
+
+interface ISubsubcategory {
+  subsubcategory_id: string;
+  subsubcategory_name: string;
+  subcategory_id: string;
+  created_at: Date;
+  updatedAt: Date;
 }

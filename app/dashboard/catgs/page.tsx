@@ -5,7 +5,7 @@ import TableHeader from "@/components/table-header";
 import { useEffect, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
-const categoriesFetcher: Fetcher<ISubcategory[], string> = (url) =>
+const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 const apiUrl = "/api/catgs";
 
@@ -17,10 +17,10 @@ export default function Page() {
   });
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<ISubcategory>();
-  const [categories, setCategories] = useState<ISubcategory[]>();
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+  const [categories, setCategories] = useState<ICategory[]>();
   useEffect(() => {
-    setCategories(data as ISubcategory[]);
+    setCategories(data as ICategory[]);
   }, [data]);
 
   return (
