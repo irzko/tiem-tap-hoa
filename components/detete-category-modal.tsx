@@ -1,17 +1,26 @@
-import { Dispatch, SetStateAction } from "react";
-import { mutate } from "swr";
+import CategoryContext from "@/context/CategoryContext";
+import { Dispatch, SetStateAction, useContext } from "react";
 
-export default function DeleteCategoryModal({
+export default function DeleteCategoryModal<
+  T,
+  K extends keyof T,
+  N extends keyof T
+>({
+  keyId,
+  keyName,
   showModal,
   setShowModal,
   category,
   apiUrl,
 }: {
+  keyId: K;
+  keyName: N;
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
+  category?: T;
   apiUrl: string;
 }) {
+  const { mutate } = useContext(CategoryContext);
   const handleDelete = () => {
     fetch(apiUrl, {
       method: "DELETE",
@@ -19,7 +28,7 @@ export default function DeleteCategoryModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        category_id: category?.category_id,
+        [keyId]: category?.[keyId],
       }),
     }).then((res) => {
       if (res.ok) {
@@ -28,6 +37,7 @@ export default function DeleteCategoryModal({
       }
     });
   };
+
   return (
     <div
       tabIndex={-1}
@@ -65,7 +75,7 @@ export default function DeleteCategoryModal({
             Bạn có chắc chắn muốn xóa danh mục này?
           </p>
           <div className="mb-4 font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white px-4 py-3.5">
-            {category?.category_name}
+            {category?.[keyName] as string}
           </div>
           <div className="flex justify-center items-center space-x-4">
             <button

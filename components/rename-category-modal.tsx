@@ -1,22 +1,35 @@
 import InputField from "@/components/common/input-field";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { mutate } from "swr";
+import CategoryContext from "@/context/CategoryContext";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
-export default function RenameCategoryModal({
+export default function RenameCategoryModal<
+  T,
+  K extends keyof T,
+  N extends keyof T
+>({
+  keyName,
+  keyId,
   showModal,
   setShowModal,
   category,
   apiUrl,
 }: {
   showModal: boolean;
+  keyName: N;
+  keyId: K;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
+  category?: T;
   apiUrl: string;
 }) {
   const [categoryName, setCategoryName] = useState<string>("");
+
+  const { mutate } = useContext(CategoryContext);
+
   useEffect(() => {
-    setCategoryName(category?.category_name || "");
-  }, [category]);
+    if (category) {
+      setCategoryName(category[keyName] as string);
+    }
+  }, [category, keyName]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetch(apiUrl, {
@@ -25,8 +38,8 @@ export default function RenameCategoryModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        category_id: category?.category_id,
-        category_name: e.currentTarget.category_name.value,
+        [keyId]: category?.[keyId],
+        [keyName]: e.currentTarget[keyName as string].value,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -75,8 +88,8 @@ export default function RenameCategoryModal({
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
               <InputField
-                id="category_name"
-                name="category_name"
+                id={keyId as string}
+                name={keyName as string}
                 label="Tên danh mục"
                 onChange={(e) => setCategoryName(e.target.value)}
                 value={categoryName}

@@ -1,22 +1,33 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import DeleteCategoryModal from "./detete-category-modal";
 import RenameCategoryModal from "./rename-category-modal";
 import Button from "./common/button";
 import Link from "next/link";
 
-export default function CategoryActionModal({
+export default function CategoryActionModal<
+  T,
+  K extends keyof T,
+  N extends keyof T
+>({
   showModal,
+  keyName,
+  keyId,
   setShowModal,
   category,
   apiUrl,
+  childPath,
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
+  category?: T;
+  keyName: N;
+  keyId: K;
   apiUrl: string;
+  childPath?: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
+
 
   return (
     <>
@@ -31,7 +42,7 @@ export default function CategoryActionModal({
           <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {category?.category_name}
+                {category?.[keyName] as ReactNode}
               </h3>
               <button
                 onClick={() => setShowModal(!showModal)}
@@ -81,6 +92,7 @@ export default function CategoryActionModal({
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   setShowDeleteModal(true);
                   setShowModal(false);
@@ -108,7 +120,7 @@ export default function CategoryActionModal({
             <div className="mt-6">
               <Link
                 className="w-full flex flex-col "
-                href={`/dashboard/subcatgs/${category?.category_id}`}
+                href={`${childPath}${category?.[keyId]}`}
               >
                 <Button>Xem danh mục con</Button>
               </Link>
@@ -117,12 +129,16 @@ export default function CategoryActionModal({
         </div>
       </div>
       <DeleteCategoryModal
+        keyName={keyName}
+        keyId={keyId}
         apiUrl={apiUrl}
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         category={category}
       />
       <RenameCategoryModal
+        keyName={keyName}
+        keyId={keyId}
         apiUrl={apiUrl}
         showModal={showRenameModal}
         setShowModal={setShowRenameModal}

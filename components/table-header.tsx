@@ -1,34 +1,41 @@
 import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import Button from "./common/button";
+import AddCategoryModal from "./add-category-modal";
 
-function search(arr: ICategory[], str: string) {
-  const stringNotSigned = vietnameseToAscii(str);
-  const result: ICategory[] = [];
-  for (let i = 0; i < arr.length; i++) {
-    const string = vietnameseToAscii(arr[i].category_name);
-    if (string.includes(stringNotSigned)) {
-      result.push(arr[i]);
-    }
-  }
-  return result;
-}
-
-export default function TableHeader({
-  toggle,
-  setToggle,
+export default function TableHeader<T, K extends keyof T, N extends keyof T>({
+  keyId,
+  keyName,
   data,
+  apiUrl,
   setData,
+  parentPath,
 }: {
-  toggle: boolean;
-  data: ICategory[] | undefined;
-  setToggle: Dispatch<SetStateAction<boolean>>;
-  setData: Dispatch<SetStateAction<ICategory[] | undefined>>;
+  keyName: N;
+  keyId: K;
+  data?: T[];
+  apiUrl: string;
+  parentPath?: string;
+  setData: Dispatch<SetStateAction<T[] | undefined>>;
 }) {
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") return setData(data);
-    const result = search(data || [], e.target.value);
-    setData(result);
+    const inputValue = e.target.value;
+
+    if (!data) return;
+    if (inputValue === "") {
+      setData(data);
+    } else {
+      const result = data.filter((item) => {
+        if (typeof item[keyName] === "string") {
+          const string = vietnameseToAscii(String(item[keyName]));
+          const stringNotSigned = vietnameseToAscii(inputValue);
+          return string.includes(stringNotSigned);
+        }
+        return false;
+      });
+      setData(result);
+    }
   };
 
   return (
@@ -68,7 +75,7 @@ export default function TableHeader({
             </form>
           </div>
           <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
-            <Button type="button" onClick={() => setToggle(!toggle)}>
+            <Button type="button" onClick={() => setShowAddCategoryModal(true)}>
               <svg
                 className="w-3.5 h-3.5 mr-2"
                 aria-hidden="true"
@@ -89,6 +96,13 @@ export default function TableHeader({
           </div>
         </div>
       </div>
+      <AddCategoryModal
+        keyId={keyId}
+        keyName={keyName}
+        apiUrl={apiUrl}
+        toggle={showAddCategoryModal}
+        setToggle={setShowAddCategoryModal}
+      />
     </div>
   );
 }
