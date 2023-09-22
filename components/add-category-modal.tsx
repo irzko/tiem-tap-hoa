@@ -1,16 +1,25 @@
 import InputField from "@/components/common/input-field";
-import { Dispatch, SetStateAction } from "react";
-import { mutate } from "swr";
+import CategoryContext from "@/context/CategoryContext";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
+import Select from "./common/select";
 
-export default function AddCategoryModal({
+export default function AddCategoryModal<K, N>({
+  keyId,
+  keyName,
   toggle,
   setToggle,
   apiUrl,
 }: {
+  keyId: K;
+  keyName: N;
   toggle: boolean;
   setToggle: Dispatch<SetStateAction<boolean>>;
   apiUrl: string;
 }) {
+  const [name, setName] = useState("");
+
+  const { mutate } = useContext(CategoryContext);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetch(apiUrl, {
@@ -19,7 +28,7 @@ export default function AddCategoryModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        category_name: e.currentTarget.category_name.value,
+        [keyName as string]: name,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -67,10 +76,15 @@ export default function AddCategoryModal({
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
+              <Select>
+                <option value="">1</option>
+              </Select>
               <InputField
-                id="category_name"
-                name="category_name"
+                id={keyId as string}
+                name={keyName as string}
                 label="Tên danh mục"
+                value={name}
+                onChange={(e) => setName(e.currentTarget.value)}
                 required
               />
 
