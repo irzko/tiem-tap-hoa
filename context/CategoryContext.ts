@@ -1,8 +1,9 @@
 import { createContext } from "react";
 
 const CategoryContext = createContext({
-  categories: [] as ICategory[] | undefined,
-  mutate: (key: string) => {},
-});
+  // data: [] as any,
+  // mutate: (key: string) => {},
+  // parentId: null,
+} as any);
 
 export default CategoryContext;

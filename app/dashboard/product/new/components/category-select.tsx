@@ -3,12 +3,12 @@ import Select from "@/components/common/select";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
-const categoriesFetcher: Fetcher<ISubcategory[], string> = (url) =>
+const categoriesFetcher: Fetcher<ISubSubcategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
 const CategorySelect = () => {
   const [selectedCategories, setSelectedCategories] = useState<string>("");
-  const [subcategories, setSubcategories] = useState<ISubcategory[]>([]);
+  const [subcategories, setSubcategories] = useState<ISubSubcategory[]>([]);
 
   const { data: categories } = useSWR("/api/catgs", categoriesFetcher, {
     revalidateIfStale: false,

@@ -1,10 +1,10 @@
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-import DeleteCategoryModal from "./detete-category-modal";
-import RenameCategoryModal from "./rename-category-modal";
+import DeleteModal from "./detete-modal";
+import RenameModal from "./rename-modal";
 import Button from "./common/button";
 import Link from "next/link";
 
-export default function CategoryActionModal<
+export default function ActionModal<
   T,
   K extends keyof T,
   N extends keyof T
@@ -14,7 +14,6 @@ export default function CategoryActionModal<
   keyId,
   setShowModal,
   category,
-  apiUrl,
   childPath,
 }: {
   showModal: boolean;
@@ -22,12 +21,10 @@ export default function CategoryActionModal<
   category?: T;
   keyName: N;
   keyId: K;
-  apiUrl: string;
   childPath?: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
-
 
   return (
     <>
@@ -128,18 +125,16 @@ export default function CategoryActionModal<
           </div>
         </div>
       </div>
-      <DeleteCategoryModal
+      <DeleteModal
         keyName={keyName}
         keyId={keyId}
-        apiUrl={apiUrl}
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         category={category}
       />
-      <RenameCategoryModal
+      <RenameModal
         keyName={keyName}
         keyId={keyId}
-        apiUrl={apiUrl}
         showModal={showRenameModal}
         setShowModal={setShowRenameModal}
         category={category}

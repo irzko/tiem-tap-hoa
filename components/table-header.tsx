@@ -1,23 +1,48 @@
 import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Button from "./common/button";
-import AddCategoryModal from "./add-category-modal";
+import AddModal from "./add-modal";
 
-export default function TableHeader<T, K extends keyof T, N extends keyof T>({
-  keyId,
+export default function TableHeader<
+  T1,
+  T2,
+  KName1 extends keyof T1,
+  KId2 extends keyof T2,
+  KName2 extends keyof T2,
+>({
+
   keyName,
+  parentKeyId,
+  parentKeyName,
   data,
-  apiUrl,
   setData,
   parentPath,
 }: {
-  keyName: N;
-  keyId: K;
-  data?: T[];
-  apiUrl: string;
+  keyName: KName1;
+  parentKeyId?: KId2 | string;
+  parentKeyName?: KName2 | string;
+  data?: T1[];
   parentPath?: string;
-  setData: Dispatch<SetStateAction<T[] | undefined>>;
+  setData: Dispatch<SetStateAction<T1[] | undefined>>;
 }) {
+  const [parentData, setParentData] = useState<T2[] | undefined>();
+  useEffect(() => {
+    if (parentPath) {
+      fetch(parentPath)
+        .then((res) => res.json())
+        .then((res) => {
+          setParentData(res);
+        });
+    }
+  }, [parentPath]);
+
+  
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -96,10 +121,11 @@ export default function TableHeader<T, K extends keyof T, N extends keyof T>({
           </div>
         </div>
       </div>
-      <AddCategoryModal
-        keyId={keyId}
-        keyName={keyName}
-        apiUrl={apiUrl}
+      <AddModal
+        parentData={parentData}
+        keyName={keyName as keyof T1}
+        parentKeyId={parentKeyId as keyof T2}
+        parentKeyName={parentKeyName as keyof T2}
         toggle={showAddCategoryModal}
         setToggle={setShowAddCategoryModal}
       />

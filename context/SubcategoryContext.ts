@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 const SubcategoryContext = createContext({
-  subcategories: [] as ISubcategory[] | undefined,
+  subcategories: [] as ISubSubcategory[] | undefined,
   mutate: (key: string) => {},
 });
 

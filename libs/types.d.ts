@@ -8,7 +8,7 @@ interface ICategory {
   };
 }
 
-interface ISubcategory {
+interface ISubSubcategory {
   subcategory_id: string;
   subcategory_name: string;
   category_id: string;
@@ -19,7 +19,7 @@ interface ISubcategory {
   };
 }
 
-interface ISubsubcategory {
+interface ISubSubcategory {
   subsubcategory_id: string;
   subsubcategory_name: string;
   subcategory_id: string;
