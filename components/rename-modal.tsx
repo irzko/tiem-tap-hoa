@@ -8,43 +8,39 @@ import {
   useState,
 } from "react";
 
-export default function RenameModal<T, K extends keyof T, N extends keyof T>({
-  keyName,
-  keyId,
+export default function RenameModal({
   showModal,
   setShowModal,
   category,
 }: {
   showModal: boolean;
-  keyName: N;
-  keyId: K;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: T;
+  category?: ICategory;
 }) {
   const [categoryName, setCategoryName] = useState<string>("");
 
-  const { mutate, postApiUrl, getApiUrl } = useContext(CategoryContext);
+  const { mutate } = useContext(CategoryContext);
 
   useEffect(() => {
     if (category) {
-      setCategoryName(category[keyName] as string);
+      setCategoryName(category.categoryName);
     }
-  }, [category, keyName]);
+  }, [category]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetch(postApiUrl, {
+    fetch("/api/catgs", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        [keyId]: category?.[keyId],
-        [keyName]: e.currentTarget[keyName as string].value,
+        categoryId: category?.categoryId,
+        categoryName: e.currentTarget.categoryName.value,
       }),
     }).then((res) => {
       if (res.ok) {
         setShowModal(false);
-        mutate(getApiUrl);
+        mutate("/api/catgs");
       }
     });
   };
@@ -88,8 +84,8 @@ export default function RenameModal<T, K extends keyof T, N extends keyof T>({
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
               <InputField
-                id={keyId as string}
-                name={keyName as string}
+                id="categoryName"
+                name="categoryName"
                 label="Tên danh mục"
                 onChange={(e) => setCategoryName(e.target.value)}
                 value={categoryName}

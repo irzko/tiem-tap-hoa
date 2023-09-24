@@ -1,16 +1,15 @@
-import { NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
   request: Request,
   { params }: { params: { catgId: string } }
 ) {
-  const categoryId = params.catgId;
-  const category = await prisma.categories.findUnique({
+  const { catgId } = params;
+  const category = await prisma.category.findMany({
     where: {
-      category_id: categoryId,
+      parentCategoryId: catgId,
     },
   });
-
   return NextResponse.json(category);
 }

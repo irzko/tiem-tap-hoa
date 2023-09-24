@@ -3,44 +3,20 @@ import {
   ChangeEvent,
   Dispatch,
   SetStateAction,
-  useEffect,
   useState,
 } from "react";
 import Button from "./common/button";
 import AddModal from "./add-modal";
 
-export default function TableHeader<
-  T1,
-  T2,
-  KName1 extends keyof T1,
-  KId2 extends keyof T2,
-  KName2 extends keyof T2,
->({
-
-  keyName,
-  parentKeyId,
-  parentKeyName,
+export default function TableHeader({
   data,
   setData,
-  parentPath,
 }: {
-  keyName: KName1;
-  parentKeyId?: KId2 | string;
-  parentKeyName?: KName2 | string;
-  data?: T1[];
+  data?: ICategory[];
   parentPath?: string;
-  setData: Dispatch<SetStateAction<T1[] | undefined>>;
+  setData: Dispatch<SetStateAction<ICategory[] | undefined>>;
 }) {
-  const [parentData, setParentData] = useState<T2[] | undefined>();
-  useEffect(() => {
-    if (parentPath) {
-      fetch(parentPath)
-        .then((res) => res.json())
-        .then((res) => {
-          setParentData(res);
-        });
-    }
-  }, [parentPath]);
+
 
   
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
@@ -52,12 +28,9 @@ export default function TableHeader<
       setData(data);
     } else {
       const result = data.filter((item) => {
-        if (typeof item[keyName] === "string") {
-          const string = vietnameseToAscii(String(item[keyName]));
-          const stringNotSigned = vietnameseToAscii(inputValue);
-          return string.includes(stringNotSigned);
-        }
-        return false;
+        const string = vietnameseToAscii(item.categoryName);
+        const stringNotSigned = vietnameseToAscii(inputValue);
+        return string.includes(stringNotSigned);
       });
       setData(result);
     }
@@ -122,10 +95,7 @@ export default function TableHeader<
         </div>
       </div>
       <AddModal
-        parentData={parentData}
-        keyName={keyName as keyof T1}
-        parentKeyId={parentKeyId as keyof T2}
-        parentKeyName={parentKeyName as keyof T2}
+
         toggle={showAddCategoryModal}
         setToggle={setShowAddCategoryModal}
       />

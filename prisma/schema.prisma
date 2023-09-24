@@ -7,44 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Categories {
-  category_id   String          @id @default(uuid())
-  category_name String          @unique
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
-  Subcategories Subcategories[]
+model Category {
+  categoryId       String     @id @default(uuid())
+  categoryName     String     @unique
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  parentCategoryId String?
+  parentCategory   Category?  @relation("SubCategories", fields: [parentCategoryId], references: [categoryId])
+  subCategories    Category[] @relation("SubCategories")
+  products         Product[]
 }
 
-model Subcategories {
-  subcategory_id   String             @id @default(uuid())
-  subcategory_name String             @unique
-  created_at       DateTime           @default(now())
-  updated_at       DateTime           @updatedAt
-  Subsubcategories Subsubcategories[]
-  Categories       Categories?        @relation(fields: [category_id], references: [category_id])
-  category_id      String?
-}
-
-model Subsubcategories {
-  subsubcategory_id   String         @id @default(uuid())
-  subsubcategory_name String         @unique
-  created_at          DateTime       @default(now())
-  updated_at          DateTime       @updatedAt
-  Products            Products[]
-  Subcategories       Subcategories? @relation(fields: [subcategory_id], references: [subcategory_id])
-  subcategory_id      String?
-}
-
-model Products {
-  product_id        String            @id @default(uuid())
-  product_name      String            @unique
-  description       String
-  price             Float
-  image             String
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
-  Subsubcategories  Subsubcategories? @relation(fields: [subsubcategory_id], references: [subsubcategory_id])
-  subsubcategory_id String?
+model Product {
+  productId     String    @id @default(uuid())
+  productName   String    @unique
+  description   String
+  price         Float
+  image         String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  stockQuantity Int
+  category      Category? @relation(fields: [categoryId], references: [categoryId])
+  categoryId    String?
 }
 
 enum Role {
@@ -52,13 +36,13 @@ enum Role {
   ADMIN
 }
 
-model Users {
-  user_id       String   @id @default(uuid())
-  email         String   @unique
-  full_name     String
-  password_hash String
-  phone_number  String?
-  role          Role     @default(USER)
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+model User {
+  userId      String   @id @default(uuid())
+  email       String   @unique
+  fullName    String
+  password    String
+  phoneNumber String?
+  role        Role     @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

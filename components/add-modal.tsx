@@ -3,52 +3,33 @@ import CategoryContext from "@/context/CategoryContext";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import Select from "./common/select";
 
-export default function AddModal<
-  T,
-  KId extends keyof T,
-  KName extends keyof T,
-  K
->({
-  keyName,
-  parentKeyId,
-  parentKeyName,
+export default function AddModal({
   toggle,
   setToggle,
-  parentData,
 }: {
-  parentKeyId?: KId;
-  parentKeyName?: KName;
-  keyName: K;
   toggle: boolean;
-  parentData?: T[];
   setToggle: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [name, setName] = useState("");
+  const [categoryName, setCategoryName] = useState<string>("");
 
-  const { mutate, parentId, getApiUrl, postApiUrl } =
-    useContext(CategoryContext);
-  const [selectedParentId, setSelectedParentId] = useState<string>(parentId);
+  const { mutate, categories } = useContext(CategoryContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload = parentData
-      ? {
-          [parentKeyId as string]: selectedParentId,
-          [keyName as string]: name,
-        }
-      : { [keyName as string]: name };
-    console.log(payload);
 
-    fetch(postApiUrl, {
+    fetch("/api/catgs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        parentCategoryId: e.currentTarget.parentId.value || null,
+        categoryName,
+      }),
     }).then((res) => {
       if (res.ok) {
-        mutate(getApiUrl);
-        setName("");
+        mutate("/api/catgs");
+        setCategoryName("");
         setToggle(false);
       }
     });
@@ -92,33 +73,25 @@ export default function AddModal<
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
-              {parentData && (
-                <Select
-                  value={selectedParentId}
-                  onChange={(e) => {
-                    setSelectedParentId(e.target.value);
-                  }}
-                  name="parentId"
-                >
-                  <option value="" disabled>
-                    Chọn ngành hàng
-                  </option>
-                  {parentData.map((item) => (
+              {categories && (
+                <Select name="parentId" defaultValue="">
+                  <option value="">Danh mục chính</option>
+                  {categories.map((category) => (
                     <option
-                      key={item[parentKeyId as KId] as string}
-                      value={item[parentKeyId as KId] as string}
+                      key={category.categoryId}
+                      value={category.categoryId}
                     >
-                      {item[parentKeyName as KName] as string}
+                      {category.categoryName}
                     </option>
                   ))}
                 </Select>
               )}
               <InputField
-                id="add-input"
-                name={parentKeyName as string}
+                id="categoryName"
+                name="categoryName"
                 label="Tên danh mục"
-                value={name}
-                onChange={(e) => setName(e.currentTarget.value)}
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.currentTarget.value)}
                 required
               />
 

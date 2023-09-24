@@ -87,22 +87,22 @@ export default function Page({}) {
             <div className="overflow-y-auto">
               <ul className="flex flex-col w-full gap-2">
                 {categories?.map((category) => (
-                  <li key={category.category_id}>
+                  <li key={category.categoryId}>
                     <input
-                      onChange={() => onCategoryChange(category.category_id)}
+                      onChange={() => onCategoryChange(category.categoryId)}
                       type="radio"
-                      id={category.category_id}
+                      id={category.categoryId}
                       name="category"
                       value={selectedCategories}
                       className="hidden peer"
                       required
                     />
                     <label
-                      htmlFor={category.category_id}
+                      htmlFor={category.categoryId}
                       className="inline-flex  items-center justify-between w-full p-2.5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
                     >
                       <div className="block">
-                        <div className="w-full">{category.category_name}</div>
+                        <div className="w-full">{category.categoryName}</div>
                       </div>
                       <svg
                         className="w-3.5 h-3.5"

@@ -3,6 +3,7 @@ import ActionModal from "@/components/action-modal";
 import ListGroup from "@/components/common/list-group";
 import TableHeader from "@/components/table-header";
 import CategoryContext from "@/context/CategoryContext";
+import { useSearchParams } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,25 +13,30 @@ export default function Page() {
     ICategory | undefined
   >();
   const [categories, setCategories] = useState<ICategory[] | undefined>();
-  const apiUrl = "/api/catgs";
-  const ref = useRef<ICategory[]>();
+  const refCategories = useRef<ICategory[]>();
+
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("id");
+
+  const apiUrl = categoryId ? `/api/catgs/${categoryId}` : "/api/catgs";
 
   useEffect(() => {
+    
     const fetchCategories = async () => {
       const res = await fetch(apiUrl);
       const data = await res.json();
       setCategories(data);
-      ref.current = data;
+      refCategories.current = data;
     };
     fetchCategories();
-  }, []);
+  }, [apiUrl]);
 
   const mutate = useCallback((apiUrl: string) => {
     fetch(apiUrl).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
           setCategories(data);
-          ref.current = data;
+          refCategories.current = data;
         });
       }
     });
@@ -38,10 +44,8 @@ export default function Page() {
 
   const contextValue = useMemo(
     () => ({
-      data:categories,
+      categories,
       mutate,
-      getApiUrl: apiUrl,
-      postApiUrl: "/api/catgs",
     }),
     [mutate, categories]
   );
@@ -51,22 +55,13 @@ export default function Page() {
       {categories && (
         <CategoryContext.Provider value={contextValue}>
           <div>
-            <TableHeader
-              keyName="category_name"
-              data={ref.current}
-              setData={setCategories}
-            />
+            <TableHeader data={refCategories.current} setData={setCategories} />
             <ListGroup
               data={categories}
-              keyName="category_name"
-              keyId="category_id"
               setItemSelected={setSelectedCategory}
               setShowActionModal={setShowCategoryActionModal}
             />
             <ActionModal
-              childPath="/dashboard/subcatgs?catgId="
-              keyId="category_id"
-              keyName="category_name"
               showModal={showCategoryActionModal}
               setShowModal={setShowCategoryActionModal}
               category={selectedCategory}

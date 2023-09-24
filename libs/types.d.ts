@@ -4,40 +4,20 @@ enum Role {
 }
 
 interface User {
-  user_id: string;
+  userId: string;
   email: string;
-  full_name: string;
-  password_hash: string;
-  phone_number: string | null;
+  fullName: string;
+  password: string;
+  phoneNumber: string | null;
   role: $Enums.Role;
   created_at: Date;
   updated_at: Date;
 }
 interface ICategory {
-  category_id: string;
-  category_name: string;
+  categoryId: string;
+  categoryName: string;
+  parentCategoryId: string | null;
   created_at: Date;
   updatedAt: Date;
-  _count: {
-    Subcategories: number;
-  };
-}
-
-interface ISubcategory {
-  subcategory_id: string;
-  subcategory_name: string;
-  category_id: string;
-  created_at: Date;
-  updatedAt: Date;
-  _count: {
-    Subsubcategories: number;
-  };
-}
-
-interface ISubSubcategory {
-  subsubcategory_id: string;
-  subsubcategory_name: string;
-  subcategory_id: string;
-  created_at: Date;
-  updatedAt: Date;
+  subCategories: ICategory[];
 }

@@ -12,7 +12,7 @@ model Order {
   userId       Int
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  user         Users          @relation(fields: [userId], references: [user_id])
+  user         Users          @relation(fields: [userId], references: [userId])
   OrderAddress OrderAddress[]
   OrderItem    OrderItem[]
   OrderPayment OrderPayment[]
@@ -37,7 +37,7 @@ model Cart {
   userId    Int
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  user      Users      @relation(fields: [userId], references: [user_id])
+  user      Users      @relation(fields: [userId], references: [userId])
   CartItem  CartItem[]
 }
 
@@ -58,7 +58,7 @@ model Address {
   address      String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  user         Users          @relation(fields: [userId], references: [user_id])
+  user         Users          @relation(fields: [userId], references: [userId])
   OrderAddress OrderAddress[]
 }
 
@@ -68,7 +68,7 @@ model Payment {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   OrderPayment OrderPayment[]
-  user         Users          @relation(fields: [userId], references: [user_id])
+  user         Users          @relation(fields: [userId], references: [userId])
   PaymentItem  PaymentItem[]
 }
 
@@ -91,7 +91,7 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   product   Products @relation(fields: [productId], references: [product_id])
-  user      Users    @relation(fields: [userId], references: [user_id])
+  user      Users    @relation(fields: [userId], references: [userId])
 }
 
 model Coupon {
@@ -110,7 +110,7 @@ model CouponUser {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   coupon    Coupon   @relation(fields: [couponId], references: [id])
-  user      Users    @relation(fields: [userId], references: [user_id])
+  user      Users    @relation(fields: [userId], references: [userId])
 }
 
 model Notification {
@@ -119,7 +119,7 @@ model Notification {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      Users    @relation(fields: [userId], references: [user_id])
+  user      Users    @relation(fields: [userId], references: [userId])
 }
 
 model OrderStatus {
@@ -161,8 +161,8 @@ model OrderItemStatus {
 }
 
 model Categories {
-  category_id   Int             @id(map: "CategoryGroup_pkey") @default(autoincrement())
-  category_name String          @unique(map: "CategoryGroup_name_key")
+  categoryId   Int             @id(map: "CategoryGroup_pkey") @default(autoincrement())
+  categoryName String          @unique(map: "CategoryGroup_name_key")
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Subcategories Subcategories[]
@@ -189,8 +189,8 @@ model Subcategories {
   subcategory_name String             @unique(map: "Category_name_key")
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  category_id      Int
-  Categories       Categories         @relation(fields: [category_id], references: [category_id], map: "Category_categoryGroupId_fkey")
+  categoryId      Int
+  Categories       Categories         @relation(fields: [categoryId], references: [categoryId], map: "Category_categoryGroupId_fkey")
   Subsubcategories Subsubcategories[]
 }
 
@@ -205,11 +205,11 @@ model Subsubcategories {
 }
 
 model Users {
-  user_id      String            @id(map: "User_pkey") @default(cuid())
+  userId      String            @id(map: "User_pkey") @default(cuid())
   email        String         @unique(map: "User_email_key")
-  full_name     String
+  fullName     String
   password     String
-  phone_number        String?
+  phoneNumber        String?
   role         String         @default("USER")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

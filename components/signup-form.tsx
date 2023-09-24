@@ -41,7 +41,7 @@ const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
-      full_name: "",
+      fullName: "",
       email: "",
       password: "",
     },
@@ -66,7 +66,7 @@ const SignUpForm = () => {
       });
     },
     validationSchema: Yup.object({
-      full_name: Yup.string().required("Tên không được để trống"),
+      fullName: Yup.string().required("Tên không được để trống"),
       email: Yup.string()
         .email("Địa chỉ email không hợp lệ")
         .required("Email không được để trống"),
@@ -81,8 +81,8 @@ const SignUpForm = () => {
       <Form className="space-y-4 md:space-y-6 flex flex-col">
         <TextField
           label="Tên đầy đủ"
-          id="full_name"
-          name="full_name"
+          id="fullName"
+          name="fullName"
           type="text"
         />
         <TextField label="Email" id="email" name="email" type="text" />

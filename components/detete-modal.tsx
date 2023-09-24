@@ -2,33 +2,29 @@ import CategoryContext from "@/context/CategoryContext";
 import { Dispatch, SetStateAction, useContext } from "react";
 import Button from "./common/button";
 
-export default function DeleteModal<T, K extends keyof T, N extends keyof T>({
-  keyId,
-  keyName,
+export default function DeleteModal({
   showModal,
   setShowModal,
   category,
 }: {
-  keyId: K;
-  keyName: N;
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: T;
+  category?: ICategory;
 }) {
-  const { mutate, getApiUrl, postApiUrl } = useContext(CategoryContext);
+  const { mutate } = useContext(CategoryContext);
   const handleDelete = () => {
-    fetch(postApiUrl, {
+    fetch("/api/catgs", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        [keyId]: category?.[keyId],
+        categoryId: category?.categoryId,
       }),
     }).then((res) => {
       if (res.ok) {
         setShowModal(false);
-        mutate(getApiUrl);
+        mutate("/api/catgs");
       }
     });
   };
@@ -70,23 +66,19 @@ export default function DeleteModal<T, K extends keyof T, N extends keyof T>({
             Bạn có chắc chắn muốn xóa danh mục này?
           </p>
           <div className="mb-4 font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white px-4 py-3.5">
-            {category?.[keyName] as string}
+            {category?.categoryName}
           </div>
           <div className="flex justify-center items-center space-x-4">
             <button
               onClick={() => setShowModal(false)}
               type="button"
               className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-              >
+            >
               Huỷ
             </button>
-              <Button
-              color="danger"
-              onClick={handleDelete}
-              >
-  
+            <Button color="danger" onClick={handleDelete}>
               Xác nhận xóa
-              </Button>
+            </Button>
           </div>
         </div>
       </div>

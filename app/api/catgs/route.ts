@@ -2,10 +2,10 @@ import prisma from "@/libs/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: Request) {
-  const { category_name } = await req.json();
-  const exists = await prisma.categories.findUnique({
+  const { categoryName, parentCategoryId } = await req.json();
+  const exists = await prisma.category.findUnique({
     where: {
-      category_name,
+      categoryName,
     },
   });
   if (exists) {
@@ -14,73 +14,47 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   } else {
-    const categories = await prisma.categories.create({
+    const category = await prisma.category.create({
       data: {
-        category_name,
+        categoryName,
+        parentCategoryId,
       },
     });
-    return NextResponse.json({ categories }, { status: 201 });
+    return NextResponse.json({ category }, { status: 201 });
   }
 }
 
 export async function GET(req: NextRequest) {
-  const query = req.nextUrl.searchParams.get("search");
-
-  if (query) {
-    const categories = await prisma.categories.findMany({
-      where: {
-        category_name: {
-          contains: query,
-        },
-      },
-      orderBy: {
-        category_name: "asc",
-      },
-      include: {
-        _count: {
-          select: {
-            Subcategories: true,
-          }, // Count of Subcategories
-        },
-      },
-    });
-    return NextResponse.json(categories);
-  } else {
-    const categories = await prisma.categories.findMany({
-      orderBy: {
-        category_name: "asc",
-      },
-      include: {
-        _count: {
-          select: {
-            Subcategories: true,
-          }, // Count of Subcategories
-        },
-      },
-    });
-    return NextResponse.json(categories);
-  }
+  const category = await prisma.category.findMany({
+    orderBy: {
+      categoryName: "asc",
+    },
+    where: {
+      parentCategoryId: null,
+    },
+  });
+  return NextResponse.json(category);
 }
 
 export async function DELETE(req: Request) {
-  const { category_id } = await req.json();
-  const categories = await prisma.categories.delete({
+  const { categoryId } = await req.json();
+  const category = await prisma.category.delete({
     where: {
-      category_id,
+      categoryId,
     },
   });
-  return NextResponse.json({ categories }, { status: 200 });
+  return NextResponse.json({ category }, { status: 200 });
 }
 
 export async function PUT(req: Request) {
-  const { category_id, category_name } = await req.json();
-  const categories = await prisma.categories.update({
+  const { categoryId, categoryName } = await req.json();
+  const category = await prisma.category.update({
     where: {
-      category_id,
+      categoryId,
     },
     data: {
-      category_name,
+      categoryName,
     },
   });
-  return NextResponse.json({ categories }, { status: 200 });
+  return NextResponse.json({ category }, { status: 200 });
 }

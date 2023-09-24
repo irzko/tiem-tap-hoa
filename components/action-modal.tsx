@@ -1,27 +1,17 @@
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import DeleteModal from "./detete-modal";
 import RenameModal from "./rename-modal";
 import Button from "./common/button";
 import Link from "next/link";
 
-export default function ActionModal<
-  T,
-  K extends keyof T,
-  N extends keyof T
->({
+export default function ActionModal({
   showModal,
-  keyName,
-  keyId,
   setShowModal,
   category,
-  childPath,
 }: {
   showModal: boolean;
+  category?: ICategory;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: T;
-  keyName: N;
-  keyId: K;
-  childPath?: string;
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -39,7 +29,7 @@ export default function ActionModal<
           <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {category?.[keyName] as ReactNode}
+                {category?.categoryName}
               </h3>
               <button
                 onClick={() => setShowModal(!showModal)}
@@ -115,10 +105,7 @@ export default function ActionModal<
               </button>
             </div>
             <div className="mt-6">
-              <Link
-                className="w-full flex flex-col "
-                href={`${childPath}${category?.[keyId]}`}
-              >
+              <Link className="w-full flex flex-col " href={`#`}>
                 <Button>Xem danh mục con</Button>
               </Link>
             </div>
@@ -126,15 +113,11 @@ export default function ActionModal<
         </div>
       </div>
       <DeleteModal
-        keyName={keyName}
-        keyId={keyId}
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         category={category}
       />
       <RenameModal
-        keyName={keyName}
-        keyId={keyId}
         showModal={showRenameModal}
         setShowModal={setShowRenameModal}
         category={category}
