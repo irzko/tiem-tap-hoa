@@ -8,14 +8,12 @@ export default function IdButton() {
   const [showDropdown, setShowDropdown] = useState(false);
   useEffect(() => {
     function handleMobileTapInsideMain(event: MouseEvent) {
-      const main = document.querySelector("main");
+      const main = document.querySelector("body");
       const isClickInsideMain = main?.contains(event.target as Node);
-
       if (isClickInsideMain) {
         setShowDropdown(false);
       }
     }
-
     document.addEventListener("mousedown", handleMobileTapInsideMain);
     return () => {
       document.removeEventListener("mousedown", handleMobileTapInsideMain);
@@ -89,7 +87,7 @@ export default function IdButton() {
                 </li>
                 <li>
                   <button
-                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                     role="menuitem"
                     onClick={() => signOut()}
                   >

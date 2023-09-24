@@ -65,7 +65,7 @@ export default function TableHeader<
 
   return (
     <div>
-      <div className="relative bg-white border-b dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-t-lg">
+      <div className="relative bg-white border dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-t-lg">
         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
           <div className="w-full md:w-1/2">
             <form className="flex items-center">

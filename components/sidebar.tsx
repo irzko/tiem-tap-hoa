@@ -68,14 +68,14 @@ export default function Sidebar() {
                   </svg>
                 }
               >
-                <ul>
-                  <li className="text-gray-500 dark:text-gray-400 mb-4">
+                <ul className="mt-2 space-y-4">
+                  <li className="text-gray-500 dark:text-gray-400">
                     <Link href="#">Tất Cả Sản Phẩm</Link>
                   </li>
-                  <li className="text-gray-500 dark:text-gray-400 mb-4">
+                  <li className="text-gray-500 dark:text-gray-400">
                     <Link href="/dashboard/product/new">Thêm Sản Phẩm</Link>
                   </li>
-                  <li className="text-gray-500 dark:text-gray-400 mb-4">
+                  <li className="text-gray-500 dark:text-gray-400">
                     <Link href="/dashboard/catgs">
                       Quản Lý Danh Mục Sản Phẩm
                     </Link>

@@ -1,3 +1,18 @@
+enum Role {
+  USER,
+  ADMIN,
+}
+
+interface User {
+  user_id: string;
+  email: string;
+  full_name: string;
+  password_hash: string;
+  phone_number: string | null;
+  role: $Enums.Role;
+  created_at: Date;
+  updated_at: Date;
+}
 interface ICategory {
   category_id: string;
   category_name: string;
@@ -8,7 +23,7 @@ interface ICategory {
   };
 }
 
-interface ISubSubcategory {
+interface ISubcategory {
   subcategory_id: string;
   subcategory_name: string;
   category_id: string;

@@ -9,12 +9,12 @@ import CategoryContext from "@/context/CategoryContext";
 export default function Page() {
   const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState<
-    ISubSubcategory | undefined
+    ISubcategory | undefined
   >();
   const [subcategories, setSubcategories] = useState<
-    ISubSubcategory[] | undefined
+    ISubcategory[] | undefined
   >();
-  const refSubcategories = useRef<ISubSubcategory[]>();
+  const refSubcategories = useRef<ISubcategory[]>();
   const searchParams = useSearchParams();
   const catgId = searchParams.get("catgId");
 

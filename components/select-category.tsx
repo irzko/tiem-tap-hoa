@@ -1,19 +1,25 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import useSWR, { Fetcher } from "swr";
+import Button from "./common/button";
 
 const categoriesFetcher: Fetcher<ICategory[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
-export default function Page({}) {
+export default function SelectCategory({
+  toggle,
+  setToggle,
+  setCatg,
+}: {
+  toggle: boolean;
+  setToggle: Dispatch<SetStateAction<boolean>>;
+  setCatg: Dispatch<SetStateAction<ISubSubcategory | undefined>>;
+}) {
   const [selectedCategories, setSelectedCategories] = useState<string>("");
   const [selectedSubcategories, setSelectedSubcategories] =
     useState<string>("");
   const [selectedSubSubcategories, setSelectedSubSubcategories] =
-    useState<string>("");
-  // useEffect(() => {
-
-  // },[])
+    useState<ISubSubcategory>();
 
   const [subcategories, setSubcategories] = useState<ISubcategory[]>([]);
   const [subSubcategories, setSubSubcategories] = useState<ISubSubcategory[]>(
@@ -26,7 +32,7 @@ export default function Page({}) {
     revalidateOnReconnect: false,
   });
 
-  const onCategoryChange = (id: string) => {
+  const handleCategoryChange = (id: string) => {
     setSelectedCategories(id);
     setSubcategories([]);
     fetch(`/api/catgs/${id}/subcatgs`)
@@ -36,7 +42,7 @@ export default function Page({}) {
       });
   };
 
-  const onSubcategoryChange = (id: string) => {
+  const handleSubcategoryChange = (id: string) => {
     setSelectedSubcategories(id);
     setSubSubcategories([]);
     fetch(`/api/subcatgs/${id}/sub-subcatgs`)
@@ -46,23 +52,31 @@ export default function Page({}) {
       });
   };
 
-  const onSubSubategoryChange = (id: string) => {
-    setSelectedSubSubcategories(id);
+  const handleSubSubcategoryChange = (catg: ISubSubcategory) => {
+    setSelectedSubSubcategories(catg);
+  };
+
+  const handleClick = () => {
+    setCatg(selectedSubSubcategories);
+    setToggle(false);
   };
 
   return (
     <div
       tabIndex={-1}
       aria-hidden="true"
-      className="overflow-y-auto bg-gray-900/80 flex overflow-x-hidden fixed z-50 justify-center items-center w-full inset-0 h-modal md:h-full"
+      className={`overflow-y-auto bg-gray-900/80 overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal h-full ${
+        toggle ? "flex" : "hidden"
+      }`}
     >
       <div className="relative p-4 w-full max-w-5xl h-full md:h-auto">
         <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
           <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Update Product
+              Chọn danh mục
             </h3>
             <button
+              onClick={() => setToggle(false)}
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
               data-modal-toggle="updateProductModal"
@@ -89,7 +103,9 @@ export default function Page({}) {
                 {categories?.map((category) => (
                   <li key={category.category_id}>
                     <input
-                      onChange={() => onCategoryChange(category.category_id)}
+                      onChange={() =>
+                        handleCategoryChange(category.category_id)
+                      }
                       type="radio"
                       id={category.category_id}
                       name="category"
@@ -130,7 +146,7 @@ export default function Page({}) {
                   <li key={subcategory.subcategory_id}>
                     <input
                       onChange={() =>
-                        onSubcategoryChange(subcategory.subcategory_id)
+                        handleSubcategoryChange(subcategory.subcategory_id)
                       }
                       type="radio"
                       id={subcategory.subcategory_id}
@@ -174,12 +190,12 @@ export default function Page({}) {
                   <li key={subSubcategory.subsubcategory_id}>
                     <input
                       onChange={() =>
-                        onSubSubategoryChange(subSubcategory.subsubcategory_id)
+                        handleSubSubcategoryChange(subSubcategory)
                       }
                       type="radio"
                       id={subSubcategory.subsubcategory_id}
-                      name="subcategory"
-                      value={selectedSubcategories}
+                      name="subsubcategory"
+                      value={selectedSubSubcategories?.subsubcategory_id}
                       className="hidden peer"
                       required
                     />
@@ -212,6 +228,11 @@ export default function Page({}) {
                 ))}
               </ul>
             </div>
+          </div>
+          <div className="flex items-center justify-end">
+            <Button type="button" onClick={handleClick}>
+              Xác nhận
+            </Button>
           </div>
         </div>
       </div>

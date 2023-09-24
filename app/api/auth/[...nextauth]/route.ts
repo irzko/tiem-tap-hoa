@@ -5,11 +5,13 @@ import { compare } from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      // @ts-ignore
       async authorize(credentials) {
         const { email, password } = credentials ?? {};
         if (!email || !password) {

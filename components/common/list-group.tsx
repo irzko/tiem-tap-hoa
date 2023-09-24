@@ -16,15 +16,11 @@ export default function ListGroup<T, K extends keyof T, N extends keyof T>({
       {data?.map((item: T) => (
         <li
           key={item[keyId] as string}
-          className="flex w-full items-center border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+          className="flex w-full items-center  border-gray-200 cursor-pointer hover:bg-gray-100 border-b hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
         >
           <button
             type="button"
-            onClick={() => {
-              setItemSelected(item);
-              setShowActionModal(true);
-            }}
-            className="w-full flex justify-between items-center px-4 py-3.5 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+            className="w-full flex justify-between items-center px-4 py-3.5 font-medium text-left"
           >
             <span>
               {item[keyName] as string}
@@ -32,6 +28,14 @@ export default function ListGroup<T, K extends keyof T, N extends keyof T>({
             {subcategory._count.Subsubcategories}
           </span> */}
             </span>
+          </button>
+          <button
+            onClick={() => {
+              setItemSelected(item);
+              setShowActionModal(true);
+            }}
+            className="px-4 py-3.5"
+          >
             <svg
               className="w-3.5 h-3.5"
               aria-hidden="true"
