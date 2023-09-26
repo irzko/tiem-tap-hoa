@@ -32,6 +32,11 @@ export async function GET(req: NextRequest) {
     where: {
       parentCategoryId: null,
     },
+    include: {
+      _count: {
+        select: { subCategories: true },
+      },
+    },
   });
   return NextResponse.json(category);
 }

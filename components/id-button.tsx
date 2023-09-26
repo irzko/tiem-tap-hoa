@@ -1,6 +1,6 @@
 "use client";
 import { useSession, signOut } from "next-auth/react";
-import Avatar from "./avatar";
+import Avatar from "./common/avatar";
 import { useEffect, useState } from "react";
 export default function IdButton() {
   const { data: session } = useSession();

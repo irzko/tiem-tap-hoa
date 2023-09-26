@@ -10,6 +10,11 @@ export async function GET(
     where: {
       parentCategoryId: catgId,
     },
+    include: {
+      _count: {
+        select: { subCategories: true },
+      },
+    },
   });
   return NextResponse.json(category);
 }
