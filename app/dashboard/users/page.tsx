@@ -1,6 +1,6 @@
 import prisma from "@/libs/prisma";
 export default async function Users() {
-  const users = await prisma.user.findMany();
+  const user = await prisma.user.findMany();
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

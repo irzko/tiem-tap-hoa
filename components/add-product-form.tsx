@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from "react";
 import InputField from "./common/input-field";
 import SelectCategory from "./select-category";
 import TextArea from "./common/textarea";
-import SelectImage from "./slelect-image";
+import SelectImage from "./select-image";
 import * as Yup from "yup";
 import { Form, FormikProvider, useField, useFormik } from "formik";
 import Button from "./common/button";
@@ -130,7 +130,7 @@ const AddProductForm = () => {
         })
       );
 
-      fetch("/api/product", {
+      fetch("/api/products", {
         method: "POST",
         body: formData,
       })
