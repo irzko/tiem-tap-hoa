@@ -1,4 +1,4 @@
-import Spinner from "@/components/common/spinner";
+import Spinner from "@/components/ui/spinner";
 import React from "react";
 
 function Loading() {

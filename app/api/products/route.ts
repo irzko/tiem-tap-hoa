@@ -41,7 +41,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      category: {
+        select: {
+          categoryName: true,
+        },
+      }
+    },
+  });
 
   return NextResponse.json(products);
 }

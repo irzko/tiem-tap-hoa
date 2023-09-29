@@ -1,6 +1,6 @@
 import { useSidebarContext } from "@/context/SidebarContext";
 import Link from "next/link";
-import Accordion from "./common/accordion";
+import Accordion from "./accordion";
 export default function Sidebar() {
   const { isOpenOnSmallScreens: isSidebarOpenOnSmallScreens } =
     useSidebarContext();
@@ -70,13 +70,13 @@ export default function Sidebar() {
               >
                 <ul className="mt-2 space-y-4">
                   <li className="text-gray-500 dark:text-gray-400">
-                    <Link href="/dashboard/products">Tất Cả Sản Phẩm</Link>
+                    <Link href="/dashboard/product">Tất Cả Sản Phẩm</Link>
                   </li>
                   <li className="text-gray-500 dark:text-gray-400">
-                    <Link href="/dashboard/products/new">Thêm Sản Phẩm</Link>
+                    <Link href="/dashboard/product/new">Thêm Sản Phẩm</Link>
                   </li>
                   <li className="text-gray-500 dark:text-gray-400">
-                    <Link href="/dashboard/catgs">
+                    <Link href="/dashboard/category">
                       Quản Lý Danh Mục Sản Phẩm
                     </Link>
                   </li>

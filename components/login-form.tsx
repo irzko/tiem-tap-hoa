@@ -4,9 +4,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Spinner from "./common/spinner";
-import InputField from "./common/input-field";
-import Button from "./common/button";
+import Spinner from "./ui/spinner";
+import InputField from "./ui/input-field";
+import Button from "./ui/button";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -78,7 +78,7 @@ export default function LoginForm() {
         </a>
       </div>
       <Button disabled={loading}>
-        {loading ? <Spinner fill="#fff"/> : <p>Đăng nhập</p>}
+        {loading ? <Spinner fill="#fff" /> : <p>Đăng nhập</p>}
       </Button>
       <p className="text-center text-sm text-gray-900 dark:text-white">
         Bạn chưa có tài khoản?&nbsp;

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { useSidebarContext } from "../context/SidebarContext";
-import IdButton from "./id-button";
+import { useSidebarContext } from "../../context/SidebarContext";
+import IdButton from "../id-button";
 
 export default function Navbar() {
   const { isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens } =

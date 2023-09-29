@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { useFormik, FormikProvider, Form, useField } from "formik";
 import * as Yup from "yup";
-import Spinner from "./common/spinner";
+import Spinner from "./ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import InputField from "./common/input-field";
-import Button from "./common/button";
+import InputField from "./ui/input-field";
+import Button from "./ui/button";
 
 const TextField = ({
   label,

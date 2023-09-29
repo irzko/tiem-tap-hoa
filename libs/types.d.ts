@@ -10,17 +10,17 @@ interface User {
   password: string;
   phoneNumber: string | null;
   role: $Enums.Role;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 interface ICategory {
   categoryId: string;
   categoryName: string;
   parentCategoryId: string | null;
-  created_at?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
   subCategories: ICategory[];
-  _count?: {
+  _count: {
     subCategories: number;
   };
 }
@@ -32,7 +32,8 @@ interface IProduct {
   stockQuantity: number;
   description: string;
   images: string[];
-  categoryId?: string;
-  created_at?: Date;
-  updated_at?: Date;
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  category: ICategory;
 }

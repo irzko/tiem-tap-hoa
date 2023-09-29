@@ -1,13 +1,13 @@
 "use client";
 import { ChangeEvent, useState } from "react";
-import InputField from "./common/input-field";
+import InputField from "../../ui/input-field";
 import SelectCategory from "./select-category";
-import TextArea from "./common/textarea";
+import TextArea from "../../ui/textarea";
 import SelectImage from "./select-image";
 import * as Yup from "yup";
 import { Form, FormikProvider, useField, useFormik } from "formik";
-import Button from "./common/button";
-import Spinner from "./common/spinner";
+import Button from "../../ui/button";
+import Spinner from "../../ui/spinner";
 
 const TextField = ({
   helpText,
@@ -66,11 +66,15 @@ const TextAreaField = ({
   );
 };
 
-const AddProductForm = () => {
-  const [selectedCategories, setSelectedCategories] = useState<ICategory>();
+const UpdateProductForm = ({ product }: { product?: IProduct }) => {
+  const [selectedCategories, setSelectedCategories] = useState<
+    ICategory | undefined
+  >(product?.category);
   const [toggle, setToggle] = useState<boolean>(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<string[]>(
+    product!.images!.map((image) => `/upload/` + image)
+  );
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,11 +111,11 @@ const AddProductForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      productName: "",
+      productName: product?.productName,
       // category: "",
-      description: "",
-      stockQuantity: 0,
-      price: "",
+      description: product?.description,
+      stockQuantity: product?.stockQuantity,
+      price: product?.price,
     },
     onSubmit: async (values) => {
       const formData = new FormData();
@@ -211,7 +215,7 @@ const AddProductForm = () => {
           <div className="col-span-5">
             <TextField
               name="category"
-              value={selectedCategories?.categoryName}
+              defaultValue={selectedCategories?.categoryName}
               onClick={() => setToggle(true)}
               id="category"
               placeholder="Chọn ngành hàng"
@@ -283,4 +287,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default UpdateProductForm;

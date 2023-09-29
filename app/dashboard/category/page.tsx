@@ -1,7 +1,7 @@
 "use client";
-import ActionModal from "@/components/action-modal";
-import ListGroup from "@/components/common/list-group";
-import TableHeader from "@/components/table-header";
+import ActionModal from "@/components/dashboard/category/action-modal";
+import ListGroupCategory from "@/components/dashboard/category/list-group-category";
+import TableHeader from "@/components/dashboard/category/table-header";
 import CategoryContext from "@/context/CategoryContext";
 import { useSearchParams } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
@@ -21,7 +21,6 @@ export default function Page() {
   const apiUrl = categoryId ? `/api/catgs/${categoryId}` : "/api/catgs";
 
   useEffect(() => {
-    
     const fetchCategories = async () => {
       const res = await fetch(apiUrl);
       const data = await res.json();
@@ -56,7 +55,7 @@ export default function Page() {
         <CategoryContext.Provider value={contextValue}>
           <div>
             <TableHeader data={refCategories.current} setData={setCategories} />
-            <ListGroup
+            <ListGroupCategory
               data={categories}
               setItemSelected={setSelectedCategory}
               setShowActionModal={setShowCategoryActionModal}

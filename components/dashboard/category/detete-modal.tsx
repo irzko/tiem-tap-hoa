@@ -1,6 +1,6 @@
 import CategoryContext from "@/context/CategoryContext";
 import { Dispatch, SetStateAction, useContext } from "react";
-import Button from "./common/button";
+import Button from "../../ui/button";
 
 export default function DeleteModal({
   showModal,

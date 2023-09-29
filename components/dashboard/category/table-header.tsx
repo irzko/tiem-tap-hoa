@@ -1,11 +1,6 @@
 import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from "react";
-import Button from "./common/button";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import Button from "../../ui/button";
 import AddModal from "./add-modal";
 
 export default function TableHeader({
@@ -16,9 +11,6 @@ export default function TableHeader({
   parentPath?: string;
   setData: Dispatch<SetStateAction<ICategory[] | undefined>>;
 }) {
-
-
-  
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -95,7 +87,6 @@ export default function TableHeader({
         </div>
       </div>
       <AddModal
-
         toggle={showAddCategoryModal}
         setToggle={setShowAddCategoryModal}
       />

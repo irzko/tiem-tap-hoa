@@ -1,21 +1,16 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import DeleteModal from "./detete-modal";
-import RenameModal from "./rename-modal";
-import Button from "./common/button";
+import { Dispatch, SetStateAction } from "react";
+import Button from "../../ui/button";
 import Link from "next/link";
 
-export default function ActionModal({
+export default function ProductActionModal({
   showModal,
   setShowModal,
-  category,
+  product,
 }: {
   showModal: boolean;
-  category?: ICategory;
+  product?: IProduct;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showRenameModal, setShowRenameModal] = useState(false);
-
   return (
     <>
       <div
@@ -29,7 +24,7 @@ export default function ActionModal({
           <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {category?.categoryName}
+                {product?.productName}
               </h3>
               <button
                 onClick={() => setShowModal(!showModal)}
@@ -49,15 +44,15 @@ export default function ActionModal({
                     clipRule="evenodd"
                   ></path>
                 </svg>
-                <span className="sr-only">Close modal</span>
+                <span className="sr-only">Đóng</span>
               </button>
             </div>
             <div className="font-medium text-gray-900 border dark:text-white dark:bg-gray-700 rounded-lg bg-white dark:border-gray-600 border-gray-200">
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setShowRenameModal(true);
-                }}
+              <Link
+                href={`/dashboard/product/edit/${product?.productId}`}
+                // onClick={() => {
+                //   setShowModal(false);
+                // }}
                 className="relative rounded-t-lg border-b inline-flex items-center w-full px-4 py-3.5 text-sm font-medium border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               >
                 <svg
@@ -75,13 +70,12 @@ export default function ActionModal({
                     d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279"
                   />
                 </svg>
-                Đổi tên danh mục
-              </button>
+                Chỉnh sửa sản phẩm
+              </Link>
 
               <button
                 type="button"
                 onClick={() => {
-                  setShowDeleteModal(true);
                   setShowModal(false);
                 }}
                 className="relative rounded-b-lg inline-flex items-center w-full px-4 py-3.5 text-sm font-medium border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
@@ -101,7 +95,7 @@ export default function ActionModal({
                     d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"
                   />
                 </svg>
-                Xoá danh mục
+                Xoá sản phẩm
               </button>
             </div>
             <div className="mt-6">
@@ -112,16 +106,6 @@ export default function ActionModal({
           </div>
         </div>
       </div>
-      <DeleteModal
-        showModal={showDeleteModal}
-        setShowModal={setShowDeleteModal}
-        category={category}
-      />
-      <RenameModal
-        showModal={showRenameModal}
-        setShowModal={setShowRenameModal}
-        category={category}
-      />
     </>
   );
 }

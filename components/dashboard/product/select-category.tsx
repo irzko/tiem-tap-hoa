@@ -1,6 +1,6 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Button from "./common/button";
+import Button from "../../ui/button";
 
 export default function SelectCategory({
   toggle,
@@ -38,7 +38,6 @@ export default function SelectCategory({
       setBreadCrumb((prev) => [...prev, category]);
     }
   };
-
 
   const handleClick = () => {
     setCatg(selectedCategories);
