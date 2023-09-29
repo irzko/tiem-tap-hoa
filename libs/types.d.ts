@@ -37,3 +37,13 @@ interface IProduct {
   updatedAt: Date;
   category: ICategory;
 }
+
+interface ICart {
+  cartId: string;
+  userId: string;
+  productId: string;
+  quantity: number;
+  createdAt: Date;
+  updatedAt: Date;
+  product: IProduct[];
+}

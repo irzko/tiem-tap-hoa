@@ -29,6 +29,7 @@ model Product {
   stockQuantity Int
   category      Category? @relation(fields: [categoryId], references: [categoryId])
   categoryId    String?
+  Cart          Cart[]
 }
 
 enum Role {
@@ -45,4 +46,16 @@ model User {
   role        Role     @default(USER)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  Cart        Cart[]
+}
+
+model Cart {
+  cartId    String   @id @default(uuid())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [userId])
+  productId String?
+  product   Product? @relation(fields: [productId], references: [productId])
 }

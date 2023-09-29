@@ -2,13 +2,13 @@
 import { useSession, signOut } from "next-auth/react";
 import Avatar from "./ui/avatar";
 import { useEffect, useState } from "react";
-export default function IdButton() {
+export default function DropdownUser() {
   const { data: session } = useSession();
 
   const [showDropdown, setShowDropdown] = useState(false);
   useEffect(() => {
     function handleMobileTapInsideMain(event: MouseEvent) {
-      const main = document.querySelector("body");
+      const main = document.querySelector("main");
       const isClickInsideMain = main?.contains(event.target as Node);
       if (isClickInsideMain) {
         setShowDropdown(false);
@@ -28,9 +28,8 @@ export default function IdButton() {
             <button
               type="button"
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              className="flex text-sm rounded-full focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
               aria-expanded="false"
-              data-dropdown-toggle="dropdown-user"
             >
               <span className="sr-only">Open user menu</span>
 

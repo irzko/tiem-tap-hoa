@@ -42,7 +42,9 @@ export default async function Users() {
               <td className="px-6 py-4">{user.email}</td>
               <td className="px-6 py-4">{user.phoneNumber}</td>
               {/* <td className="pl-20">{user.address}</td> */}
-              <td className="px-6 py-4">{user.created_at.toLocaleString()}</td>
+              <td className="px-6 py-4">
+                {user.createdAt.toLocaleString("vi-VN")}
+              </td>
             </tr>
           ))}
         </tbody>

@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
-import ToastContainer from "@/components/toast-container";
 
 const inter = Inter({
   variable: "--font-inter",
