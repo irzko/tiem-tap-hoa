@@ -27,9 +27,7 @@ export default function LoginForm() {
           if (error) {
             setLoading(false);
           } else {
-            setTimeout(() => {
-              router.push("/dashboard");
-            }, 1000);
+            router.push("/");
           }
         });
       }}

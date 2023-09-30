@@ -10,9 +10,12 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      // @ts-ignore
-      async authorize(credentials) {
-        const { email, password } = credentials ?? {};
+
+      async authorize(credentials, req): Promise<any> {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
         if (!email || !password) {
           throw new Error("Missing username or password");
         }
@@ -29,6 +32,29 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
+    async session({ session, token, user }) {
+      const prismaUser = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+      });
+      session.user.userId = prismaUser?.userId;
+      session.user.fullName = prismaUser?.fullName;
+
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

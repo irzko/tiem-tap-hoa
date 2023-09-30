@@ -1,4 +1,3 @@
-import Button from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 async function getData() {
@@ -23,7 +22,7 @@ export default async function Page() {
           <Link
             className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
             key={product.productId}
-            href={`/home/${product.categoryId}`}
+            href={`/item/${product.productId}`}
           >
             <div className="relative flex justify-center w-full aspect-square">
               <Image

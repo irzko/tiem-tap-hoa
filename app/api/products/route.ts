@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ message: "Tải lên thành công." });
+  return NextResponse.json({ message: "Tải lên thành công." }, { status: 201 });
 }
 
 export async function GET(req: NextRequest) {
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
         select: {
           categoryName: true,
         },
-      }
+      },
     },
   });
 

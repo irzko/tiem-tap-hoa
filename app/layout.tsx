@@ -1,7 +1,9 @@
 import "./globals.css";
+import 'react-toastify/dist/ReactToastify.min.css';
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
+import { ToastContainer, toast } from 'react-toastify';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,6 +35,7 @@ export default async function RootLayout({
     <html lang="vi">
       <body className={`${inter.variable} bg-white dark:bg-gray-900`}>
         <NextAuthProvider>{children}</NextAuthProvider>
+        <ToastContainer />
       </body>
     </html>
   );

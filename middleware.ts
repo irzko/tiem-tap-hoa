@@ -11,20 +11,15 @@ export default async function middleware(req: NextRequest) {
 
   if (!session) {
     if (pathname.startsWith("/dashboard")) {
-      return NextResponse.rewrite(new URL("/", req.url));
+      return NextResponse.rewrite(new URL("/login", req.url));
     }
-  } else {
-    if (pathname === "/login" || pathname === "/signup") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    } else if (pathname === "/") {
-      return NextResponse.rewrite(new URL("/dashboard", req.url));
-    }
+  } else if (pathname === "/login" || pathname === "/signup") {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (pathname.startsWith("/login")) {
-    return NextResponse.rewrite(new URL("/", req.url));
-  }
-
+  // if (pathname.startsWith("/login")) {
+  //   return NextResponse.rewrite(new URL("/", req.url));
+  // }
 
   // if (pathname.startsWith("/api")) {
   //   return NextResponse.next();

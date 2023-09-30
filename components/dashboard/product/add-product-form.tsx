@@ -138,7 +138,7 @@ const AddProductForm = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          router.push("/dashboard/product");
+          // router.push("/dashboard/product");
           setLoading(false);
         })
         .catch((err) => console.log(err));

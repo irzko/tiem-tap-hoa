@@ -45,5 +45,5 @@ interface ICart {
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
-  product: IProduct[];
+  product: IProduct;
 }
