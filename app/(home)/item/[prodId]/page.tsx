@@ -1,4 +1,4 @@
-import AddProductToCart from "@/components/add-product-to-cart";
+import AddProductToCart from "@/components/dashboard/product/add-product-to-cart";
 import Image from "next/image";
 async function getData(productId: string) {
   const res = await fetch(`${process.env.BASE_URL}/api/products/${productId}`, {

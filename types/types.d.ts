@@ -26,16 +26,16 @@ interface ICategory {
 }
 
 interface IProduct {
-  productId: string;
+  productId: ?string;
   productName: string;
   price: number;
   stockQuantity: number;
-  description: string;
-  images: string[];
-  categoryId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  category: ICategory;
+  description?: string;
+  images?: string[];
+  categoryId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  category?: ICategory;
 }
 
 interface ICart {

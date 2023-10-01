@@ -1,9 +1,12 @@
 import "./globals.css";
-import 'react-toastify/dist/ReactToastify.min.css';
+import "react-toastify/dist/ReactToastify.min.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
-import { ToastContainer, toast } from 'react-toastify';
+
+import { ToastContainer } from "react-toastify";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,10 +34,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="vi">
       <body className={`${inter.variable} bg-white dark:bg-gray-900`}>
-        <NextAuthProvider>{children}</NextAuthProvider>
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
         <ToastContainer />
       </body>
     </html>

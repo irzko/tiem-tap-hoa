@@ -1,5 +1,6 @@
 "use client";
 
+import AdjustProductQuantity from "@/components/adjust-product-quantity";
 import React from "react";
 import { toast } from "react-toastify";
 const notify = () => {
@@ -8,7 +9,7 @@ const notify = () => {
 export default function Page() {
   return (
     <div>
-      <button onClick={notify}>Make me a toast</button>
+      <AdjustProductQuantity />
     </div>
   );
 }

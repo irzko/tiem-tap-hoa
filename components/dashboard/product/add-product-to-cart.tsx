@@ -1,8 +1,9 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import Button from "./ui/button";
+import Button from "../../ui/button";
 import { toast } from "react-toastify";
+import { mutate } from "swr";
 
 interface Props {
   productId: string;
@@ -23,6 +24,7 @@ export default function AddProductToCart({ productId }: Props) {
         toast.success("Thêm vào giỏ hàng thành công", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
+        mutate(`/api/cart/count/${session?.user?.userId}`);
       }
     });
   };

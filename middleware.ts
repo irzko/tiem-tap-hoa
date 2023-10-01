@@ -8,6 +8,7 @@ export default async function middleware(req: NextRequest) {
     req,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  
 
   if (!session) {
     if (pathname.startsWith("/dashboard")) {
@@ -16,10 +17,6 @@ export default async function middleware(req: NextRequest) {
   } else if (pathname === "/login" || pathname === "/signup") {
     return NextResponse.redirect(new URL("/", req.url));
   }
-
-  // if (pathname.startsWith("/login")) {
-  //   return NextResponse.rewrite(new URL("/", req.url));
-  // }
 
   // if (pathname.startsWith("/api")) {
   //   return NextResponse.next();

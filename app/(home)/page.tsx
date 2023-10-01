@@ -34,7 +34,7 @@ export default async function Page() {
                 sizes="300px"
               />
             </div>
-            <div className="px-5 flex flex-col justify-between">
+            <div className="p-5 flex flex-col justify-between">
               <h5 className="mb-2 text-xl font-medium tracking-tight text-gray-900 dark:text-white">
                 {product.price.toLocaleString("vi-VN")}&nbsp;₫
               </h5>

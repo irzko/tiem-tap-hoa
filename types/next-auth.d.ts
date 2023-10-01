@@ -9,6 +9,7 @@ declare module "next-auth" {
       /** The user's postal address. */
       userId: string
       fullName: string
-    } & DefaultSession["user"]
+      email: string
+    }
   }
 }
