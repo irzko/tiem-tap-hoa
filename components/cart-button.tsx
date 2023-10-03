@@ -4,7 +4,10 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import useSWR, { Fetcher } from "swr";
 
-const cartNumberFetch: Fetcher<{ cart: number }> = async (url: string) => {
+const cartNumberFetch: Fetcher<{
+  cartNum: number;
+  sucsses: boolean;
+}> = async (url: string) => {
   const res = await fetch(url);
   const data = await res.json();
   return data;
@@ -44,9 +47,10 @@ const CartButton = () => {
           />
         </svg>
         <span className="sr-only">Cart</span>
-        {cartNumber && cartNumber.cart > 0 ? (
-          <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2.5 -right-2.5 dark:border-gray-900">
-            {cartNumber.cart}
+        {cartNumber && cartNumber.cartNum > 0 ? (
+          <div className="absolute inline-flex items-center justify-center p-0.5 leading-none px-2 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -translate-y-1/2 translate-x-1/2 left-auto top-0 right-0 dark:border-gray-900">
+            {cartNumber.cartNum}
+            {/* 1351 */}
           </div>
         ) : null}
       </button>

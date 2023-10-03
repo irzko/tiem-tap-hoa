@@ -8,7 +8,7 @@ export default function Page() {
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   useEffect(() => {
     const getProducts = async () => {
-      const res = await fetch("http://localhost:3000/api/products");
+      const res = await fetch("/api/products");
       const json = await res.json();
       setProducts(json);
     };
@@ -41,14 +41,14 @@ export default function Page() {
           <tbody>
             {products.map((product) => (
               <tr
-                key={product.categoryId}
+                key={product.productId}
                 className="border-b dark:border-gray-700"
               >
                 <th
                   scope="row"
                   className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {product.productName}&#34;
+                  {product.productName}
                 </th>
                 <td className="px-4 py-3">{product.category.categoryName}</td>
                 <td className="px-4 py-3">{product.stockQuantity}</td>

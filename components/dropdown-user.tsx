@@ -47,7 +47,7 @@ export default function DropdownUser() {
                   className="text-sm text-gray-900 dark:text-white"
                   role="none"
                 >
-                  {session.user?.name}
+                  {session.user?.fullName}
                 </p>
                 <p
                   className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"

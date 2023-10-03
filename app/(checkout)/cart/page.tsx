@@ -6,8 +6,7 @@ import useSWR, { Fetcher, mutate } from "swr";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/button";
-import { useContext, useState } from "react";
-import CartContext from "@/context/CartContext";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const cartFetcher: Fetcher<ICart[], string> = (url) =>
@@ -18,7 +17,6 @@ export default function Page() {
 
   const [itemsSelected, setItemsSelected] = useState<ICart[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const { carts: items, setCarts } = useContext(CartContext);
 
   const { data: carts } = useSWR(
     `/api/cart/${session?.user?.userId}`,
@@ -60,9 +58,7 @@ export default function Page() {
 
   const router = useRouter();
   const handleBuy = () => {
-    console.log(itemsSelected);
-
-    setCarts(itemsSelected);
+    localStorage.setItem("itemsSelected", JSON.stringify(itemsSelected));
     router.push("/checkout");
   };
 
@@ -112,10 +108,10 @@ export default function Page() {
                             />
                             <Link
                               href={`/item/${cart.productId}`}
-                              className="ml-2 flex items-center text-sm font-medium text-gray-900 dark:text-gray-300"
+                              className="ml-2 break-words flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
                             >
                               <Image
-                                src={`/upload/${cart.product.images[0]}`}
+                                src={`http://localhost:1337/${cart.product.images[0]}`}
                                 alt={cart.product.productName}
                                 width={80}
                                 height={80}

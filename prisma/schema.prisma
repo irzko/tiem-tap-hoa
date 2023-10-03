@@ -19,17 +19,19 @@ model Category {
 }
 
 model Product {
-  productId     String    @id @default(uuid())
-  productName   String    @unique
+  productId     String      @id @default(uuid())
+  productName   String      @unique
   description   String
   price         Float
-  images        String[]  @default([])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  images        String[]    @default([])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   stockQuantity Int
-  category      Category? @relation(fields: [categoryId], references: [categoryId])
+  category      Category?   @relation(fields: [categoryId], references: [categoryId])
   categoryId    String?
   Cart          Cart[]
+  OrderItem     OrderItem[]
+  Review        Review[]
 }
 
 enum Role {
@@ -38,15 +40,20 @@ enum Role {
 }
 
 model User {
-  userId      String   @id @default(uuid())
-  email       String   @unique
+  userId      String    @id @default(uuid())
+  email       String    @unique
   fullName    String
   password    String
   phoneNumber String?
-  role        Role     @default(USER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  role        Role      @default(USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   Cart        Cart[]
+  Order       Order[]
+  Address     Address[]
+  Payment     Payment[]
+  Review      Review[]
+  Coupon      Coupon[]
 }
 
 model Cart {
@@ -58,4 +65,76 @@ model Cart {
   user      User     @relation(fields: [userId], references: [userId])
   productId String
   product   Product  @relation(fields: [productId], references: [productId])
+}
+
+model Order {
+  orderId     String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String
+  user        User        @relation(fields: [userId], references: [userId])
+  orderItems  OrderItem[]
+  totalAmount Float
+  Address     Address[]
+  Payment     Payment[]
+  Coupon      Coupon[]
+}
+
+model OrderItem {
+  orderItemId String   @id @default(uuid())
+  quantity    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [orderId])
+  productId   String
+  product     Product  @relation(fields: [productId], references: [productId])
+}
+
+model Address {
+  addressId String   @id @default(uuid())
+  address   String
+  ward      String
+  district  String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [userId])
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [orderId])
+}
+
+model Payment {
+  paymentId   String   @id @default(uuid())
+  paymentType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [userId])
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [orderId])
+}
+
+model Review {
+  reviewId  String   @id @default(uuid())
+  review    String
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [userId])
+  productId String
+  product   Product  @relation(fields: [productId], references: [productId])
+}
+
+model Coupon {
+  couponId   String   @id @default(uuid())
+  couponCode String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [userId])
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [orderId])
 }

@@ -7,7 +7,13 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        "lg-light":
+          "0 10px 15px -3px hsla(0,0%,100%,.1),0 4px 6px -2px hsla(0,0%,100%,.05)",
+      },
+      
+    },
   },
   plugins: [],
 };

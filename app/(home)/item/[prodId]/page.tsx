@@ -17,10 +17,10 @@ export default async function Page({ params }: { params: { prodId: string } }) {
   const product: IProduct = await getData(prodId);
 
   return (
-    <div className="grid max-w-7xl sm:grid-cols-3">
+    <div className="grid max-w-7xl md:grid-cols-3 gap-2">
       <div className="flex justify-center w-full">
         <Image
-          src={`/upload/${product.images[0]}`}
+          src={`${process.env.IMAGE_URL}/${product.images[0]}`}
           alt={product.productName}
           priority
           width={300}
@@ -28,9 +28,11 @@ export default async function Page({ params }: { params: { prodId: string } }) {
         />
       </div>
       <div className="col-span-2">
-        <h2 className="text-2xl">{product.productName}</h2>
-        <div className="text-red-500">
-          {product.price.toLocaleString("vi-VN")}
+        <h5 className="text-xl line-clamp-2 break-words font-semibold tracking-tight text-gray-900 dark:text-white">
+          {product.productName}
+        </h5>
+        <div className="my-4 text-3xl font-bold text-gray-900 dark:text-white">
+          {product.price.toLocaleString("vi-VN")}&nbsp;₫
         </div>
         <AddProductToCart productId={product.productId} />
       </div>

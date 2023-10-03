@@ -13,7 +13,7 @@
     "@prisma/client": "latest",
     "bcryptjs": "latest",
     "formik": "latest",
-    "next": "latest",
+    "next": "^13.5.4",
     "next-auth": "latest",
     "react": "latest",
     "react-dom": "latest",

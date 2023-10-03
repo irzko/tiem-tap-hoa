@@ -2,14 +2,14 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  req: Request,
   { params }: { params: { userId: string } }
 ) {
   const { userId } = params;
-  const cart = await prisma.cart.count({
+  const result = await prisma.address.findMany({
     where: {
       userId,
     },
   });
-  return NextResponse.json({ cartNum: cart, sucsses: true }, { status: 200 });
+  return NextResponse.json(result, { status: 200 });
 }

@@ -49,8 +49,8 @@ export const authOptions: NextAuthOptions = {
           email: session.user.email,
         },
       });
-      session.user.userId = prismaUser?.userId;
-      session.user.fullName = prismaUser?.fullName;
+      session.user.userId = prismaUser?.userId as string;
+      session.user.fullName = prismaUser?.fullName as string;
 
       return session;
     },

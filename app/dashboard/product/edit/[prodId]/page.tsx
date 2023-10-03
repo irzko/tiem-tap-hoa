@@ -6,7 +6,6 @@ import useProduct from "@/hooks/useProduct";
 export default function Page({ params }: { params: { prodId: string } }) {
   const { prodId } = params;
   const { data: product, isLoading } = useProduct(prodId);
-  console.log(isLoading);
 
   return (
     <>

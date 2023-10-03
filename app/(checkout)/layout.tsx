@@ -1,22 +1,20 @@
-"use client";
-import CartButton from "@/components/cart-button";
+import DropdownUser from "@/components/dropdown-user";
+import Logo from "@/components/ui/logo";
 import Navbar from "@/components/ui/navbar";
-import CartContext from "@/context/CartContext";
-import { useState } from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [carts, setCarts] = useState<ICart[]>([]);
   return (
     <>
       <Navbar>
-        <div className="w-full flex justify-end mx-2">
-          <CartButton />
+        <div className="flex items-center justify-start">
+          <Logo />
+        </div>
+        <div className="flex items-center">
+          <DropdownUser />
         </div>
       </Navbar>
       <main>
-        <CartContext.Provider value={{ carts, setCarts }}>
-          <div className="p-4 mt-14">{children}</div>
-        </CartContext.Provider>
+        <div className="p-4 mt-14">{children}</div>
       </main>
     </>
   );

@@ -120,28 +120,41 @@ const AddProductForm = () => {
       const formData = new FormData();
       if (selectedFiles) {
         for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append("images", selectedFiles[i]);
+          formData.append("file", selectedFiles[i]);
         }
       }
 
-      formData.append(
-        "product",
-        JSON.stringify({
-          categoryId: selectedCategories?.categoryId,
-          ...values,
-        })
-      );
+      // formData.append(
+      //   "product",
+      //   JSON.stringify({
+      //     categoryId: selectedCategories?.categoryId,
+      //     ...values,
+      //   })
+      // );
 
-      fetch("/api/products", {
+      const imgRes = await fetch(`http://localhost:1337/upload`, {
         method: "POST",
         body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // router.push("/dashboard/product");
-          setLoading(false);
+      });
+
+      const imgData = await imgRes.json();
+      console.log(imgData);
+      if (imgData.sucsses) {
+        fetch("/api/products", {
+          method: "POST",
+          body: JSON.stringify({
+            images: imgData.file,
+            categoryId: selectedCategories?.categoryId,
+            ...values,
+          }),
         })
-        .catch((err) => console.log(err));
+          .then((res) => res.json())
+          .then((data) => {
+            router.push("/dashboard/product");
+            setLoading(false);
+          })
+          .catch((err) => console.log(err));
+      }
     },
     validationSchema: Yup.object({
       productName: Yup.string()
