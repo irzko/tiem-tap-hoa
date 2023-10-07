@@ -35,7 +35,6 @@ export default function Page() {
       method: "DELETE",
     }).then((res) => {
       if (res.ok) {
-        mutate(`/api/cart/count/${session?.user?.userId}`);
         mutate(`/api/cart/${session?.user?.userId}`);
       }
     });
@@ -58,8 +57,9 @@ export default function Page() {
 
   const router = useRouter();
   const handleBuy = () => {
-    localStorage.setItem("itemsSelected", JSON.stringify(itemsSelected));
-    router.push("/checkout");
+    router.push(
+      `/checkout/state=${itemsSelected.map((item) => item.cartId).toString()}`
+    );
   };
 
   return (

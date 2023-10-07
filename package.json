@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "latest",
-    "@prisma/client": "latest",
+    "@prisma/client": "^5.4.1",
     "bcryptjs": "latest",
     "formik": "latest",
     "next": "^13.5.4",
@@ -30,7 +30,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
-    "prisma": "latest",
+    "prisma": "^5.4.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

@@ -8,26 +8,49 @@ import { useSession } from "next-auth/react";
 
 const addressFetcher: Fetcher<IAddress[], string> = (url) =>
   fetch(url).then((res) => res.json());
+
+const cartFetcher: Fetcher<ICart[], string> = (url) =>
+  fetch(url).then((res) => res.json());
+
 export default function Page() {
   const { data: session } = useSession();
-  const [itemsSelected, setItemsSelected] = useState<ICart[]>([]);
+  // const [productsOrdered, setProductsOrdered] = useState<ICart[]>([]);
 
-  const { data: address } = useSWR(`/api/user/address/${session?.user.userId}`, addressFetcher);
 
-  useEffect(() => {
-    const localData = localStorage.getItem("itemsSelected");
-    if (localData) {
-      setItemsSelected(JSON.parse(localData));
+  const { data: address } = useSWR(
+    `/api/user/address/${session?.user.userId}`,
+    addressFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     }
-  }, []);
+  );
+
+  const { data: productsOrdered } = useSWR(`/api/checkout/`, cartFetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+
+  // useEffect(() => {
+  //   const localData = localStorage.getItem("itemsSelected");
+  //   if (localData) {
+  //     setItemsSelected(JSON.parse(localData));
+  //   }
+  // }, []);
 
   return (
     <div className="max-w-7xl mx-auto">
       <div>
+        <h5>Địa chỉ nhận hàng</h5>
+        <div></div>
+      </div>
+      <div>
         <h2>{session?.user.fullName}</h2>
       </div>
-      {itemsSelected ? (
-        itemsSelected.length > 0 ? (
+      {productsOrdered ? (
+        productsOrdered.length > 0 ? (
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -48,7 +71,7 @@ export default function Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {itemsSelected.map((cart) => (
+                  {productsOrdered.map((cart) => (
                     <tr
                       key={cart.cartId}
                       className="border-b dark:border-gray-700"

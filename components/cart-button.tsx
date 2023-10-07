@@ -19,7 +19,7 @@ const CartButton = () => {
     `/api/cart/count/${session?.user.userId}`,
     cartNumberFetch,
     {
-      revalidateIfStale: false,
+      // revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
