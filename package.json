@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "latest",
+    "@lexical/react": "^0.12.2",
     "@prisma/client": "^5.4.1",
     "bcryptjs": "latest",
     "formik": "latest",
+    "lexical": "^0.12.2",
     "next": "^13.5.4",
     "next-auth": "latest",
     "react": "latest",

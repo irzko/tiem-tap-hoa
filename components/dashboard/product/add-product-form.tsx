@@ -124,21 +124,12 @@ const AddProductForm = () => {
         }
       }
 
-      // formData.append(
-      //   "product",
-      //   JSON.stringify({
-      //     categoryId: selectedCategories?.categoryId,
-      //     ...values,
-      //   })
-      // );
-
       const imgRes = await fetch(`http://localhost:1337/upload`, {
         method: "POST",
         body: formData,
       });
 
       const imgData = await imgRes.json();
-      console.log(imgData);
       if (imgData.sucsses) {
         fetch("/api/products", {
           method: "POST",

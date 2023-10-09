@@ -2,6 +2,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Avatar from "./ui/avatar";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 export default function DropdownUser() {
   const { data: session } = useSession();
 
@@ -58,13 +59,12 @@ export default function DropdownUser() {
               </div>
               <ul className="py-1" role="none">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/dashboard"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
                   >
                     Dashboard
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a

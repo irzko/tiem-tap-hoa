@@ -47,7 +47,7 @@ export default function SelectCategory({
   return (
     <div
       tabIndex={-1}
-      aria-hidden="true"
+      // aria-hidden="true"
       className={`overflow-y-auto bg-gray-900/80 overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal h-full ${
         toggle ? "flex" : "hidden"
       }`}
@@ -62,7 +62,6 @@ export default function SelectCategory({
               onClick={() => setToggle(false)}
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-toggle="updateProductModal"
             >
               <svg
                 aria-hidden="true"
@@ -122,7 +121,6 @@ export default function SelectCategory({
                     name="category"
                     value={selectedCategories?.categoryId}
                     className="hidden peer"
-                    required
                   />
                   <label
                     htmlFor={category.categoryId}

@@ -3,13 +3,14 @@ import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
 import MenuButton from "@/components/menu-button";
 import DropdownUser from "@/components/dropdown-user";
+import SidebarItem from "@/components/ui/sidebar-item";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar>
         <div className="flex items-center justify-start">
-          <MenuButton>{/* <Sidebar /> */}</MenuButton>
+          <MenuButton><SidebarItem /></MenuButton>
           <Logo />
         </div>
         <div className="w-full flex justify-center mx-2">

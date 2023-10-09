@@ -1,20 +1,18 @@
-import DropdownUser from "@/components/dropdown-user";
-import MenuButton from "@/components/menu-button";
-import Logo from "@/components/ui/logo";
 import Navbar from "@/components/ui/navbar";
-import SidebarItem from "@/components/dashboard/sidebar-item";
+import CartButton from "@/components/cart-button";
+import Logo from "@/components/ui/logo";
+import MenuButton from "@/components/menu-button";
+import DropdownUser from "@/components/dropdown-user";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <>
       <Navbar>
         <div className="flex items-center justify-start">
-          <MenuButton>
-            <SidebarItem />
-          </MenuButton>
+          <MenuButton></MenuButton>
           <Logo />
         </div>
-        <div className="w-full flex justify-center mx-2">
+        {/* <div className="w-full flex justify-center mx-2">
           <form action="#" method="GET" className="hidden lg:block">
             <label htmlFor="topbar-search" className="sr-only">
               Search
@@ -45,14 +43,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               />
             </div>
           </form>
-        </div>
+        </div> */}
         <div className="flex items-center">
+          <span className="mx-2">
+            <CartButton />
+          </span>
           <DropdownUser />
         </div>
       </Navbar>
       <main>
-        <div className="p-4 mt-14 sm:ml-64">{children}</div>
+        <div className="p-4 sm:ml-64">
+          <div className="mt-14">{children}</div>
+        </div>
       </main>
-    </div>
+    </>
   );
 }

@@ -5,9 +5,7 @@ export async function POST(req: NextRequest) {
   const product = await req.json();
 
   await prisma.product.create({
-    data: {
-      ...product,
-    },
+    data: product,
   });
 
   return NextResponse.json({ message: "Tải lên thành công." }, { status: 201 });

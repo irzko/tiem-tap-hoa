@@ -56,10 +56,13 @@ export default function Page() {
   };
 
   const router = useRouter();
-  const handleBuy = () => {
-    router.push(
-      `/checkout/state=${itemsSelected.map((item) => item.cartId).toString()}`
+  const handleCheckout = () => {
+    sessionStorage.setItem(
+      "cart_store",
+      JSON.stringify(itemsSelected.map((item) => item.cartId))
     );
+
+    router.push(`/checkout`);
   };
 
   return (
@@ -160,7 +163,7 @@ export default function Page() {
               </div>
               <Button
                 disabled={itemsSelected.length > 0 ? false : true}
-                onClick={handleBuy}
+                onClick={handleCheckout}
               >
                 Mua Hàng
               </Button>

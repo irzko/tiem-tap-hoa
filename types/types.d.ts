@@ -58,3 +58,22 @@ interface IAddress {
   createdAt: Date;
   updatedAt: Date;
 }
+
+interface IWard {
+  wardId: string;
+  name: string;
+  districtId: string;
+}
+
+interface IDistrict {
+  districtId: string;
+  name: string;
+  cityId: string;
+  wards?: IWard[];
+}
+
+interface ICity {
+  cityId: string;
+  name: string;
+  districts?: IDistrict[];
+}
