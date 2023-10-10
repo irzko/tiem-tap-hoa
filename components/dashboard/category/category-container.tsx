@@ -1,34 +1,17 @@
 "use client";
-import ActionModal from "@/components/dashboard/category/action-modal";
-import ListGroupCategory from "@/components/dashboard/category/list-group-category";
-import TableHeader from "@/components/dashboard/category/table-header";
 import CategoryContext from "@/context/CategoryContext";
-import { useSearchParams } from "next/navigation";
-import React, { useCallback, useMemo } from "react";
-import { useEffect, useRef, useState } from "react";
+import TableHeader from "./table-header";
+import ListGroupCategory from "./list-group-category";
+import ActionModal from "./action-modal";
+import { useCallback, useMemo, useRef, useState } from "react";
 
-export default function Page() {
+export default function CategoryContainer({ data }: { data?: ICategory[] }) {
   const [showCategoryActionModal, setShowCategoryActionModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
     ICategory | undefined
   >();
-  const [categories, setCategories] = useState<ICategory[] | undefined>();
-  const refCategories = useRef<ICategory[]>();
-
-  const searchParams = useSearchParams();
-  const categoryId = searchParams.get("id");
-
-  const apiUrl = categoryId ? `/api/catgs/${categoryId}` : "/api/catgs";
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
-      setCategories(data);
-      refCategories.current = data;
-    };
-    fetchCategories();
-  }, [apiUrl]);
+  const refCategories = useRef<ICategory[]>(data || []);
+  const [categories, setCategories] = useState<ICategory[] | undefined>(data);
 
   const mutate = useCallback((apiUrl: string) => {
     fetch(apiUrl).then((res) => {
@@ -48,7 +31,6 @@ export default function Page() {
     }),
     [mutate, categories]
   );
-
   return (
     <>
       {categories && (

@@ -10,7 +10,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <Navbar>
         <div className="flex items-center justify-start">
-          <MenuButton><SidebarItem /></MenuButton>
+          <MenuButton>
+            <SidebarItem />
+          </MenuButton>
           <Logo />
         </div>
         <div className="w-full flex justify-center mx-2">

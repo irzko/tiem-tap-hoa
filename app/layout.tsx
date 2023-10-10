@@ -38,7 +38,7 @@ export default async function RootLayout({
 
   return (
     <html lang="vi">
-      <body className={`${inter.variable} bg-white dark:bg-gray-900`}>
+      <body className={`${inter.variable} bg-[#f9fafb] dark:bg-gray-900`}>
         <NextAuthProvider session={session}>{children}</NextAuthProvider>
         <ToastContainer />
       </body>

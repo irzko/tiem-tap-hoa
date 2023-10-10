@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Button from "../../ui/button";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
+import { useRouter } from "next/navigation";
 
 interface Props {
   productId: string;
@@ -11,12 +12,17 @@ interface Props {
 
 export default function AddProductToCart({ productId }: Props) {
   const { data: session } = useSession();
+  const router = useRouter();
   const handleClick = () => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
     fetch(`/api/cart`, {
       method: "POST",
       body: JSON.stringify({
         productId: productId,
-        userId: session?.user?.userId,
+        userId: session.user.userId,
         quantity: 1,
       }),
     }).then((res) => {

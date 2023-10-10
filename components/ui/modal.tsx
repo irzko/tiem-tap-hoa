@@ -63,12 +63,12 @@ function PortalImpl({
       role="dialog"
     >
       <div
-        className="p-4 min-h-[100px] min-w-[300px] max-w-2xl w-full flex  bg-white shadow dark:bg-gray-800 flex-grow-0 flex-col relative rounded-lg"
+        className="p-4 min-h-[100px] min-w-[300px] max-w-2xl flex  bg-white shadow dark:bg-gray-800 flex-grow-0 flex-col relative rounded-lg"
         tabIndex={-1}
         ref={modalRef}
       >
         <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-lg font-semibold mr-12 text-gray-900 dark:text-white">
             {title}
           </h2>
 

@@ -1,9 +1,21 @@
 import AddProductToCart from "@/components/dashboard/product/add-product-to-cart";
 import Image from "next/image";
+
+export async function generateStaticParams() {
+  const products: IProduct[] = await fetch(
+    `${process.env.BASE_URL}/api/products`,
+    {
+      cache: "no-store",
+    }
+  ).then((res) => res.json());
+
+  return products.map((product) => ({
+    prodId: product.productId,
+  }));
+}
+
 async function getData(productId: string) {
-  const res = await fetch(`${process.env.BASE_URL}/api/products/${productId}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(`${process.env.BASE_URL}/api/products/${productId}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -53,3 +65,5 @@ export default async function Page({ params }: { params: { prodId: string } }) {
     </div>
   );
 }
+
+export const dynamicParams = false;

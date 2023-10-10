@@ -9,7 +9,14 @@ export async function GET(
   const result = await prisma.address.findMany({
     where: {
       userId,
+
     },
+    include: {
+      ward: true,
+      district: true,
+      city: true,
+    },
+
   });
   return NextResponse.json(result, { status: 200 });
 }

@@ -16,7 +16,7 @@ export default async function SidebarItem() {
   const categoris: ICategory[] = await getData();
   return (
     <>
-      <div className="h-full px-3 pb-4 overflow-y-auto">
+      <div className="h-full p-3 overflow-y-auto">
         <ul className="space-y-2 font-medium">
           {categoris.map((catg) => (
             <li key={catg.categoryId}>

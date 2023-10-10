@@ -11,6 +11,7 @@ interface ButtonProps
 
 export default function Button({
   children,
+  className,
   color = "primary",
   disabled,
   ...props
@@ -43,7 +44,7 @@ export default function Button({
         disabled
           ? `cursor-not-allowed ${disabledButtonColor}`
           : `focus:ring-4 focus:outline-none ${buttonColor}`
-      }`}
+      } ${className}}`}
     >
       {children}
     </button>

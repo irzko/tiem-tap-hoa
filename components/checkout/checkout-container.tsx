@@ -2,48 +2,21 @@
 import Loading from "@/components/loading";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import useSWR, { Fetcher } from "swr";
-import { useSession } from "next-auth/react";
 import Button from "@/components/ui/button";
-import useModal from "@/hooks/useModal";
 import InputField from "@/components/ui/input-field";
+import useModal from "@/hooks/useModal";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
-const addressFetcher: Fetcher<IAddress[], string> = (url) =>
-  fetch(url).then((res) => res.json());
-
-export default function Page() {
+export default function CheckoutContainer({
+  address,
+}: {
+  address?: IAddress[];
+}) {
   const [modal, showModal] = useModal();
   const { data: session } = useSession();
   const [productsOrdered, setProductsOrdered] = useState<ICart[]>([]);
   const shippingFee = 30000;
-
-  const { data: address } = useSWR(
-    `/api/user/address/${session?.user.userId}`,
-    addressFetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
-
-  useEffect(() => {
-    const cartStore = sessionStorage.getItem("cart_store");
-    if (cartStore) {
-      fetch(`/api/checkout`, {
-        body: cartStore,
-        method: "POST",
-      }).then((res) => {
-        if (res.ok) {
-          res.json().then((data) => {
-            setProductsOrdered(data);
-          });
-        }
-      });
-    }
-  }, []);
-
   return (
     <div className="grid lg:grid-cols-12 gap-4 max-w-7xl mx-auto">
       <div className="col-auto lg:col-span-8">

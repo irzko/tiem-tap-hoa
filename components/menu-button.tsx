@@ -33,7 +33,7 @@ export default function MenuButton({
       </button>
       <aside
         id="logo-sidebar"
-        className={`fixed sm:top-14 top-0 z-40 space-y-2 left-0 w-full sm:w-64 h-screen transition-transform bg-white border border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 ${
+        className={`fixed sm:top-14 top-0 z-40 left-0 w-full sm:w-64 bottom-0 transition-transform bg-white border border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 ${
           isOpenOnSmallScreens ? "translate-x-0" : "-translate-x-full"
         }`}
       >

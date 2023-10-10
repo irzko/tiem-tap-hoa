@@ -30,7 +30,6 @@ export default async function Page() {
                 src={`${process.env.IMAGE_URL}/${product.images[0]}`}
                 alt=""
                 fill
-                priority
                 sizes="300px"
               />
             </div>

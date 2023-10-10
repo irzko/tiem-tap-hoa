@@ -38,11 +38,11 @@ export default function Page() {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y">
             {products.map((product) => (
               <tr
                 key={product.productId}
-                className="border-b dark:border-gray-700"
+                className="dark:border-gray-700"
               >
                 <th
                   scope="row"

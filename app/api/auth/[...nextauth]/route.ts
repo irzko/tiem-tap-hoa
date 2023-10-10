@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
         });
         // if user doesn't exist or password doesn't match
         if (!user || !(await compare(password, user.password))) {
-          throw new Error("Invalid username or password");
+          throw new Error("Email hoặc mật khẩu không đúng");
         }
         return user;
       },
@@ -37,11 +37,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      return url;
     },
     async session({ session, token, user }) {
       const prismaUser = await prisma.user.findUnique({

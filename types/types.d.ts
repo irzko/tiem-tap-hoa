@@ -51,10 +51,16 @@ interface ICart {
 interface IAddress {
   addressId: string;
   userId: string;
-  address: string;
-  city: string;
-  district: string;
-  ward: string;
+  fullName: string;
+  streetAddress: string;
+  phoneNumber: string;
+  cityId: string;
+  districtId: string;
+  wardId: string;
+  city: ICity;
+  district: IDistrict;
+  ward: IWard;
+  user: User;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Spinner from "./ui/spinner";
 import InputField from "./ui/input-field";
 import Button from "./ui/button";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -17,17 +18,16 @@ export default function LoginForm() {
       onSubmit={(e) => {
         e.preventDefault();
         setLoading(true);
-
         signIn("credentials", {
-          redirect: false,
+          // redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
-          // @ts-ignore
-        }).then(({ error }) => {
-          if (error) {
+        }).then((res) => {
+          if (res?.error) {
+            toast.error(res.error);
             setLoading(false);
           } else {
-            router.push("/");
+            toast.success("Đăng nhập thành công");
           }
         });
       }}

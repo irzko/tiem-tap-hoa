@@ -43,7 +43,7 @@ const InputField = ({
       <input
         {...props}
         id={id}
-        className={`block rounded-lg px-2.5 w-full text-sm border-2 appearance-none focus:outline-none focus:ring-0 peer ${
+        className={`block rounded-lg px-2.5 w-full text-sm border appearance-none focus:outline-none focus:ring-0 peer ${
           label ? "pb-1 pt-4" : "py-2.5"
         } ${inputColor}}`}
         placeholder={placeholder}

@@ -62,7 +62,7 @@ export default function SidebarItem() {
                   <Link href="/dashboard/product">Tất Cả Sản Phẩm</Link>
                 </li>
                 <li className="text-gray-500 dark:text-gray-400">
-                  <Link href="/dashboard/product/new">Thêm Sản Phẩm</Link>
+                  <Link href="/dashboard/product/add">Thêm Sản Phẩm</Link>
                 </li>
                 <li className="text-gray-500 dark:text-gray-400">
                   <Link href="/dashboard/category">

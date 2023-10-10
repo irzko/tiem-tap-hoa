@@ -1,14 +1,16 @@
 import { ChangeEvent, useState } from "react";
 import { mutate } from "swr";
 
-export default function AdjustProductQuantity({
+export default function AdjustProdQuantity({
   cartId,
   quantity,
   userId,
+  onRefresh,
 }: {
   cartId: string;
   quantity: number;
   userId?: string;
+  onRefresh: () => void;
 }) {
   const [quant, setQuant] = useState<string>(quantity.toString());
   const decrease = () => {
@@ -24,7 +26,8 @@ export default function AdjustProductQuantity({
         method: "PUT",
       }).then((res) => {
         if (res.ok) {
-          mutate(`/api/cart/${userId}`);
+          // mutate(`/api/cart/${userId}`);
+          onRefresh();
         }
       });
     }
@@ -47,7 +50,8 @@ export default function AdjustProductQuantity({
       method: "PUT",
     }).then((res) => {
       if (res.ok) {
-        mutate(`/api/cart/${userId}`);
+        // mutate(`/api/cart/${userId}`);
+        onRefresh();
       }
     });
   };
@@ -64,7 +68,8 @@ export default function AdjustProductQuantity({
         method: "PUT",
       }).then((res) => {
         if (res.ok) {
-          mutate(`/api/cart/${userId}`);
+          // mutate(`/api/cart/${userId}`);
+          onRefresh();
         }
       });
     }

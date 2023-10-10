@@ -19,37 +19,37 @@ model Category {
 }
 
 model Product {
-  productId     String         @id @default(uuid())
-  productName   String         @unique
+  productId     String        @id @default(uuid())
+  productName   String        @unique
   description   String
   price         Float
-  images        String[]       @default([])
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  images        String[]      @default([])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   stockQuantity Int
   categoryId    String?
   Cart          Cart[]
-  Interactions  Interactions[]
+  Interaction   Interaction[]
   OrderItem     OrderItem[]
-  category      Category?      @relation(fields: [categoryId], references: [categoryId])
+  category      Category?     @relation(fields: [categoryId], references: [categoryId])
   Review        Review[]
 }
 
 model User {
-  userId       String         @id @default(uuid())
-  email        String         @unique
-  fullName     String
-  password     String
-  role         Role           @default(USER)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Address      Address[]
-  Cart         Cart[]
-  Coupon       Coupon[]
-  Interactions Interactions[]
-  Order        Order[]
-  Payment      Payment[]
-  Review       Review[]
+  userId      String        @id @default(uuid())
+  email       String        @unique
+  fullName    String
+  password    String
+  role        Role          @default(USER)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Address     Address[]
+  Cart        Cart[]
+  Coupon      Coupon[]
+  Interaction Interaction[]
+  Order       Order[]
+  Payment     Payment[]
+  Review      Review[]
 }
 
 model Cart {
@@ -63,7 +63,7 @@ model Cart {
   user      User     @relation(fields: [userId], references: [userId])
 }
 
-model Interactions {
+model Interaction {
   interactId      String          @id @default(uuid())
   userId          String
   productId       String
@@ -96,32 +96,15 @@ model OrderItem {
   product     Product  @relation(fields: [productId], references: [productId])
 }
 
-model Address {
-  addressId     String   @id @default(uuid())
-  phoneNumber   String
-  fullName      String
-  streetAddress String
-  wardId        String
-  districtId    String
-  cityId        String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  userId        String
-  Ward          Ward     @relation(fields: [wardId], references: [wardId])
-  District      District @relation(fields: [districtId], references: [districtId])
-  City          City     @relation(fields: [cityId], references: [cityId])
-  user          User     @relation(fields: [userId], references: [userId])
-}
-
 model Payment {
-  paymentId   String   @id @default(uuid())
-  paymentType String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  paymentId   String      @id @default(uuid())
+  paymentType PaymentType
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   userId      String
   orderId     String
-  order       Order    @relation(fields: [orderId], references: [orderId])
-  user        User     @relation(fields: [userId], references: [userId])
+  order       Order       @relation(fields: [orderId], references: [orderId])
+  user        User        @relation(fields: [userId], references: [userId])
 }
 
 model Review {
@@ -167,8 +150,25 @@ model Ward {
   wardId     String    @id @default(uuid())
   name       String
   districtId String
-  district   District  @relation(fields: [districtId], references: [districtId])
   Address    Address[]
+  district   District  @relation(fields: [districtId], references: [districtId])
+}
+
+model Address {
+  addressId     String   @id @default(uuid())
+  phoneNumber   String
+  fullName      String
+  streetAddress String
+  wardId        String
+  districtId    String
+  cityId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+  user          User     @relation(fields: [userId], references: [userId])
+  ward          Ward     @relation(fields: [wardId], references: [wardId])
+  district      District @relation(fields: [districtId], references: [districtId])
+  city          City     @relation(fields: [cityId], references: [cityId])
 }
 
 enum Role {
@@ -180,4 +180,11 @@ enum InteractionType {
   VIEW
   PURCHASE
   REVIEW
+}
+
+enum PaymentType {
+  COD
+  PAYPAL
+  PAYMENT_CARD
+  MOMO
 }

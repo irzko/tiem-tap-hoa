@@ -13,16 +13,17 @@ export default function AddAddressForm() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     fetch("/api/user/address", {
       method: "POST",
       body: JSON.stringify({
         userId: session?.user?.userId,
         fullName: event.currentTarget.fullName.value,
         phoneNumber: event.currentTarget.phoneNumber.value,
-        address: event.currentTarget.streetAddress.value,
-        city: address?.[0].cityId,
-        district: address?.[1].districtId,
-        ward: address?.[2].districtId,
+        streetAddress: event.currentTarget.streetAddress.value,
+        cityId: address?.[0].cityId,
+        districtId: address?.[1].districtId,
+        wardId: address?.[2].wardId,
       }),
     })
       .then((res) => res.json())
