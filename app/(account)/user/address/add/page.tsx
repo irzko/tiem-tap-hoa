@@ -5,6 +5,7 @@ import { SelectAddress } from "@/components/user/select-address";
 import Button from "@/components/ui/button";
 import useModal from "@/hooks/useModal";
 import { useSession } from "next-auth/react";
+import ModalHeader from "@/components/ui/modal-header";
 
 export default function AddAddressForm() {
   const [address, setAddress] = useState<[ICity, IDistrict, IWard]>();
@@ -28,8 +29,9 @@ export default function AddAddressForm() {
     })
       .then((res) => res.json())
       .then((data) => {
-        showModal("Thêm địa chỉ thành công", (onClose) => (
+        showModal((onClose) => (
           <div>
+            <ModalHeader title="Thông báo" onClose={onClose} />
             <p>Thêm địa chỉ thành công</p>
             <button onClick={onClose}>Close</button>
           </div>
@@ -50,7 +52,7 @@ export default function AddAddressForm() {
         type="button"
         className="block rounded-lg px-2.5 w-full text-sm text-start border-2 appearance-none focus:outline-none focus:ring-0 py-2.5 bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         onClick={() =>
-          showModal("Thêm địa chỉ", (onClose) => {
+          showModal((onClose) => {
             return <SelectAddress onClose={onClose} setAddress={setAddress} />;
           })
         }

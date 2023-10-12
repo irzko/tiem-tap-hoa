@@ -20,7 +20,9 @@ export default async function middleware(req: NextRequest) {
   });
 
   if (!session) {
-    return NextResponse.rewrite(new URL("/login", req.url));
+    if (pathname !== "/login" && pathname !== "/signup") {
+      return NextResponse.rewrite(new URL("/login", req.url));
+    }
   } else if (pathname === "/login" || pathname === "/signup") {
     return NextResponse.redirect(new URL("/", req.url));
   }

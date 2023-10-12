@@ -5,18 +5,64 @@ import Image from "next/image";
 import Button from "@/components/ui/button";
 import InputField from "@/components/ui/input-field";
 import useModal from "@/hooks/useModal";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PaymentMethodModal from "./payment-method-modal";
+
+const paymentMethod = {
+  COD: "Thanh toán khi nhận hàng",
+  PAYPAL: "PayPal",
+  PAYMENT_CARD: "Thẻ ngân hàng",
+};
 
 export default function CheckoutContainer({
   address,
+  paymentMethods,
+  userId,
 }: {
-  address?: IAddress[];
+  address: IAddress[];
+  paymentMethods: IPaymentMethod[];
+  userId: string;
 }) {
   const [modal, showModal] = useModal();
-  const { data: session } = useSession();
   const [productsOrdered, setProductsOrdered] = useState<ICart[]>([]);
   const shippingFee = 30000;
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>();
+
+  useEffect(() => {
+    const cartStore = sessionStorage.getItem("cart_store");
+    if (cartStore) {
+      fetch(`/api/checkout`, {
+        body: cartStore,
+        method: "POST",
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
+            setProductsOrdered(data);
+          });
+        }
+      });
+    }
+  }, []);
+
+  const handleCheckout = () => {
+    const data = {
+      userId: userId,
+      address: address[0].addressId,
+      paymentMethod: selectedPaymentMethod,
+      shippingFee: shippingFee,
+      products: productsOrdered,
+    };
+    fetch(`/api/orders`, {
+      body: JSON.stringify(data),
+      method: "POST",
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          console.log(data);
+        });
+      }
+    });
+  };
   return (
     <div className="grid lg:grid-cols-12 gap-4 max-w-7xl mx-auto">
       <div className="col-auto lg:col-span-8">
@@ -63,10 +109,10 @@ export default function CheckoutContainer({
               <Loading />
             )}
           </div>
-          {productsOrdered ? (
-            productsOrdered.length > 0 ? (
-              <>
-                <div className="overflow-x-auto">
+          <div className="overflow-x-auto">
+            {productsOrdered ? (
+              productsOrdered.length > 0 ? (
+                <>
                   <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
@@ -125,31 +171,39 @@ export default function CheckoutContainer({
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </>
-            ) : (
-              <></>
-            )
-          ) : (
-            <Loading />
-          )}
+                </>
+              ) : (
+                <></>
+              )
+            ) : null}
+          </div>
         </div>
       </div>
       <div className="col-auto lg:col-span-4">
         <div className="bg-white flex flex-col space-y-4 dark:bg-gray-800 rounded-lg p-5">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
               Chọn phương thức thanh toán
             </h2>
             <button
-              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
               onClick={() => {
-                showModal("Chọn phương thức thanh toán", (onClose) => {
-                  return <Button>Thanh toan khi nhan hang</Button>;
+                showModal((onClose) => {
+                  return (
+                    <PaymentMethodModal
+                      onClose={onClose}
+                      setPaymentMethod={setSelectedPaymentMethod}
+                      paymentMethods={paymentMethods}
+                    />
+                  );
                 });
               }}
+              className="inline-flex  items-center justify-between w-full p-2.5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
-              Chọn
+              {selectedPaymentMethod
+                ? paymentMethod[
+                    selectedPaymentMethod as keyof typeof paymentMethod
+                  ]
+                : "Chọn phương thức thanh toán"}
             </button>
           </div>
           <div>
@@ -191,7 +245,7 @@ export default function CheckoutContainer({
               </p>
             </div>
           </div>
-          <Button>Đặt hàng</Button>
+          <Button onClick={handleCheckout}>Đặt hàng</Button>
         </div>
       </div>
 

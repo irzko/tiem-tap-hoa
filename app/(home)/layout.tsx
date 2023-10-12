@@ -4,6 +4,7 @@ import Logo from "@/components/ui/logo";
 import MenuButton from "@/components/menu-button";
 import DropdownUser from "@/components/dropdown-user";
 import SidebarItem from "@/components/ui/sidebar-item";
+import ToggleTheme from "@/components/ui/toggle-theme";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -48,6 +49,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </form>
         </div>
         <div className="flex items-center">
+          <span>
+            <ToggleTheme />
+          </span>
           <span className="mx-2">
             <CartButton />
           </span>

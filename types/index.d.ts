@@ -3,6 +3,13 @@ enum Role {
   ADMIN,
 }
 
+enum PaymentType {
+  COD,
+  MOMO,
+  PAYPAL,
+  PAYMENT_CARD,
+}
+
 interface User {
   userId: string;
   email: string;
@@ -82,4 +89,20 @@ interface ICity {
   cityId: string;
   name: string;
   districts?: IDistrict[];
+}
+
+interface IPaymentCard {
+  cardNumber: string;
+  cardHolderName: string;
+  expirationDate: Date;
+  cvv: string;
+}
+
+interface IPaymentMethod {
+  paymentMethodId: string;
+  paymentType: $Enums.PaymentType;
+  accountInfo: string | IPaymentCard;
+  userId: string;
+  orderId: string;
+  user: User;
 }
