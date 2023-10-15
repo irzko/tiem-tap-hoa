@@ -52,6 +52,7 @@ model User {
   Order              Order[]
   Review             Review[]
   OrderStatusHistory OrderStatusHistory[]
+  Usefulness         Usefulness[]
 }
 
 model Cart {
@@ -131,15 +132,26 @@ model PaymentMethod {
 }
 
 model Review {
-  reviewId  String   @id @default(uuid())
-  review    String
-  rating    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  productId String
-  product   Product  @relation(fields: [productId], references: [productId])
-  user      User     @relation(fields: [userId], references: [userId])
+  reviewId   String       @id @default(uuid())
+  review     String
+  rating     Int
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  userId     String
+  productId  String
+  product    Product      @relation(fields: [productId], references: [productId])
+  user       User         @relation(fields: [userId], references: [userId])
+  Usefulness Usefulness[]
+}
+
+model Usefulness {
+  usefulnessId String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  reviewId     String
+  review       Review   @relation(fields: [reviewId], references: [reviewId])
+  user         User     @relation(fields: [userId], references: [userId])
 }
 
 model Coupon {

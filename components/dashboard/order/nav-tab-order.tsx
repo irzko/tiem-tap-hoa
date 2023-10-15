@@ -4,12 +4,12 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { orderStatus } from "./order-status";
 
-const orderStatusTabs = [{ name: "Tất cả", type: "" }, ...orderStatus];
+const orderStatusTabs = [...orderStatus];
 
 export default function NavTabOrder() {
   const pathname = usePathname();
 
-  const tabType = pathname.split("/")[3] || "";
+  const tabType = pathname.split("/")[3];
 
   return (
     <div className="text-sm sticky top-14 bg-white dark:bg-gray-900 font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">

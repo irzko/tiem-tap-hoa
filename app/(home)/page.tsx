@@ -23,7 +23,7 @@ export default async function Page() {
           <Link
             className="flex flex-col bg-white rounded-lg border border-gray-100 hover:border-white dark:border-gray-800 dark:hover:border-gray-700 hover:shadow-lg dark:hover:shadow-lg-light  dark:bg-gray-900"
             key={product.productId}
-            href={`/item/${product.productId}`}
+            href={`/detail/${product.productId}`}
           >
             <div className="relative flex justify-center w-full aspect-square">
               <Image

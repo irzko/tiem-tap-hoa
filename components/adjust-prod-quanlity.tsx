@@ -75,7 +75,7 @@ export default function AdjustProdQuantity({
     }
   };
   return (
-    <div className="flex">
+    <div className="flex h-full md:h-auto">
       <button
         type="button"
         onClick={decrease}

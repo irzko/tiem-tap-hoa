@@ -37,6 +37,7 @@ interface IProduct {
   categoryId: string;
   createdAt: Date;
   updatedAt: Date;
+  Review: IReview[];
   category: ICategory;
 }
 
@@ -150,4 +151,19 @@ interface IOrder {
   user: User;
   orderDetails: IOrderDetail[];
   paymentMethods: IPaymentMethod[];
+}
+
+interface IReview {
+  reviewId: string;
+  userId: string;
+  productId: string;
+  rating: number;
+  review: string;
+  createdAt: Date;
+  updatedAt: Date;
+  product: IProduct;
+  user: User;
+  _count: {
+    Usefulness: number;
+  };
 }

@@ -109,68 +109,48 @@ export default function CheckoutContainer({
               <Loading />
             )}
           </div>
-          <div className="overflow-x-auto">
+          <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400 p-5">
             {productsOrdered ? (
               productsOrdered.length > 0 ? (
                 <>
-                  <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" className="px-4 py-3">
-                          Sản phẩm
-                        </th>
-                        <th scope="col" className="px-4 py-3">
-                          Đơn Giá
-                        </th>
-                        <th scope="col" className="px-4 py-3">
-                          Số Lượng
-                        </th>
-                        <th scope="col" className="px-4 py-3">
-                          Số Tiền
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {productsOrdered.map((cart) => (
-                        <tr key={cart.cartId} className="dark:border-gray-700">
-                          <th
-                            scope="row"
-                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  <div className="divide-y">
+                    {productsOrdered.map((product) => (
+                      <div
+                        key={product.cartId}
+                        className="dark:border-gray-700 grid sm:grid-cols-5 grid-cols-2 gap-2 py-4"
+                      >
+                        <div className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          <Link
+                            href={`/item/${product.productId}`}
+                            className="flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
                           >
-                            <form>
-                              <div className="flex items-center mb-4">
-                                <Link
-                                  href={`/item/${cart.productId}`}
-                                  className="ml-2 break-words flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  {cart.product.images ? (
-                                    <Image
-                                      src={`http://localhost:1337/${cart.product.images[0]}`}
-                                      alt={cart.product.productName}
-                                      width={80}
-                                      height={80}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {cart.product.productName}
-                                </Link>
-                              </div>
-                            </form>
-                          </th>
-                          <td className="px-4 py-3">
-                            {cart.product.price.toLocaleString("vi-VN")}
-                          </td>
-                          <td className="px-4 py-3">{cart.quantity}</td>
-                          <td className="px-4 py-3">
+                            <Image
+                              src={`http://localhost:1337/${product.product.images[0]}`}
+                              alt={product.product.productName}
+                              width={80}
+                              height={80}
+                            />
+                          </Link>
+                        </div>
+                        <div className="sm:col-span-4 grid sm:grid-cols-4 gap-2 items-center">
+                          <div className="font-medium text-gray-900 dark:text-white">
+                            {product.product.productName}
+                          </div>
+                          <div>
+                            {product.product.price.toLocaleString("vi-VN")}
+                          </div>
+
+                          <div>{product.quantity}</div>
+
+                          <div>
                             {(
-                              cart.product.price * cart.quantity
+                              product.product.price * product.quantity
                             ).toLocaleString("vi-VN")}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </>
               ) : (
                 <></>

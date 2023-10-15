@@ -1,4 +1,4 @@
-import React, { useRef, useState, TextareaHTMLAttributes } from "react";
+import React, { TextareaHTMLAttributes } from "react";
 
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   helperText?: string;
