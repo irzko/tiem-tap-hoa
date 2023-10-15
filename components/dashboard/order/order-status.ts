@@ -1,5 +1,3 @@
-import prisma from "@/libs/prisma";
-
 export const orderStatus: { type: OrderTabType; name: OrderStatusType }[] = [
   {
     type: "unpaid",
@@ -30,15 +28,3 @@ export const orderStatus: { type: OrderTabType; name: OrderStatusType }[] = [
     name: "Giao không thành công",
   },
 ];
-
-export default async function Page() {
-  orderStatus.map(async (status) => {
-    const orderStatus = await prisma.orderStatus.create({
-      data: {
-        statusId: status.type,
-        status: status.name,
-      },
-    });
-  });
-  return <div>Page</div>;
-}

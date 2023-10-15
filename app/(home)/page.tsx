@@ -17,8 +17,8 @@ export default async function Page() {
   const data = await getData();
 
   return (
-    <div className="flex justify-center">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 max-w-7xl gap-2">
+    <div className="mx-auto max-w-screen-xl">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
         {data.map((product: IProduct) => (
           <Link
             className="flex flex-col bg-white rounded-lg border border-gray-100 hover:border-white dark:border-gray-800 dark:hover:border-gray-700 hover:shadow-lg dark:hover:shadow-lg-light  dark:bg-gray-900"

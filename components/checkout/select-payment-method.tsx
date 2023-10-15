@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Button from "../ui/button";
 import ModalHeader from "../ui/modal-header";
-import { PaymentType } from "@prisma/client";
 
 const SelectPaymentMethod = ({
   setIndex,
@@ -9,14 +8,14 @@ const SelectPaymentMethod = ({
   onClose,
   data,
 }: {
-  setPaymentMethod: (paymentMethod: PaymentType) => void;
+  setPaymentMethod: (paymentMethod: string) => void;
   onClose: () => void;
   setIndex: (index: number) => void;
   data?: IPaymentMethod;
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentType>();
+  const [selectedMethod, setSelectedMethod] = useState<string>("");
 
-  const handleSelectPaymentMethod = (paymentMethod: PaymentType) => {
+  const handleSelectPaymentMethod = (paymentMethod: string) => {
     switch (paymentMethod) {
       case "PAYMENT_CARD":
         // if (!data) {
@@ -30,7 +29,7 @@ const SelectPaymentMethod = ({
   };
 
   const handleConfirm = () => {
-    setPaymentMethod(selectedMethod as PaymentType);
+    setPaymentMethod(selectedMethod);
     onClose();
   };
 

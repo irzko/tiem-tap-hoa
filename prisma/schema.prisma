@@ -30,28 +30,28 @@ model Product {
   categoryId    String?
   Cart          Cart[]
   Interaction   Interaction[]
-  OrderItem     OrderDetail[]
+  orderDetail   OrderDetail[]
   category      Category?     @relation(fields: [categoryId], references: [categoryId])
   Review        Review[]
 }
 
 model User {
-  userId           String          @id @default(uuid())
-  email            String          @unique
-  fullName         String
-  password         String
-  role             Role            @default(USER)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  defaultAddressId String?
-  defaultPaymentId String?
-  Address          Address[]
-  Cart             Cart[]
-  Coupon           Coupon[]
-  Interaction      Interaction[]
-  Order            Order[]
-  PaymentMethod    PaymentMethod[]
-  Review           Review[]
+  userId             String               @id @default(uuid())
+  email              String               @unique
+  fullName           String
+  password           String
+  role               Role                 @default(USER)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  defaultAddressId   String?
+  defaultPaymentId   String?
+  Address            Address[]
+  Cart               Cart[]
+  Coupon             Coupon[]
+  Interaction        Interaction[]
+  Order              Order[]
+  Review             Review[]
+  OrderStatusHistory OrderStatusHistory[]
 }
 
 model Cart {
@@ -76,40 +76,58 @@ model Interaction {
 }
 
 model Order {
-  orderId       String          @id @default(uuid())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  userId        String
-  totalAmount   Float
-  Coupon        Coupon[]
-  user          User            @relation(fields: [userId], references: [userId])
-  addressId     String
-  address       Address         @relation(fields: [addressId], references: [addressId])
-  orderItems    OrderDetail[]
-  PaymentMethod PaymentMethod[]
+  orderId            String               @id @default(uuid())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  userId             String
+  totalAmount        Float
+  Coupon             Coupon[]
+  addressId          String
+  orderDetails       OrderDetail[]
+  paymentMethod      PaymentMethod?
+  statusId           String
+  OrderStatusHistory OrderStatusHistory[]
+  user               User                 @relation(fields: [userId], references: [userId])
+  address            Address              @relation(fields: [addressId], references: [addressId])
+  orderStatus        OrderStatus          @relation(fields: [statusId], references: [statusId])
+}
+
+model OrderStatus {
+  statusId String  @id
+  status   String
+  orders   Order[]
+}
+
+model OrderStatusHistory {
+  orderStatusHistoryId String   @id @default(uuid())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  orderId              String
+  statusId             String
+  userId               String
+  order                Order?   @relation(fields: [orderId], references: [orderId])
+  user                 User     @relation(fields: [userId], references: [userId])
 }
 
 model OrderDetail {
-  orderItemId String   @id @default(uuid())
-  quantity    Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  orderId     String
-  productId   String
-  order       Order    @relation(fields: [orderId], references: [orderId])
-  product     Product  @relation(fields: [productId], references: [productId])
+  orderDetailId String   @id @default(uuid())
+  quantity      Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orderId       String
+  productId     String
+  order         Order    @relation(fields: [orderId], references: [orderId])
+  product       Product  @relation(fields: [productId], references: [productId])
 }
 
 model PaymentMethod {
-  paymentId   String      @id @default(uuid())
-  paymentType PaymentType
+  paymentId   String   @id @default(uuid())
+  paymentType String
   accountInfo String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  userId      String
-  user        User        @relation(fields: [userId], references: [userId])
-  orderId     String
-  order       Order       @relation(fields: [orderId], references: [orderId])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orderId     String   @unique
+  order       Order    @relation(fields: [orderId], references: [orderId])
 }
 
 model Review {
@@ -129,6 +147,7 @@ model Coupon {
   couponCode String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  remaining  Int
   userId     String
   orderId    String
   order      Order    @relation(fields: [orderId], references: [orderId])
@@ -186,11 +205,4 @@ enum InteractionType {
   VIEW
   PURCHASE
   REVIEW
-}
-
-enum PaymentType {
-  COD
-  PAYPAL
-  PAYMENT_CARD
-  MOMO
 }

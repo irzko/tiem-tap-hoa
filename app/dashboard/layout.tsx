@@ -3,6 +3,7 @@ import MenuButton from "@/components/menu-button";
 import Logo from "@/components/ui/logo";
 import Navbar from "@/components/ui/navbar";
 import SidebarItem from "@/components/dashboard/sidebar-item";
+import ToggleTheme from "@/components/ui/toggle-theme";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -47,6 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </form>
         </div>
         <div className="flex items-center">
+          <ToggleTheme />
           <DropdownUser />
         </div>
       </Navbar>

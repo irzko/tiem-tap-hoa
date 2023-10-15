@@ -3,12 +3,7 @@ enum Role {
   ADMIN,
 }
 
-enum PaymentType {
-  COD,
-  MOMO,
-  PAYPAL,
-  PAYMENT_CARD,
-}
+type PaymentType = "COD" | "MOMO" | "PAYPAL" | "PAYMENT_CARD";
 
 interface User {
   userId: string;
@@ -100,9 +95,59 @@ interface IPaymentCard {
 
 interface IPaymentMethod {
   paymentMethodId: string;
-  paymentType: $Enums.PaymentType;
+  paymentType: PaymentType;
   accountInfo: string | IPaymentCard;
-  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
   orderId: string;
+}
+
+type OrderTabType =
+  | "unpaid"
+  | "toship"
+  | "shipping"
+  | "completed"
+  | "cancelled"
+  | "returnlist"
+  | "failed_delivery";
+
+type OrderStatusType =
+  | "Chờ xác nhận"
+  | "Chờ lấy hàng"
+  | "Đang giao"
+  | "Đã giao"
+  | "Đã hủy"
+  | "Trả hàng/Hoàn tiền"
+  | "Giao không thành công";
+
+interface IOrderDetail {
+  orderDetailId: string;
+  orderId: string;
+  productId: string;
+  quantity: number;
+  createdAt: Date;
+  updatedAt: Date;
+  product: IProduct;
+}
+
+interface IOrderStatus {
+  orderStatusId: string;
+  status: OrderTabType;
+  createdAt: Date;
+  updatedAt: Date;
+  orderId: string;
+}
+
+interface IOrder {
+  orderId: string;
+  userId: string;
+  addressId: string;
+  totalAmount: number;
+  orderStatus: IOrderStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  address: IAddress;
   user: User;
+  orderDetails: IOrderDetail[];
+  paymentMethods: IPaymentMethod[];
 }

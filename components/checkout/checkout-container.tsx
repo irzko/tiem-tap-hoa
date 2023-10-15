@@ -16,11 +16,11 @@ const paymentMethod = {
 
 export default function CheckoutContainer({
   address,
-  paymentMethods,
+  // paymentMethods,
   userId,
 }: {
   address: IAddress[];
-  paymentMethods: IPaymentMethod[];
+  // paymentMethods: IPaymentMethod[];
   userId: string;
 }) {
   const [modal, showModal] = useModal();
@@ -47,7 +47,7 @@ export default function CheckoutContainer({
   const handleCheckout = () => {
     const data = {
       userId: userId,
-      address: address[0].addressId,
+      addressId: address[0].addressId,
       paymentMethod: selectedPaymentMethod,
       shippingFee: shippingFee,
       products: productsOrdered,
@@ -88,7 +88,7 @@ export default function CheckoutContainer({
                       <p>{addr.phoneNumber}</p>
                       <p>
                         {addr.streetAddress}, {addr.ward.name},{" "}
-                        {addr.district.name}, {addr.ward.name}
+                        {addr.district.name}, {addr.city.name}
                       </p>
                     </div>
                   </div>
@@ -192,7 +192,7 @@ export default function CheckoutContainer({
                     <PaymentMethodModal
                       onClose={onClose}
                       setPaymentMethod={setSelectedPaymentMethod}
-                      paymentMethods={paymentMethods}
+                      // paymentMethods={paymentMethods}
                     />
                   );
                 });

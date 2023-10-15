@@ -4,22 +4,22 @@ import SelectPaymentMethod from "./select-payment-method";
 
 export default function PaymentMethodModal({
   setPaymentMethod,
-  paymentMethods,
+  // paymentMethods,
   onClose,
 }: {
   setPaymentMethod: (paymentMethod: string) => void;
-  paymentMethods: IPaymentMethod[];
+  // paymentMethods: IPaymentMethod[];
   onClose: () => void;
 }) {
   const [indexPage, setIndexPage] = useState(0);
 
-  const paymentCard = useMemo(
-    () =>
-      paymentMethods?.find(
-        (paymentMethod) => paymentMethod.paymentType === "PAYMENT_CARD"
-      ),
-    [paymentMethods]
-  );
+  // const paymentCard = useMemo(
+  //   () =>
+  //     paymentMethods?.find(
+  //       (paymentMethod) => paymentMethod.paymentType === "PAYMENT_CARD"
+  //     ),
+  //   [paymentMethods]
+  // );
 
   const page = useMemo(() => {
     return [
@@ -28,16 +28,16 @@ export default function PaymentMethodModal({
         setPaymentMethod={setPaymentMethod}
         onClose={onClose}
         setIndex={setIndexPage}
-        data={paymentCard}
+        // data={paymentCard}
       />,
       <PaymentCardAddForm
         key={1}
         onClose={onClose}
         onBack={setIndexPage}
-        data={paymentCard}
+        // data={paymentCard}
       />,
     ];
-  }, [onClose, paymentCard, setPaymentMethod]);
+  }, [onClose, setPaymentMethod]);
 
   return <>{page[indexPage]}</>;
 }
