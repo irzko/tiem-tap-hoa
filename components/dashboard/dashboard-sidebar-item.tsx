@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Accordion from "../ui/accordion";
-export default function SidebarItem() {
+export default function DashboardSidebarItem() {
   return (
     <>
       <div className="h-full p-3 overflow-y-auto">

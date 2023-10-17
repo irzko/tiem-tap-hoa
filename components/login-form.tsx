@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Spinner from "./ui/spinner";
 import InputField from "./ui/input-field";
 import Button from "./ui/button";
@@ -11,7 +10,6 @@ import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   return (
     <form
@@ -19,7 +17,6 @@ export default function LoginForm() {
         e.preventDefault();
         setLoading(true);
         signIn("credentials", {
-          // redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
         }).then((res) => {

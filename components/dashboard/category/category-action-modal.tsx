@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import DeleteModal from "./detete-modal";
-import RenameModal from "./rename-modal";
+import DeleteCategoryModal from "./detete-category-modal";
+import RenameModal from "./rename-category-modal";
 import Button from "../../ui/button";
 import Link from "next/link";
 
-export default function ActionModal({
+export default function CategoryActionModal({
   showModal,
   setShowModal,
   category,
@@ -112,7 +112,7 @@ export default function ActionModal({
           </div>
         </div>
       </div>
-      <DeleteModal
+      <DeleteCategoryModal
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         category={category}

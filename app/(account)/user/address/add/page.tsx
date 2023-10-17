@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import InputField from "@/components/ui/input-field";
-import { SelectAddress } from "@/components/user/select-address";
+import { AddressSelect } from "@/components/user/address-select";
 import Button from "@/components/ui/button";
 import useModal from "@/hooks/useModal";
 import { useSession } from "next-auth/react";
@@ -53,7 +53,7 @@ export default function AddAddressForm() {
         className="block rounded-lg px-2.5 w-full text-sm text-start border-2 appearance-none focus:outline-none focus:ring-0 py-2.5 bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         onClick={() =>
           showModal((onClose) => {
-            return <SelectAddress onClose={onClose} setAddress={setAddress} />;
+            return <AddressSelect onClose={onClose} setAddress={setAddress} />;
           })
         }
       >

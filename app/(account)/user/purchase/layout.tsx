@@ -1,9 +1,9 @@
-import NavTabOrder from "@/components/dashboard/order/nav-tab-order";
+import OrderTabs from "@/components/dashboard/order/order-tabs";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <NavTabOrder />
+      <OrderTabs baseURL="/user/purchase" />
 
       <div>{children}</div>
     </div>

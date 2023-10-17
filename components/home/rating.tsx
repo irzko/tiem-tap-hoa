@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import TextArea from "../ui/textarea";
 import Button from "../ui/button";
 import { useSession } from "next-auth/react";
+import TextArea from "../ui/textarea";
 
 export default function Rating({ productId }: { productId: string }) {
   const [rate, setRate] = useState(0);

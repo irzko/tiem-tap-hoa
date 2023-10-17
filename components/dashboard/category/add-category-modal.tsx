@@ -3,7 +3,7 @@ import CategoryContext from "@/context/CategoryContext";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import Select from "../../ui/select";
 
-export default function AddModal({
+export default function AddCategoryModal({
   toggle,
   setToggle,
 }: {

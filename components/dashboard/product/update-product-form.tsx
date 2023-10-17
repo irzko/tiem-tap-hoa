@@ -1,9 +1,9 @@
 "use client";
 import { ChangeEvent, useState } from "react";
 import InputField from "../../ui/input-field";
-import SelectCategory from "./select-category";
+import CategorySelect from "./category-select";
 import TextArea from "../../ui/textarea";
-import SelectImage from "./select-image";
+import ImageSelect from "./image-select";
 import * as Yup from "yup";
 import { Form, FormikProvider, useField, useFormik } from "formik";
 import Button from "../../ui/button";
@@ -181,7 +181,7 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
             Hình ảnh sản phẩm
           </label>
           <div className="col-span-5">
-            <SelectImage
+            <ImageSelect
               onChange={handleFileChange}
               previewImages={previewImages}
               onRemoveImage={handleRemoveImage}
@@ -223,7 +223,7 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
           </div>
         </div>
 
-        <SelectCategory
+        <CategorySelect
           setCatg={setSelectedCategories}
           toggle={toggle}
           setToggle={setToggle}

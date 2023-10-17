@@ -1,4 +1,4 @@
-import AddProductToCart from "@/components/dashboard/product/add-product-to-cart";
+import AddToCartButton from "@/components/dashboard/product/add-to-cart-button";
 import Rating from "@/components/home/rating";
 import Review from "@/components/home/review";
 import Image from "next/image";
@@ -68,7 +68,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
               {product.price.toLocaleString("vi-VN")}&nbsp;₫
             </div>
           </div>
-          <AddProductToCart productId={product.productId} />
+          <AddToCartButton productId={product.productId} />
         </div>
       </div>
       <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

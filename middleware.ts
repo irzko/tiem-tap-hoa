@@ -13,7 +13,6 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest) {
-  
   const { pathname } = req.nextUrl;
   const session = await getToken({
     req,

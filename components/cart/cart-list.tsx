@@ -2,10 +2,10 @@
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
-import Button from "./ui/button";
+import Button from "../ui/button";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Loading from "./loading";
+import Loading from "../loading";
 import AdjustProdQuantity from "./adjust-prod-quanlity";
 
 export default function CartList({ data }: { data?: ICart[] }) {
@@ -95,7 +95,9 @@ export default function CartList({ data }: { data?: ICart[] }) {
                     </form>
                   </div>
                   <div className="md:col-span-5 grid md:grid-cols-5 gap-2 items-center">
-                    <div className="font-medium text-gray-900 dark:text-white">{cart.product.productName}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {cart.product.productName}
+                    </div>
                     <div>{cart.product.price.toLocaleString("vi-VN")}</div>
 
                     <AdjustProdQuantity

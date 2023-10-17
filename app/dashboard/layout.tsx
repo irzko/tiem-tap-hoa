@@ -2,7 +2,7 @@ import DropdownUser from "@/components/dropdown-user";
 import MenuButton from "@/components/menu-button";
 import Logo from "@/components/ui/logo";
 import Navbar from "@/components/ui/navbar";
-import SidebarItem from "@/components/dashboard/sidebar-item";
+import DashboardSidebarItem from "@/components/dashboard/dashboard-sidebar-item";
 import ToggleTheme from "@/components/ui/toggle-theme";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Navbar>
         <div className="flex items-center justify-start">
           <MenuButton>
-            <SidebarItem />
+            <DashboardSidebarItem />
           </MenuButton>
           <Logo />
         </div>

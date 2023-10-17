@@ -58,12 +58,23 @@ export default function DropdownUser() {
                 </p>
               </div>
               <ul className="py-1" role="none">
+                {session.user?.role === "ADMIN" && (
+                  <li>
+                    <Link
+                      href="/dashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link
-                    href="/dashboard"
+                    href="/user/purchase/unpaid"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    role="menuitem"
                   >
-                    Dashboard
+                    Đơn mua
                   </Link>
                 </li>
                 <li>
@@ -72,16 +83,7 @@ export default function DropdownUser() {
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                     role="menuitem"
                   >
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                  >
-                    Earnings
+                    Tài khoản
                   </a>
                 </li>
                 <li>
@@ -90,7 +92,7 @@ export default function DropdownUser() {
                     role="menuitem"
                     onClick={() => signOut()}
                   >
-                    Sign out
+                    Đăng xuất
                   </button>
                 </li>
               </ul>

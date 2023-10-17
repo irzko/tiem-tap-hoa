@@ -2,7 +2,7 @@ import CategoryContext from "@/context/CategoryContext";
 import { Dispatch, SetStateAction, useContext } from "react";
 import Button from "../../ui/button";
 
-export default function DeleteModal({
+export default function DeleteCategoryModal({
   showModal,
   setShowModal,
   category,
@@ -76,7 +76,7 @@ export default function DeleteModal({
             >
               Huỷ
             </button>
-            <Button color="danger" onClick={handleDelete}>
+            <Button color="red" onClick={handleDelete}>
               Xác nhận xóa
             </Button>
           </div>

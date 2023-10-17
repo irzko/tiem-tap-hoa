@@ -3,11 +3,11 @@ import { Dispatch, SetStateAction, useState } from "react";
 import Button from "@/components/ui/button";
 import useSWR from "swr";
 
-export function SelectAddress({
+export default function AddressSelect({
   onClose,
   setAddress,
 }: {
-  onClose: () => void;
+  onClose: Dispatch<SetStateAction<boolean>>;
   setAddress: Dispatch<SetStateAction<[ICity, IDistrict, IWard] | undefined>>;
 }) {
   const [districts, setDistricts] = useState<IDistrict[] | undefined>();
@@ -53,12 +53,12 @@ export function SelectAddress({
 
   const handleSubmit = () => {
     setAddress(selectedAddress);
-    onClose();
+    onClose(false);
   };
 
   return (
-    <div>
-      <ul className="hidden mb-2 text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+    <div className="relative">
+      <ul className="flex whitespace-nowrap mb-2 text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
         <li className="w-full">
           <button
             className={`inline-block rounded-l-lg w-full p-4 focus:outline-none ${

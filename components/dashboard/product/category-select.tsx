@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "../../ui/button";
 
-export default function SelectCategory({
+export default function CategorySelect({
   toggle,
   setToggle,
   setCatg,

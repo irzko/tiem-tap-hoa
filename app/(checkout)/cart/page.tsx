@@ -1,7 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import CartList from "@/components/cart-list";
-
+import CartList from "@/components/cart/cart-list";
 
 const getCart = async (userId: string) => {
   const res = await fetch(`${process.env.BASE_URL}/api/cart/${userId}`, {

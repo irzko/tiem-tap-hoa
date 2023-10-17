@@ -10,7 +10,7 @@ interface Props {
   productId: string;
 }
 
-export default function AddProductToCart({ productId }: Props) {
+export default function AddToCartButton({ productId }: Props) {
   const { data: session } = useSession();
   const router = useRouter();
   const handleClick = () => {

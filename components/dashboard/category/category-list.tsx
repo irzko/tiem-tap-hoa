@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ListGroupCategory({
+export default function CategoryList({
   data,
   setItemSelected,
   setShowActionModal,

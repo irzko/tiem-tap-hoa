@@ -31,7 +31,9 @@ export default async function Page() {
               <p>{order.orderStatus.status}</p>
               <div className="flex flex-wrap gap-2">
                 {/* <ButtonConfirm orderId={order.orderId} /> */}
-                <Button color="light" className="w-full">Hủy</Button>
+                <Button color="light" className="w-full">
+                  Hủy
+                </Button>
               </div>
             </div>
           );

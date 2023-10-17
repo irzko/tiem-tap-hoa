@@ -1,8 +1,8 @@
 "use client";
 import CategoryContext from "@/context/CategoryContext";
-import TableHeader from "./table-header";
-import ListGroupCategory from "./list-group-category";
-import ActionModal from "./action-modal";
+import CategoryTableHeader from "./category-table-header";
+import CategoryList from "./category-list";
+import CategoryActionModal from "./category-action-modal";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 export default function CategoryContainer({ data }: { data?: ICategory[] }) {
@@ -36,13 +36,16 @@ export default function CategoryContainer({ data }: { data?: ICategory[] }) {
       {categories && (
         <CategoryContext.Provider value={contextValue}>
           <div>
-            <TableHeader data={refCategories.current} setData={setCategories} />
-            <ListGroupCategory
+            <CategoryTableHeader
+              data={refCategories.current}
+              setData={setCategories}
+            />
+            <CategoryList
               data={categories}
               setItemSelected={setSelectedCategory}
               setShowActionModal={setShowCategoryActionModal}
             />
-            <ActionModal
+            <CategoryActionModal
               showModal={showCategoryActionModal}
               setShowModal={setShowCategoryActionModal}
               category={selectedCategory}

@@ -1,9 +1,8 @@
-import vietnameseToAscii from "@/libs/vietnamese-to-ascii";
+import vietnameseToAscii from "@/libs/vietnameseToAscii";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import Button from "../../ui/button";
-import AddModal from "./add-modal";
 
-export default function TableHeader({
+export default function CategoryTableHeader({
   data,
   setData,
 }: {
@@ -86,7 +85,7 @@ export default function TableHeader({
           </div>
         </div>
       </div>
-      <AddModal
+      <AddCategoryModal
         toggle={showAddCategoryModal}
         setToggle={setShowAddCategoryModal}
       />

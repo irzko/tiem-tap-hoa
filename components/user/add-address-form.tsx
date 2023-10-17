@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import InputField from "@/components/ui/input-field";
-import { SelectAddress } from "./select-address";
 import Button from "../ui/button";
+import AddressSelect from "./address-select";
 
 export default function AddAddressForm() {
   const [toggle, setToggle] = useState(false);
@@ -22,8 +22,8 @@ export default function AddAddressForm() {
           ? address?.map((item) => item.name).join(", ")
           : "Chọn địa chỉ"}
       </button>
-      <SelectAddress
-        toggle={toggle}
+      <AddressSelect
+        // toggle={toggle}
         onClose={setToggle}
         setAddress={setAddress}
       />

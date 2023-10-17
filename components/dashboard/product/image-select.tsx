@@ -5,7 +5,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onRemoveImage: (index: number) => void;
 }
 
-function SelectImage({ previewImages, onRemoveImage, ...rest }: InputProps) {
+function ImageSelect({ previewImages, onRemoveImage, ...rest }: InputProps) {
   return (
     <div className="flex gap-2">
       {previewImages?.map((preview, index) => (
@@ -76,4 +76,4 @@ function SelectImage({ previewImages, onRemoveImage, ...rest }: InputProps) {
   );
 }
 
-export default SelectImage;
+export default ImageSelect;
