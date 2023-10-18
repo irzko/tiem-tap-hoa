@@ -2,7 +2,7 @@ import ButtonConfirm from "@/components/dashboard/order/unpaid/button-confirm";
 import Button from "@/components/ui/button";
 
 const getUnpaidOrder = async () => {
-  return await fetch(`${process.env.BASE_URL}/api/orders/unpaid`, {
+  return await fetch(`${process.env.API_URL}/api/orders/unpaid`, {
     cache: "no-store",
   }).then((res) => res.json());
 };

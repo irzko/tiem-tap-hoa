@@ -3,19 +3,16 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 
 const getAddress = async (userId: string) => {
-  const res = await fetch(
-    `${process.env.BASE_URL}/api/user/address/${userId}`,
-    {
-      cache: "no-store",
-    }
-  );
+  const res = await fetch(`${process.env.API_URL}/api/user/address/${userId}`, {
+    cache: "no-store",
+  });
   const data = await res.json();
   return data;
 };
 
 // const getPaymentMethods = async (userId: string) => {
 //   const res = await fetch(
-//     `${process.env.BASE_URL}/api/user/payment-methods/${userId}`,
+//     `${process.env.API_URL}/api/user/payment-methods/${userId}`,
 //     {
 //       cache: "no-store",
 //     }

@@ -49,7 +49,7 @@ export default function ProductActionModal({
             </div>
             <div className="font-medium text-gray-900 border dark:text-white dark:bg-gray-700 rounded-lg bg-white dark:border-gray-600 border-gray-200">
               <Link
-                href={`/dashboard/product/edit/${product?.productId}`}
+                href={`/dashboard/products/edit/${product?.productId}`}
                 // onClick={() => {
                 //   setShowModal(false);
                 // }}

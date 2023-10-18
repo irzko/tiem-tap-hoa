@@ -1,7 +1,7 @@
 import CategoryContainer from "@/components/dashboard/category/category-container";
 
 export async function generateStaticParams() {
-  const categories = await fetch(`${process.env.BASE_URL}/api/catgs`, {
+  const categories = await fetch(`${process.env.API_URL}/api/catgs/all`, {
     cache: "no-store",
   }).then((res) => res.json());
 
@@ -14,11 +14,11 @@ export async function generateStaticParams() {
 
 const getCategories = async (categoryId: string) => {
   if (categoryId) {
-    return await fetch(`${process.env.BASE_URL}/api/catgs/${categoryId}`, {
+    return await fetch(`${process.env.API_URL}/api/catgs/${categoryId}`, {
       cache: "no-store",
     }).then((res) => res.json());
   } else {
-    return await fetch(`${process.env.BASE_URL}/api/catgs`, {
+    return await fetch(`${process.env.API_URL}/api/catgs`, {
       cache: "no-store",
     }).then((res) => res.json());
   }

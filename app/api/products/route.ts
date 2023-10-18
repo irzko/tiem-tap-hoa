@@ -24,3 +24,19 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(products);
 }
+
+export async function PUT(req: NextRequest) {
+  const product = await req.json();
+
+  await prisma.product.update({
+    where: {
+      productId: product.productId,
+    },
+    data: product,
+  });
+
+  return NextResponse.json(
+    { message: "Cập nhật thành công." },
+    { status: 201 }
+  );
+}

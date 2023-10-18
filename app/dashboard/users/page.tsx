@@ -17,12 +17,6 @@ export default async function Users() {
               Email
             </th>
             <th scope="col" className="px-6 py-3">
-              Số điện thoại
-            </th>
-            {/* <th className="font-medium tracking-wide text-left pl-20">
-                Địa chỉ
-              </th> */}
-            <th scope="col" className="px-6 py-3">
               Ngày tạo
             </th>
           </tr>
@@ -40,8 +34,6 @@ export default async function Users() {
               <td className="px-6 py-4">{user.userId}</td>
               <td className="px-6 py-4">{user.fullName}</td>
               <td className="px-6 py-4">{user.email}</td>
-              <td className="px-6 py-4">{user.phoneNumber}</td>
-              {/* <td className="pl-20">{user.address}</td> */}
               <td className="px-6 py-4">
                 {user.createdAt.toLocaleString("vi-VN")}
               </td>

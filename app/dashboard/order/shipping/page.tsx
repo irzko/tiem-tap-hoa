@@ -1,7 +1,7 @@
 import ButtonConfirm from "@/components/dashboard/order/shipping/button-confirm";
 
 const getShippingOrder = async () => {
-  return await fetch(`${process.env.BASE_URL}/api/orders/shipping`, {
+  return await fetch(`${process.env.API_URL}/api/orders/shipping`, {
     cache: "no-store",
   }).then((res) => res.json());
 };

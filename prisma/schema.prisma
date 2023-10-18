@@ -24,6 +24,8 @@ model Product {
   productName   String        @unique
   description   String
   price         Float
+  gender        String?
+  dateOfBirth   DateTime?
   images        String[]      @default([])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -54,6 +56,8 @@ model User {
   Review             Review[]
   OrderStatusHistory OrderStatusHistory[]
   Usefulness         Usefulness[]
+  Participant        Participant[]
+  Message            Message[]
 }
 
 model Cart {
@@ -155,12 +159,12 @@ model Usefulness {
   user         User     @relation(fields: [userId], references: [userId])
 }
 
+
 model Coupon {
   couponId   String   @id @default(uuid())
   couponCode String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  remaining  Int
   userId     String
   orderId    String
   order      Order    @relation(fields: [orderId], references: [orderId])
@@ -218,4 +222,33 @@ enum InteractionType {
   VIEW
   PURCHASE
   REVIEW
+}
+
+model Conversation {
+  conversationId String        @id @default(uuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  messages       Message[]
+  participants   Participant[]
+}
+
+model Message {
+  messageId      String       @id @default(uuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversationId String
+  senderId       String
+  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
+  sender         User         @relation(fields: [senderId], references: [userId])
+}
+
+model Participant {
+  participantId  String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversationId String
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
+  user           User         @relation(fields: [userId], references: [userId])
 }

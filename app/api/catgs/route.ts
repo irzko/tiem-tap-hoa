@@ -36,6 +36,11 @@ export async function GET(req: NextRequest) {
       _count: {
         select: { subCategories: true },
       },
+      subCategories: {
+        orderBy: {
+          categoryName: "asc",
+        },
+      },
     },
   });
   return NextResponse.json(category);

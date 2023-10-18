@@ -1,20 +1,22 @@
 import React, { InputHTMLAttributes } from "react";
+import Image from "next/image";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  previewImages: string[];
+  thumbnails: string[];
   onRemoveImage: (index: number) => void;
 }
 
-function ImageSelect({ previewImages, onRemoveImage, ...rest }: InputProps) {
+function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
   return (
     <div className="flex gap-2">
-      {previewImages?.map((preview, index) => (
+      {thumbnails.map((thumbnail, index) => (
         <div key={index} className="relative">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={preview}
+          <Image
+            src={`http://localhost:1337/${thumbnail}`}
             alt="preview"
-            className="rounded-lg object-cover w-16 h-16"
+            className="rounded-lg object-cover"
+            width={64}
+            height={64}
           />
           <button
             type="button"

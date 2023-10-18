@@ -1,8 +1,9 @@
 "use client";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import Avatar from "./ui/avatar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Button from "./ui/button";
 export default function DropdownUser() {
   const { data: session } = useSession();
 
@@ -78,13 +79,13 @@ export default function DropdownUser() {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/user/profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                     role="menuitem"
                   >
                     Tài khoản
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <button
@@ -100,7 +101,12 @@ export default function DropdownUser() {
           </div>
         </div>
       ) : (
-        <div className="relative w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"></div>
+        <button
+          className="whitespace-nowrap font-medium rounded-lg text-sm flex items-center justify-center text-gray-900 dark:text-white"
+          onClick={() => signIn()}
+        >
+          Đăng nhập
+        </button>
       )}
     </>
   );

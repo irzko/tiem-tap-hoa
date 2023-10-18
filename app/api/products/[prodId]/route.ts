@@ -36,3 +36,14 @@ export async function GET(
 
   return NextResponse.json(products);
 }
+
+export const DELETE = async (req: Request) => {
+  const { productId } = await req.json();
+  const product = prisma.product.delete({
+    where: {
+      productId,
+    },
+  });
+
+  return NextResponse.json(product, { status: 200 });
+};

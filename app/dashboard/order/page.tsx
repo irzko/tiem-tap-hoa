@@ -1,7 +1,7 @@
 import { orderStatus } from "@/components/dashboard/order/order-status";
 
 const getAllOrder = async () => {
-  return await fetch(`${process.env.BASE_URL}/api/orders`, {
+  return await fetch(`${process.env.API_URL}/api/orders`, {
     cache: "no-store",
   }).then((res) => res.json());
 };

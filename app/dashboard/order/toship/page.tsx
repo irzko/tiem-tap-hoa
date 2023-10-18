@@ -1,7 +1,7 @@
 import ButtonConfirm from "@/components/dashboard/order/toship/button-confirm";
 
 const getToShipOrder = async () => {
-  return await fetch(`${process.env.BASE_URL}/api/orders/toship`, {
+  return await fetch(`${process.env.API_URL}/api/orders/toship`, {
     cache: "no-store",
   }).then((res) => res.json());
 };

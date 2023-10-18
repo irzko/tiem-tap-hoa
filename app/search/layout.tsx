@@ -3,7 +3,7 @@ import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
 import MenuButton from "@/components/menu-button";
 import DropdownUser from "@/components/dropdown-user";
-import SidebarItem from "@/components/ui/sidebar-item";
+import HomeSidebarItem from "@/components/ui/home-sidebar-item";
 import ToggleTheme from "@/components/ui/toggle-theme";
 import SearchForm from "@/components/search-form";
 
@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Navbar>
         <div className="flex items-center justify-start">
           <MenuButton>
-            <SidebarItem />
+            <HomeSidebarItem />
           </MenuButton>
           <Logo />
         </div>

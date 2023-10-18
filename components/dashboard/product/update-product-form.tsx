@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import { Form, FormikProvider, useField, useFormik } from "formik";
 import Button from "../../ui/button";
 import Spinner from "../../ui/spinner";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const TextField = ({
   helpText,
@@ -71,75 +73,60 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
     ICategory | undefined
   >(product?.category);
   const [toggle, setToggle] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>(
-    product!.images!.map((image) => `/upload/` + image)
+  const [selectedImages, setSelectedImages] = useState<string[]>(
+    product ? product.images : ([] as string[])
   );
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setSelectedFiles(files);
-
-      const imagePreviews: string[] = [];
+      const formData = new FormData();
 
       files.forEach((file) => {
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-          if (event.target) {
-            imagePreviews.push(event.target.result as string);
-            setPreviewImages([...imagePreviews]);
-          }
-        };
-
-        reader.readAsDataURL(file);
+        formData.append("images", file);
       });
+
+      const res = await fetch(`http://localhost:1337/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      setSelectedImages([...selectedImages, ...data.files]);
     }
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedPreviews = [...previewImages];
-    updatedPreviews.splice(index, 1);
-    setPreviewImages(updatedPreviews);
-
-    const updatedFiles = Array.from(selectedFiles || []);
+    const updatedFiles = Array.from(selectedImages || []);
     updatedFiles.splice(index, 1);
-    setSelectedFiles(updatedFiles);
+    setSelectedImages(updatedFiles);
   };
 
   const formik = useFormik({
     initialValues: {
       productName: product?.productName,
-      // category: "",
       description: product?.description,
       stockQuantity: product?.stockQuantity,
       price: product?.price,
     },
     onSubmit: async (values) => {
-      const formData = new FormData();
-
-      if (selectedFiles) {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append("images", selectedFiles[i]);
-        }
-      }
-
-      formData.append(
-        "product",
-        JSON.stringify({
+      setLoading(true);
+      fetch("/api/products", {
+        method: "PUT",
+        body: JSON.stringify({
+          productId: product?.productId,
+          images: selectedImages,
           categoryId: selectedCategories?.categoryId,
           ...values,
-        })
-      );
-
-      fetch("/api/products", {
-        method: "POST",
-        body: formData,
+        }),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+          toast.success("Thêm sản phẩm thành công");
+          setLoading(false);
+          router.push("/dashboard/products");
+        })
         .catch((err) => console.log(err));
     },
     validationSchema: Yup.object({
@@ -183,7 +170,7 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
           <div className="col-span-5">
             <ImageSelect
               onChange={handleFileChange}
-              previewImages={previewImages}
+              thumbnails={selectedImages}
               onRemoveImage={handleRemoveImage}
             />
           </div>
@@ -279,7 +266,7 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
         </div>
         <div className="flex justify-end">
           <Button type="submit" disabled={loading}>
-            {loading ? <Spinner fill="#fff" /> : <p>Thêm sản phẩm</p>}
+            {loading ? <Spinner fill="#fff" /> : <p>Cập nhật sản phẩm</p>}
           </Button>
         </div>
       </Form>

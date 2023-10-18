@@ -5,7 +5,7 @@ enum Role {
 
 type PaymentType = "COD" | "MOMO" | "PAYPAL" | "PAYMENT_CARD";
 
-interface User {
+interface IUser {
   userId: string;
   email: string;
   fullName: string;
@@ -22,6 +22,7 @@ interface ICategory {
   createdAt: Date;
   updatedAt: Date;
   subCategories: ICategory[];
+  parentCategory: ICategory;
   _count: {
     subCategories: number;
   };
@@ -166,4 +167,23 @@ interface IReview {
   _count: {
     Usefulness: number;
   };
+}
+
+interface IConversation {
+  conversationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  participants: IParticipant[];
+  messages: IMessage[];
+}
+
+interface IMessage {
+  messageId: string;
+  senderId: string;
+  content: string;
+  conversationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  sender: User;
+  conversation: IConversation;
 }

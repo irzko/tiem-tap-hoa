@@ -1,14 +1,15 @@
 "use client";
 import { ChangeEvent, useState } from "react";
 import InputField from "../../ui/input-field";
-import CategorySelect from "./category-select";
 import TextArea from "../../ui/textarea";
-import ImageSelect from "./image-select";
 import * as Yup from "yup";
 import { Form, FormikProvider, useField, useFormik } from "formik";
 import Button from "../../ui/button";
 import Spinner from "../../ui/spinner";
 import { useRouter } from "next/navigation";
+import ImageSelect from "./image-select";
+import CategorySelect from "./category-select";
+import { toast } from "react-toastify";
 
 const TextField = ({
   helpText,
@@ -70,41 +71,32 @@ const TextAreaField = ({
 const AddProductForm = () => {
   const [selectedCategories, setSelectedCategories] = useState<ICategory>();
   const [toggle, setToggle] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setSelectedFiles(files);
-
-      const imagePreviews: string[] = [];
+      const formData = new FormData();
 
       files.forEach((file) => {
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-          if (event.target) {
-            imagePreviews.push(event.target.result as string);
-            setPreviewImages([...imagePreviews]);
-          }
-        };
-
-        reader.readAsDataURL(file);
+        formData.append("images", file);
       });
+
+      const res = await fetch(`http://localhost:1337/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      setSelectedImages([...selectedImages, ...data.files]);
     }
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedPreviews = [...previewImages];
-    updatedPreviews.splice(index, 1);
-    setPreviewImages(updatedPreviews);
-
-    const updatedFiles = Array.from(selectedFiles || []);
+    const updatedFiles = Array.from(selectedImages || []);
     updatedFiles.splice(index, 1);
-    setSelectedFiles(updatedFiles);
+    setSelectedImages(updatedFiles);
   };
 
   const formik = useFormik({
@@ -117,35 +109,21 @@ const AddProductForm = () => {
     },
     onSubmit: async (values) => {
       setLoading(true);
-      const formData = new FormData();
-      if (selectedFiles) {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append("file", selectedFiles[i]);
-        }
-      }
-
-      const imgRes = await fetch(`http://localhost:1337/upload`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const imgData = await imgRes.json();
-      if (imgData.sucsses) {
-        fetch("/api/products", {
-          method: "POST",
-          body: JSON.stringify({
-            images: imgData.file,
-            categoryId: selectedCategories?.categoryId,
-            ...values,
-          }),
+      fetch("/api/products", {
+        method: "PUT",
+        body: JSON.stringify({
+          images: selectedImages,
+          categoryId: selectedCategories?.categoryId,
+          ...values,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          toast.success("Thêm sản phẩm thành công");
+          setLoading(false);
+          router.push("/dashboard/products");
         })
-          .then((res) => res.json())
-          .then((data) => {
-            router.push("/dashboard/product");
-            setLoading(false);
-          })
-          .catch((err) => console.log(err));
-      }
+        .catch((err) => console.log(err));
     },
     validationSchema: Yup.object({
       productName: Yup.string()
@@ -188,7 +166,7 @@ const AddProductForm = () => {
           <div className="col-span-5">
             <ImageSelect
               onChange={handleFileChange}
-              previewImages={previewImages}
+              thumbnails={selectedImages}
               onRemoveImage={handleRemoveImage}
             />
           </div>
