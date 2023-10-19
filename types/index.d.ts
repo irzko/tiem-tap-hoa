@@ -187,3 +187,25 @@ interface IMessage {
   sender: User;
   conversation: IConversation;
 }
+
+interface IParticipant {
+  participantId: string;
+  userId: string;
+  conversationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+  conversation: IConversation;
+}
+
+interface ISupplier {
+  supplierId: string;
+  supplierName: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  otherInfo?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  products: IProduct[];
+}
