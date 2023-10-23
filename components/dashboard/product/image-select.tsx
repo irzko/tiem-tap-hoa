@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from "react";
 import Image from "next/image";
+import { Button } from "@nextui-org/react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   thumbnails: string[];
@@ -10,7 +11,7 @@ function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
   return (
     <div className="flex gap-2">
       {thumbnails.map((thumbnail, index) => (
-        <div key={index} className="relative">
+        <div key={index}>
           <Image
             src={`http://localhost:1337/${thumbnail}`}
             alt="preview"
@@ -35,9 +36,12 @@ function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
           </button>
         </div>
       ))}
-      <label
+      <Button
+        as="label"
+        className="h-16 w-16"
+        variant="flat"
+        isIconOnly
         htmlFor="image-product"
-        className="rounded-lg border-2 appearance-none focus:outline-none border-dashed h-16 w-16 flex items-center justify-center bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <svg
           className="w-6 h-6 text-gray-800 dark:text-white"
@@ -65,7 +69,7 @@ function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
             d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
           />
         </svg>
-      </label>
+      </Button>
       <input
         {...rest}
         type="file"

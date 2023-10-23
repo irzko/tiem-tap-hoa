@@ -36,8 +36,6 @@ const InputField = ({
     }
   }
 
-  
-
   return (
     <div className="relative">
       <input

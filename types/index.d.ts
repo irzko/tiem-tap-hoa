@@ -173,29 +173,21 @@ interface IConversation {
   conversationId: string;
   createdAt: Date;
   updatedAt: Date;
-  participants: IParticipant[];
+  user1Id: string;
+  user2Id: string;
+  user1: User;
+  user2: User;
   messages: IMessage[];
 }
 
 interface IMessage {
   messageId: string;
-  senderId: string;
+  userId: string;
   content: string;
   conversationId: string;
   createdAt: Date;
   updatedAt: Date;
-  sender: User;
-  conversation: IConversation;
-}
-
-interface IParticipant {
-  participantId: string;
-  userId: string;
-  conversationId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  user: User;
-  conversation: IConversation;
+  user: IUser;
 }
 
 interface ISupplier {

@@ -1,56 +1,55 @@
+import DashboardSidebarItem from "@/components/dashboard/dashboard-sidebar-item";
 import DropdownUser from "@/components/dropdown-user";
 import MenuButton from "@/components/menu-button";
+import SearchForm from "@/components/search-form";
+import HomeSidebarItem from "@/components/ui/home-sidebar-item";
 import Logo from "@/components/ui/logo";
-import Navbar from "@/components/ui/navbar";
-import DashboardSidebarItem from "@/components/dashboard/dashboard-sidebar-item";
-import ToggleTheme from "@/components/ui/toggle-theme";
+import {
+  Button,
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <Navbar>
-        <div className="flex items-center justify-start">
-          <MenuButton>
-            <DashboardSidebarItem />
-          </MenuButton>
+      <Navbar isBordered>
+        <NavbarBrand>
           <Logo />
-        </div>
-        <div className="w-full flex justify-center mx-2">
-          <form action="#" method="GET" className="hidden lg:block">
-            <label htmlFor="topbar-search" className="sr-only">
-              Search
-            </label>
-            <div className="relative lg:w-96">
-              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+        </NavbarBrand>
+        <NavbarContent as="div" className="items-center" justify="center">
+          <SearchForm />
+        </NavbarContent>
+        <NavbarContent justify="end">
+          <DashboardSidebarItem />
+          <NavbarItem>
+            <Link href={`/message/`}>
+              <Button isIconOnly variant="flat">
                 <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  className="w-4 h-4"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 20 20"
+                  viewBox="0 0 20 18"
                 >
                   <path
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />{" "}
+                    d="M16 5h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-2v3l-4-3H8m4-13H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2v3l4-3h4a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                  />
                 </svg>
-              </div>
-              <input
-                type="text"
-                id="topbar-search"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 px-2.5 h-8 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Tìm kiếm"
-              />
-            </div>
-          </form>
-        </div>
-        <div className="flex items-center">
-          <ToggleTheme />
-          <DropdownUser />
-        </div>
+              </Button>
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <DropdownUser />
+          </NavbarItem>
+        </NavbarContent>
       </Navbar>
       <main>
         <div className="p-4 mt-14 sm:ml-64">{children}</div>

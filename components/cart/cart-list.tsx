@@ -1,40 +1,17 @@
 "use client";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Button from "../ui/button";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
-import AdjustProdQuantity from "./adjust-prod-quanlity";
+import AdjustProdQuantity from "./adjust-prod-quantity";
+import { deleteCart } from "@/libs/actions";
 
 export default function CartList({ data }: { data?: ICart[] }) {
-  const { data: session } = useSession();
   const [itemsSelected, setItemsSelected] = useState<ICart[]>([]);
   const [total, setTotal] = useState<number>(0);
   const router = useRouter();
-  const [carts, setCarts] = useState<ICart[]>(data ? data : []);
-
-  const handleDelete = (cartId: string) => {
-    fetch(`/api/cart`, {
-      body: JSON.stringify({
-        cartId: cartId,
-      }),
-      method: "DELETE",
-    }).then((res) => {
-      if (res.ok) {
-        setCarts(carts.filter((cart) => cart.cartId !== cartId));
-      }
-    });
-  };
-
-  const refeshCart = () => {
-    fetch(`/api/cart/${session?.user.userId}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => setCarts(data));
-  };
 
   const handleSelect = (cart: ICart) => {
     const index = itemsSelected.findIndex(
@@ -62,11 +39,11 @@ export default function CartList({ data }: { data?: ICart[] }) {
 
   return (
     <>
-      {carts ? (
-        carts.length > 0 ? (
+      {data ? (
+        data.length > 0 ? (
           <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <div className="divide-y">
-              {carts.map((cart) => (
+              {data.map((cart) => (
                 <div
                   key={cart.cartId}
                   className="dark:border-gray-700 grid md:grid-cols-6 grid-cols-2 gap-2 py-4"
@@ -101,10 +78,8 @@ export default function CartList({ data }: { data?: ICart[] }) {
                     <div>{cart.product.price.toLocaleString("vi-VN")}</div>
 
                     <AdjustProdQuantity
-                      onRefresh={refeshCart}
                       quantity={cart.quantity}
                       cartId={cart.cartId}
-                      userId={session?.user?.userId}
                     />
                     <div>
                       {(cart.product.price * cart.quantity).toLocaleString(
@@ -112,13 +87,14 @@ export default function CartList({ data }: { data?: ICart[] }) {
                       )}
                     </div>
                     <div>
-                      <button
-                        className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                        type="button"
-                        onClick={() => handleDelete(cart.cartId)}
-                      >
-                        Xoá
-                      </button>
+                      <form action={() => deleteCart(cart.cartId)}>
+                        <button
+                          className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                          type="submit"
+                        >
+                          Xoá
+                        </button>
+                      </form>
                     </div>
                   </div>
                 </div>

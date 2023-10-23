@@ -20,22 +20,21 @@ model Category {
 }
 
 model Product {
-  productId     String        @id @default(uuid())
-  productName   String        @unique
+  productId     String         @id @default(uuid())
+  productName   String         @unique
   description   String
   price         Float
-  gender        String?
-  dateOfBirth   DateTime?
-  images        String[]      @default([])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  images        String[]       @default([])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   stockQuantity Int
-  categoryId    String?
+  categoryId    String
   Cart          Cart[]
   Interaction   Interaction[]
   orderDetail   OrderDetail[]
-  category      Category?     @relation(fields: [categoryId], references: [categoryId])
+  category      Category       @relation(fields: [categoryId], references: [categoryId])
   Review        Review[]
+  ImportDetail  ImportDetail[]
 }
 
 model User {
@@ -51,12 +50,11 @@ model User {
   Address            Address[]
   Cart               Cart[]
   Coupon             Coupon[]
-  Interaction        Interaction[]
-  Order              Order[]
-  Review             Review[]
-  OrderStatusHistory OrderStatusHistory[]
-  Usefulness         Usefulness[]
-  Participant        Participant[]
+  interaction        Interaction[]
+  order              Order[]
+  review             Review[]
+  orderStatusHistory OrderStatusHistory[]
+  usefulness         Usefulness[]
   Message            Message[]
 }
 
@@ -223,33 +221,13 @@ enum InteractionType {
   REVIEW
 }
 
-model Conversation {
-  conversationId String        @id @default(uuid())
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  messages       Message[]
-  participants   Participant[]
-}
-
 model Message {
-  messageId      String       @id @default(uuid())
-  content        String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  conversationId String
-  senderId       String
-  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
-  sender         User         @relation(fields: [senderId], references: [userId])
-}
-
-model Participant {
-  participantId  String       @id @default(uuid())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  messageId      String   @id @default(uuid())
   conversationId String
   userId         String
-  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
-  user           User         @relation(fields: [userId], references: [userId])
+  content        String
+  timestamp      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [userId])
 }
 
 model Supplier {
@@ -272,6 +250,20 @@ model ProductImport {
   Shipping        Shipping[]
   QualityControl  QualityControl[]
   ImportHistory   ImportHistory[]
+  ImportDetail    ImportDetail[]
+}
+
+model ImportDetail {
+  importDetailId  String        @id @default(uuid())
+  quantity        Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  productId       String
+  price           Float
+  productImportId String
+  productImport   ProductImport @relation(fields: [productImportId], references: [productImportId])
+  product         Product       @relation(fields: [productId], references: [productId])
+  totalValue      Float
 }
 
 model Warehouse {

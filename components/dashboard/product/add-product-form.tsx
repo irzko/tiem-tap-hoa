@@ -235,6 +235,7 @@ const AddProductForm = () => {
             <TextField
               id="price"
               name="price"
+              defaultValue="1000"
               type="number"
               placeholder="Nhập vào"
               min="1000"
@@ -255,6 +256,7 @@ const AddProductForm = () => {
               name="stockQuantity"
               type="number"
               placeholder="Nhập vào"
+              defaultValue="0"
               min="0"
               max="10000000"
             />

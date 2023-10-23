@@ -92,7 +92,9 @@ export default function DashboardSidebarItem() {
                   <Link href="/dashboard/import/suppliers">Nhà cung cấp</Link>
                 </li>
                 <li className="text-gray-500 dark:text-gray-400">
-                  <Link href="/dashboard/products/add">Sản phẩm nhập</Link>
+                  <Link href="/dashboard/import/product-imports">
+                    Nhập hàng
+                  </Link>
                 </li>
                 <li className="text-gray-500 dark:text-gray-400">
                   <Link href="/dashboard/category">Kiểm tra hàng hóa</Link>

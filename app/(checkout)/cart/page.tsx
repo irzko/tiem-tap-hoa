@@ -3,9 +3,7 @@ import { getServerSession } from "next-auth";
 import CartList from "@/components/cart/cart-list";
 
 const getCart = async (userId: string) => {
-  const res = await fetch(`${process.env.API_URL}/api/cart/${userId}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(`${process.env.API_URL}/api/cart/${userId}`);
   const data = await res.json();
   return data;
 };

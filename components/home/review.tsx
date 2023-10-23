@@ -1,14 +1,7 @@
-"use client";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-
 export default function Review({ data }: { data: IReview[] }) {
-  const [reviews, setReviews] = useState(data);
-  const {data: session} = useSession();
-
   return (
     <div>
-      {reviews.map((review) => (
+      {data.map((review) => (
         <article key={review.reviewId} className="mb-5">
           <div className="flex items-center mb-4 space-x-4">
             {/* <img className="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt=""> */}

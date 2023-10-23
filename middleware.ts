@@ -5,10 +5,10 @@ export const config = {
   matcher: [
     "/cart/:path*",
     "/dashboard/:path*",
-    "/login",
-    "/signup",
+    "/auth",
     "/checkout",
     "/user/:path*",
+    "/message",
   ],
 };
 
@@ -20,16 +20,15 @@ export default async function middleware(req: NextRequest) {
   });
 
   if (!session) {
-    if (pathname !== "/login" && pathname !== "/signup") {
-      return NextResponse.rewrite(new URL("/login", req.url));
+    if (pathname !== "/auth") {
+      return NextResponse.rewrite(new URL("/auth", req.url));
     }
-  } else if (pathname === "/login" || pathname === "/signup") {
+  } else if (pathname === "/auth") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   // if (pathname.startsWith("/api")) {
   //   return NextResponse.next();
   // }
-
   return NextResponse.next();
 }

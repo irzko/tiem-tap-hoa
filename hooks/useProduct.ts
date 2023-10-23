@@ -1,19 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import useSWR, { Fetcher } from "swr";
+
+const fetcher: Fetcher<IProduct, string> = (url) =>
+  fetch(url).then((res) => res.json());
 
 const useProduct = (productId: string) => {
-  const [data, setData] = useState<IProduct>();
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const res = await fetch(`/api/products/${productId}`);
-      const product = await res.json();
-      setData(product);
-      setIsLoading(false);
-    };
-    fetchProduct();
-  }, [productId]);
-  return { data, isLoading };
+  const { data, error, isLoading } = useSWR(
+    `/api/products/${productId}`,
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+  return {
+    product: data,
+    isLoading,
+    isError: error,
+  };
 };
 
 export default useProduct;

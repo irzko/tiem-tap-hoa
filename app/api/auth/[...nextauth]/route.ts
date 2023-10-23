@@ -33,13 +33,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/auth",
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      return url;
-    },
     async session({ session, token, user }) {
       const prismaUser = await prisma.user.findUnique({
         where: {

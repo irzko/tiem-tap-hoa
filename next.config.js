@@ -4,14 +4,6 @@ const nextConfig = {
   images: {
     domains: ["localhost"],
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/dashboard/category",
-  //       destination: "/dashboard/category/root",
-  //     },
-  //   ];
-  // },
 };
 
 module.exports = nextConfig;

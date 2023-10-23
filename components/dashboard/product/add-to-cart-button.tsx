@@ -15,7 +15,7 @@ export default function AddToCartButton({ productId }: Props) {
   const router = useRouter();
   const handleClick = () => {
     if (!session) {
-      router.push("/login");
+      router.push("/auth");
       return;
     }
     fetch(`/api/cart`, {
