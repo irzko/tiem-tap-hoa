@@ -1,119 +1,155 @@
 "use client";
-import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import Button from "../ui/button";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
 import AdjustProdQuantity from "./adjust-prod-quantity";
 import { deleteCart } from "@/libs/actions";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Checkbox,
+} from "@nextui-org/react";
 
-export default function CartList({ data }: { data?: ICart[] }) {
-  const [itemsSelected, setItemsSelected] = useState<ICart[]>([]);
-  const [total, setTotal] = useState<number>(0);
+const Summary = ({
+  selectedItems,
+  carts,
+}: {
+  selectedItems: string[];
+  carts: ICart[];
+}) => {
   const router = useRouter();
 
-  const handleSelect = (cart: ICart) => {
-    const index = itemsSelected.findIndex(
-      (item) => item.cartId === cart.cartId
-    );
-    if (index === -1) {
-      // const newItemsSelected = [...itemsSelected];
-      setItemsSelected([...itemsSelected, cart]);
-      setTotal(total + cart.product.price * cart.quantity);
-    } else {
-      const newItemsSelected = [...itemsSelected];
-      newItemsSelected.splice(index, 1);
-      setItemsSelected(newItemsSelected);
-      setTotal(total - cart.product.price * cart.quantity);
-    }
-  };
+  const summary = carts.reduce(
+    (acc, cart) => {
+      if (selectedItems.includes(cart.cartId)) {
+        acc.total += cart.product.price * cart.quantity;
+        acc.quantity++;
+      }
+      return acc;
+    },
+    { total: 0, quantity: 0 }
+  );
 
   const handleCheckout = () => {
-    sessionStorage.setItem(
-      "cart_store",
-      JSON.stringify(itemsSelected.map((item) => item.cartId))
-    );
+    sessionStorage.setItem("cart_store", JSON.stringify(selectedItems));
     router.push(`/checkout`);
+  };
+  return (
+    <Card className="sticky bottom-0 inset-x-0 z-20" radius="none">
+      <CardBody>
+        <div className="mr-2">
+          <span className="text-sm text-gray-500 dark:text-gray-300">{`Tổng thanh toán (${summary.quantity} sản phẩm): `}</span>
+          <span className="flex items-center ml-0 text-sm font-medium text-blue-600 md:ml-1 md:inline-flex dark:text-blue-500">
+            ₫{summary.total.toLocaleString("vi-VN")}
+          </span>
+        </div>
+      </CardBody>
+      <CardFooter>
+        <Button
+          color="primary"
+          disabled={selectedItems.length > 0 ? false : true}
+          onPress={handleCheckout}
+        >
+          Mua Hàng
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export default function CartList({ data }: { data?: ICart[] }) {
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const handleSelect = (cartId: string) => {
+    const index = selectedItems.findIndex((item) => item === cartId);
+    if (index === -1) {
+      // Add cartId to selectedItems
+      setSelectedItems([...selectedItems, cartId]);
+    } else {
+      // Delete cartId from selectedItems
+      const newItemsSelected = [...selectedItems];
+      newItemsSelected.splice(index, 1);
+      setSelectedItems(newItemsSelected);
+    }
   };
 
   return (
     <>
       {data ? (
         data.length > 0 ? (
-          <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <div className="divide-y">
-              {data.map((cart) => (
-                <div
-                  key={cart.cartId}
-                  className="dark:border-gray-700 grid md:grid-cols-6 grid-cols-2 gap-2 py-4"
-                >
-                  <div className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <form>
-                      <div className="flex items-center mb-4">
-                        <input
-                          id="default-checkbox"
-                          type="checkbox"
-                          onChange={() => handleSelect(cart)}
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <Link
-                          href={`/item/${cart.productId}`}
-                          className="ml-2 flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          <Image
-                            src={`http://localhost:1337/${cart.product.images[0]}`}
-                            alt={cart.product.productName}
-                            width={80}
-                            height={80}
-                          />
-                        </Link>
-                      </div>
-                    </form>
-                  </div>
-                  <div className="md:col-span-5 grid md:grid-cols-5 gap-2 items-center">
-                    <div className="font-medium text-gray-900 dark:text-white">
+          <div className="w-full space-y-4">
+            {data.map((cart) => (
+              <Card key={cart.cartId}>
+                <CardHeader className="flex justify-between">
+                  <Checkbox onChange={() => handleSelect(cart.cartId)}>
+                    <h1 className="text-large line-clamp-1 font-medium">
                       {cart.product.productName}
+                    </h1>
+                  </Checkbox>
+                  <form
+                    action={() => deleteCart(cart.cartId)}
+                    className="flex items-center"
+                  >
+                    <Button
+                      isIconOnly
+                      type="submit"
+                      color="danger"
+                      variant="flat"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 20"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"
+                        />
+                      </svg>
+                    </Button>
+                  </form>
+                </CardHeader>
+                <CardBody>
+                  <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+                    <div className="relative col-span-3 sm:col-span-1 md:col-span-2">
+                      <div className="relative w-full aspect-square">
+                        <Image
+                          className="object-cover rounded-lg"
+                          src={`http://localhost:1337/${cart.product.images[0]}`}
+                          alt={cart.product.productName}
+                          fill
+                          // sizes="200px"
+                        />
+                      </div>
                     </div>
-                    <div>{cart.product.price.toLocaleString("vi-VN")}</div>
-
-                    <AdjustProdQuantity
-                      quantity={cart.quantity}
-                      cartId={cart.cartId}
-                    />
-                    <div>
-                      {(cart.product.price * cart.quantity).toLocaleString(
-                        "vi-VN"
-                      )}
-                    </div>
-                    <div>
-                      <form action={() => deleteCart(cart.cartId)}>
-                        <button
-                          className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                          type="submit"
-                        >
-                          Xoá
-                        </button>
-                      </form>
+                    <div className="grid md:grid-cols-3 col-span-3 sm:col-span-5 md:col-span-10 gap-2">
+                      <h3 className="flex items-center font-semibold">
+                        {cart.product.price} VNĐ
+                      </h3>
+                      <div>
+                        <AdjustProdQuantity
+                          cartId={cart.cartId}
+                          quantity={cart.quantity}
+                        />
+                      </div>
+                      <h3 className="flex items-center font-semibold">
+                        {cart.product.price * cart.quantity} VNĐ
+                      </h3>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="sticky mt-2 bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-end md:p-6 dark:bg-gray-800 dark:border-gray-600">
-              <div className="mr-2">
-                <span className="text-sm text-gray-500 dark:text-gray-300">{`Tổng thanh toán (${itemsSelected.length} sản phẩm): `}</span>
-                <span className="flex items-center ml-0 text-sm font-medium text-blue-600 md:ml-1 md:inline-flex dark:text-blue-500">
-                  ₫{total.toLocaleString("vi-VN")}
-                </span>
-              </div>
-              <Button
-                disabled={itemsSelected.length > 0 ? false : true}
-                onClick={handleCheckout}
-              >
-                Mua Hàng
-              </Button>
-            </div>
+                </CardBody>
+              </Card>
+            ))}
+            <Summary selectedItems={selectedItems} carts={data} />
           </div>
         ) : (
           <></>

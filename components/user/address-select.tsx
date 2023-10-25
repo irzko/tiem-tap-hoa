@@ -1,6 +1,6 @@
 "use client";
+import { Button } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useState } from "react";
-import Button from "@/components/ui/button";
 import useSWR from "swr";
 
 export default function AddressSelect({
@@ -226,7 +226,7 @@ export default function AddressSelect({
         )}
       </div>
       <div className="flex justify-end mt-4">
-        <Button onClick={handleSubmit}>Chọn</Button>
+        <Button onPress={handleSubmit}>Chọn</Button>
       </div>
     </div>
   );

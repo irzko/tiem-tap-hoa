@@ -1,7 +1,9 @@
 import ProductCard from "@/components/product-card";
 
 async function getProducts(): Promise<IProduct[]> {
-  const res = await fetch(`${process.env.API_URL}/api/products`);
+  const res = await fetch(`${process.env.API_URL}/api/products`, {
+    next: { tags: ["products"] },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");

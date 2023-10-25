@@ -1,55 +1,42 @@
+"use client";
+import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import Link from "next/link";
-import Accordion from "./accordion";
 
-async function getData() {
-  const res = await fetch(`${process.env.API_URL}/api/catgs`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
-
-export default async function HomeSidebarItem() {
-  const categoris: ICategory[] = await getData();
+export default function HomeSidebarItem({
+  categories,
+}: {
+  categories: ICategory[];
+}) {
+  const itemClasses = {
+    base: "py-0 w-full",
+    title: "font-normal text-medium",
+    trigger:
+      "px-2 py-0 data-[hover=true]:bg-default-100 rounded-lg h-14 flex items-center",
+    indicator: "text-medium",
+    content: "text-small px-2",
+  };
   return (
     <>
-      <div className="h-full p-3 overflow-y-auto">
-        <ul className="space-y-2 font-medium">
-          {categoris.map((catg) => (
-            // <li key={catg.categoryId}>
-            //   <Link
-            //     href={`/category/${catg.categoryId}`}
-            //     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            //   >
-            //     <span className="flex-1 whitespace-nowrap">
-            //       {catg.categoryName}
-            //     </span>
-            //   </Link>
-            // </li>
-            <Accordion key={catg.categoryId} heading={catg.categoryName}>
-              <ul className="mt-2 space-y-4">
-                {catg.subCategories &&
-                  catg.subCategories.map((subCatg) => {
-                    return (
-                      <li
-                        key={subCatg.categoryId}
-                        className="text-gray-500 dark:text-gray-400"
-                      >
-                        <Link href={`/category/${subCatg.categoryId}`}>
-                          {subCatg.categoryName}
-                        </Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </Accordion>
-          ))}
-        </ul>
-      </div>
+      <Accordion
+        showDivider={false}
+        itemClasses={itemClasses}
+        className="space-y-2 p-2 font-medium"
+      >
+        {categories.map((catg) => (
+          <AccordionItem key={catg.categoryId} title={catg.categoryName}>
+            {catg.subCategories &&
+              catg.subCategories.map((subCatg) => {
+                return (
+                  <li key={subCatg.categoryId}>
+                    <Button as={Link} href={`/category/${subCatg.categoryId}`} className="line-clamp-1">
+                      {subCatg.categoryName}
+                    </Button>
+                  </li>
+                );
+              })}
+          </AccordionItem>
+        ))}
+      </Accordion>
     </>
   );
 }

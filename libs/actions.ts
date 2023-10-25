@@ -1,5 +1,5 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import prisma from "./prisma";
 import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -11,6 +11,7 @@ export const deleteCart = async (id: string) => {
     },
   });
   revalidatePath("/cart");
+  revalidateTag("cartNum");
   redirect("/cart");
 };
 
@@ -71,6 +72,22 @@ export const addProduct = async (formData: FormData) => {
       categoryId: formData.get("categoryId") as string,
     },
   });
-  revalidatePath(`/`);
+  revalidateTag("products");
   redirect(`/dashboard/products`);
+};
+
+export const addAddress = async (formData: FormData, redirectPath: string) => {
+  await prisma.address.create({
+    data: {
+      cityId: formData.get("cityId") as string,
+      streetAddress: formData.get("streetAddress") as string,
+      districtId: formData.get("districtId") as string,
+      wardId: formData.get("wardId") as string,
+      userId: formData.get("userId") as string,
+      fullName: formData.get("fullName") as string,
+      phoneNumber: formData.get("phoneNumber") as string,
+    },
+  });
+  revalidateTag("address");
+  redirect(redirectPath);
 };

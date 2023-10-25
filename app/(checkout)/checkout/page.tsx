@@ -1,10 +1,10 @@
-import CheckoutContainer from "@/components/checkout/checkout-container";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import CheckoutContainer from "@/components/checkout/checkout-container";
 
-const getAddress = async (userId: string) => {
+const getAddress = async (userId: string): Promise<IAddress[]> => {
   const res = await fetch(`${process.env.API_URL}/api/user/address/${userId}`, {
-    cache: "no-store",
+    next: { tags: ["address"] },
   });
   const data = await res.json();
   return data;
@@ -29,11 +29,5 @@ export default async function Page() {
   const userId = session.user.userId;
   const address = await getAddress(userId);
   // const paymentMethods = await getPaymentMethods(userId);
-  return (
-    <CheckoutContainer
-      address={address}
-      userId={userId}
-      // paymentMethods={paymentMethods}
-    />
-  );
+  return <CheckoutContainer address={address} userId={userId} />;
 }

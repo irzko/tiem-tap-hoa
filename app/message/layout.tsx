@@ -1,9 +1,9 @@
-import Navbar from "@/components/ui/navbar";
 import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
 import DropdownUser from "@/components/dropdown-user";
 import ToggleTheme from "@/components/ui/toggle-theme";
 import SearchForm from "@/components/search-form";
+import { Navbar } from "@nextui-org/react";
 
 export default async function Layout({
   children,

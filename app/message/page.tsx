@@ -1,6 +1,5 @@
 "use client";
-import Button from "@/components/ui/button";
-import InputField from "@/components/ui/input-field";
+import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import React, { FormEvent, useEffect, useState } from "react";
 
@@ -44,7 +43,7 @@ export default function Page() {
       >
         <div className="flex w-full mx-auto max-w-3xl">
           <div className="mr-2 w-full">
-            <InputField name="content" />
+            <Input name="content" />
           </div>
           <Button type="submit">
             <svg

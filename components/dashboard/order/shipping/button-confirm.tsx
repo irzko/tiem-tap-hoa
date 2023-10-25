@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/ui/button";
+import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 
@@ -17,5 +17,5 @@ export default function ButtonConfirm({ orderId }: { orderId: string }) {
       }
     });
   };
-  return <Button onClick={handleConfirm}>Xác nhận đã nhận hàng</Button>;
+  return <Button onPress={handleConfirm}>Xác nhận đã nhận hàng</Button>;
 }

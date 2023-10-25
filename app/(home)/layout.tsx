@@ -11,12 +11,29 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import ToggleTheme from "@/components/ui/toggle-theme";
+import Sidebar from "@/components/ui/sidebar";
+import HomeSidebarItem from "@/components/ui/home-sidebar-item";
+import SidebarToggle from "@/components/ui/sidebar-toggle";
+
+async function getCategories() {
+  const res = await fetch(`${process.env.API_URL}/api/catgs`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const categories: ICategory[] = await getCategories();
+
   return (
     <>
       <Navbar isBordered>
@@ -24,9 +41,9 @@ export default async function Layout({
           <Logo />
         </NavbarBrand>
         <div className="flex items-center justify-start">
-          {/* <MenuButton>
-            <HomeSidebarItem />
-          </MenuButton> */}
+          <NavbarItem>
+            <SidebarToggle />
+          </NavbarItem>
         </div>
         <NavbarContent as="div" className="items-center" justify="center">
           <SearchForm />
@@ -54,6 +71,9 @@ export default async function Layout({
             </Link>
           </NavbarItem>
           <NavbarItem>
+            <ToggleTheme />
+          </NavbarItem>
+          <NavbarItem>
             <CartButton />
           </NavbarItem>
           <NavbarItem>
@@ -62,9 +82,10 @@ export default async function Layout({
         </NavbarContent>
       </Navbar>
       <main>
-        <div className="p-4 sm:ml-64">
-          <div className="mt-14">{children}</div>
-        </div>
+        <Sidebar>
+          <HomeSidebarItem categories={categories}/>
+        </Sidebar>
+        <div className="p-2 sm:ml-64">{children}</div>
       </main>
     </>
   );

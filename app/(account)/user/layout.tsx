@@ -1,18 +1,18 @@
-import Navbar from "@/components/ui/navbar";
 import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
-import MenuButton from "@/components/menu-button";
+import Sidebar from "@/components/menu-button";
 import DropdownUser from "@/components/dropdown-user";
 import UserSidebarItem from "@/components/user/user-sidebar-item";
+import { Navbar } from "@nextui-org/react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar>
         <div className="flex items-center justify-start">
-          <MenuButton>
+          <Sidebar>
             <UserSidebarItem />
-          </MenuButton>
+          </Sidebar>
           <Logo />
         </div>
         <div className="flex items-center">

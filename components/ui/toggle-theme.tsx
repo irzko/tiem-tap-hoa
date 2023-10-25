@@ -1,5 +1,6 @@
 "use client";
 import ThemeContext from "@/context/ThemeContext";
+import { Button } from "@nextui-org/react";
 import { useContext } from "react";
 
 const DarkIcon = () => {
@@ -55,11 +56,8 @@ export default function ToggleTheme() {
     }
   };
   return (
-    <button
-      className="relative text-gray-900 w-8 h-8 flex justify-center bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-full text-sm text-center items-center mr-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600 dark:hover:border-gray-600"
-      onClick={handlelick}
-    >
+    <Button isIconOnly variant="flat" onPress={handlelick}>
       {theme === "light" ? <DarkIcon /> : <LightIcon />}
-    </button>
+    </Button>
   );
 }

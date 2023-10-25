@@ -1,5 +1,5 @@
 import ButtonConfirm from "@/components/dashboard/order/unpaid/button-confirm";
-import Button from "@/components/ui/button";
+import { Button } from "@nextui-org/react";
 
 const getUnpaidOrder = async () => {
   return await fetch(`${process.env.API_URL}/api/orders/unpaid`, {

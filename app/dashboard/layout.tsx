@@ -1,9 +1,10 @@
 import DashboardSidebarItem from "@/components/dashboard/dashboard-sidebar-item";
 import DropdownUser from "@/components/dropdown-user";
-import MenuButton from "@/components/menu-button";
 import SearchForm from "@/components/search-form";
-import HomeSidebarItem from "@/components/ui/home-sidebar-item";
 import Logo from "@/components/ui/logo";
+import Sidebar from "@/components/ui/sidebar";
+import SidebarToggle from "@/components/ui/sidebar-toggle";
+import ToggleTheme from "@/components/ui/toggle-theme";
 import {
   Button,
   Link,
@@ -17,6 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <Navbar isBordered>
+        <NavbarItem>
+          <SidebarToggle />
+        </NavbarItem>
         <NavbarBrand>
           <Logo />
         </NavbarBrand>
@@ -24,7 +28,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SearchForm />
         </NavbarContent>
         <NavbarContent justify="end">
-          <DashboardSidebarItem />
+          <NavbarItem>
+            <ToggleTheme />
+          </NavbarItem>
           <NavbarItem>
             <Link href={`/message/`}>
               <Button isIconOnly variant="flat">
@@ -52,7 +58,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </NavbarContent>
       </Navbar>
       <main>
-        <div className="p-4 mt-14 sm:ml-64">{children}</div>
+        <Sidebar>
+          <DashboardSidebarItem />
+        </Sidebar>
+        <div className="p-4 sm:ml-64">{children}</div>
       </main>
     </div>
   );

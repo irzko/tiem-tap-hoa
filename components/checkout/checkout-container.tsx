@@ -2,31 +2,28 @@
 import Loading from "@/components/loading";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "@/components/ui/button";
-import InputField from "@/components/ui/input-field";
-import useModal from "@/hooks/useModal";
 import { useEffect, useState } from "react";
-import PaymentMethodModal from "./payment-method-modal";
 
-const paymentMethod = {
-  COD: "Thanh toán khi nhận hàng",
-  PAYPAL: "PayPal",
-  PAYMENT_CARD: "Thẻ ngân hàng",
-};
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Input,
+  Link as NextLink,
+} from "@nextui-org/react";
+import AddAddressForm from "../user/add-address-form";
 
 export default function CheckoutContainer({
   address,
-  // paymentMethods,
   userId,
 }: {
   address: IAddress[];
-  // paymentMethods: IPaymentMethod[];
   userId: string;
 }) {
-  const [modal, showModal] = useModal();
   const [productsOrdered, setProductsOrdered] = useState<ICart[]>([]);
-  const shippingFee = 30000;
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>();
 
   useEffect(() => {
     const cartStore = sessionStorage.getItem("cart_store");
@@ -44,6 +41,93 @@ export default function CheckoutContainer({
     }
   }, []);
 
+  return (
+    <div className="grid lg:grid-cols-12 gap-4 max-w-7xl mx-auto">
+      <div className="col-auto lg:col-span-8 space-y-4">
+        <AddressShipping address={address} />
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-left">Sản phẩm</h2>
+          </CardHeader>
+          <CardBody>
+            <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400 p-5">
+              {productsOrdered ? (
+                productsOrdered.length > 0 ? (
+                  <>
+                    <div className="divide-y">
+                      {productsOrdered.map((product) => (
+                        <div
+                          key={product.cartId}
+                          className="dark:border-gray-700 grid sm:grid-cols-5 grid-cols-2 gap-2"
+                        >
+                          <div className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <Link
+                              href={`/item/${product.productId}`}
+                              className="flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
+                            >
+                              <Image
+                                src={`http://localhost:1337/${product.product.images[0]}`}
+                                alt={product.product.productName}
+                                width={80}
+                                height={80}
+                                className="object-cover aspect-square rounded-lg"
+                              />
+                            </Link>
+                          </div>
+                          <div className="sm:col-span-4 grid sm:grid-cols-4 gap-2 items-center">
+                            <div className="font-medium text-gray-900 dark:text-white">
+                              {product.product.productName}
+                            </div>
+                            <div>
+                              {product.product.price.toLocaleString("vi-VN")}
+                            </div>
+
+                            <div>{product.quantity}</div>
+
+                            <div>
+                              {(
+                                product.product.price * product.quantity
+                              ).toLocaleString("vi-VN")}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )
+              ) : null}
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      <Payment
+        address={address}
+        userId={userId}
+        productsOrdered={productsOrdered}
+      />
+    </div>
+  );
+}
+
+const paymentMethod = {
+  COD: "Thanh toán khi nhận hàng",
+  PAYPAL: "PayPal",
+  PAYMENT_CARD: "Thẻ ngân hàng",
+};
+
+const Payment = ({
+  address,
+  userId,
+  productsOrdered,
+}: {
+  address: IAddress[];
+  userId: string;
+  productsOrdered: ICart[];
+}) => {
+  const shippingFee = 30000;
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>();
   const handleCheckout = () => {
     const data = {
       userId: userId,
@@ -64,172 +148,134 @@ export default function CheckoutContainer({
     });
   };
   return (
-    <div className="grid lg:grid-cols-12 gap-4 max-w-7xl mx-auto">
-      <div className="col-auto lg:col-span-8">
-        <div className="bg-white dark:bg-gray-800 relative shadow-md rounded-lg overflow-hidden">
-          <div className="p-5">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-                Địa chỉ nhận hàng
-              </h2>
-              <Link
-                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                href="/user/address/add"
-              >
-                Chỉnh sửa
-              </Link>
-            </div>
-            {address ? (
-              address.length > 0 ? (
-                address.map((addr) => (
-                  <div key={addr.addressId}>
-                    <div className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                      <p>{addr.fullName}</p>
-                      <p>{addr.phoneNumber}</p>
-                      <p>
-                        {addr.streetAddress}, {addr.ward.name},{" "}
-                        {addr.district.name}, {addr.city.name}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div>
-                  <div className="flex gap-8 justify-between items-start py-3 px-4 w-full bg-gray-50 border border-b border-gray-200 sm:items-center dark:border-gray-700 lg:py-4 dark:bg-gray-800">
-                    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                      Bạn chưa có địa chỉ nào
-                    </p>
-                    <Link href={`/user/address/add`}>
-                      <Button>Thêm địa chỉ</Button>
-                    </Link>
-                  </div>
-                </div>
-              )
-            ) : (
-              <Loading />
-            )}
-          </div>
-          <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400 p-5">
-            {productsOrdered ? (
-              productsOrdered.length > 0 ? (
-                <>
-                  <div className="divide-y">
-                    {productsOrdered.map((product) => (
-                      <div
-                        key={product.cartId}
-                        className="dark:border-gray-700 grid sm:grid-cols-5 grid-cols-2 gap-2 py-4"
-                      >
-                        <div className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                          <Link
-                            href={`/item/${product.productId}`}
-                            className="flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
-                          >
-                            <Image
-                              src={`http://localhost:1337/${product.product.images[0]}`}
-                              alt={product.product.productName}
-                              width={80}
-                              height={80}
-                            />
-                          </Link>
-                        </div>
-                        <div className="sm:col-span-4 grid sm:grid-cols-4 gap-2 items-center">
-                          <div className="font-medium text-gray-900 dark:text-white">
-                            {product.product.productName}
-                          </div>
-                          <div>
-                            {product.product.price.toLocaleString("vi-VN")}
-                          </div>
-
-                          <div>{product.quantity}</div>
-
-                          <div>
-                            {(
-                              product.product.price * product.quantity
-                            ).toLocaleString("vi-VN")}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <></>
-              )
-            ) : null}
-          </div>
-        </div>
-      </div>
-      <div className="col-auto lg:col-span-4">
-        <div className="bg-white flex flex-col space-y-4 dark:bg-gray-800 rounded-lg p-5">
-          <div>
-            <h2 className="text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+    <div className="col-auto lg:col-span-4">
+      <Card>
+        <CardBody className="space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-lg font-semibold text-left">
               Chọn phương thức thanh toán
             </h2>
-            <button
-              onClick={() => {
-                showModal((onClose) => {
-                  return (
-                    <PaymentMethodModal
-                      onClose={onClose}
-                      setPaymentMethod={setSelectedPaymentMethod}
-                      // paymentMethods={paymentMethods}
-                    />
-                  );
-                });
-              }}
-              className="inline-flex  items-center justify-between w-full p-2.5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+            <Button
+              // onClick={() => {
+              //   showModal((onClose) => {
+              //     return (
+              //       <PaymentMethodModal
+              //         onClose={onClose}
+              //         setPaymentMethod={setSelectedPaymentMethod}
+              //         // paymentMethods={paymentMethods}
+              //       />
+              //     );
+              //   });
+              // }}
+              color="primary"
+              variant="flat"
+              className="w-full"
             >
               {selectedPaymentMethod
                 ? paymentMethod[
                     selectedPaymentMethod as keyof typeof paymentMethod
                   ]
                 : "Chọn phương thức thanh toán"}
-            </button>
+            </Button>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-              Mã giảm giá
-            </h2>
-            <form className="flex space-x-2">
-              <div className="w-full">
-                <InputField placeholder="Mã giảm giá (mã chỉ áp dụng 1 lần)" />
-              </div>
-              <Button style={{ whiteSpace: "nowrap", height: "100%" }}>
-                Áp dụng
-              </Button>
+          <div className="space-y-2">
+            <h2 className="text-lg font-semibold text-left">Mã giảm giá</h2>
+            <form>
+              <ButtonGroup className="w-full">
+                <Input
+                  className=""
+                  classNames={{
+                    inputWrapper: "rounded-r-none",
+                  }}
+                  placeholder="Mã giảm giá (mã chỉ áp dụng 1 lần)"
+                />
+                <Button color="primary" variant="flat">
+                  Áp dụng
+                </Button>
+              </ButtonGroup>
             </form>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-              Thông tin đơn hàng
-            </h2>
-            <div className="text-sm space-y-2 font-medium text-gray-500 dark:text-gray-400">
-              <p>
-                Tạm tính: ₫
-                {productsOrdered
-                  .reduce(
-                    (acc, cart) => acc + cart.product.price * cart.quantity,
-                    0
-                  )
-                  .toLocaleString("vi-VN")}
-              </p>
-              <p>Phí vận chuyển: ₫{shippingFee.toLocaleString("vi-VN")}</p>
-              <p>
-                Tổng cộng: ₫
-                {(
-                  productsOrdered.reduce(
-                    (acc, cart) => acc + cart.product.price * cart.quantity,
-                    0
-                  ) + shippingFee
-                ).toLocaleString("vi-VN")}
-              </p>
-            </div>
+        </CardBody>
+        <CardFooter className="flex flex-col items-start gap-2">
+          <h2 className="text-lg font-semibold text-left">
+            Thông tin đơn hàng
+          </h2>
+          <div className="text-sm space-y-2 font-medium text-gray-500 dark:text-gray-400">
+            <p>
+              Tạm tính: ₫
+              {productsOrdered
+                .reduce(
+                  (acc, cart) => acc + cart.product.price * cart.quantity,
+                  0
+                )
+                .toLocaleString("vi-VN")}
+            </p>
+            <p>Phí vận chuyển: ₫{shippingFee.toLocaleString("vi-VN")}</p>
+            <p>
+              Tổng cộng: ₫
+              {(
+                productsOrdered.reduce(
+                  (acc, cart) => acc + cart.product.price * cart.quantity,
+                  0
+                ) + shippingFee
+              ).toLocaleString("vi-VN")}
+            </p>
           </div>
-          <Button onClick={handleCheckout}>Đặt hàng</Button>
-        </div>
-      </div>
-
-      {modal}
+          <Button
+            fullWidth
+            color="primary"
+            variant="shadow"
+            onPress={handleCheckout}
+          >
+            Đặt hàng
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
-}
+};
+
+const AddressShipping = ({ address }: { address: IAddress[] }) => {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="w-full flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-left">Địa chỉ nhận hàng</h2>
+          <NextLink as={Link} href="/user/address/add">
+            Chỉnh sửa
+          </NextLink>
+        </div>
+      </CardHeader>
+      <CardBody>
+        {address ? (
+          address.length > 0 ? (
+            address.map((addr) => (
+              <div key={addr.addressId}>
+                <div className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                  <p>{addr.fullName}</p>
+                  <p>{addr.phoneNumber}</p>
+                  <p>
+                    {addr.streetAddress}, {addr.ward.name}, {addr.district.name}
+                    , {addr.city.name}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>
+              <div className="flex gap-8 justify-between items-start py-3 px-4 w-full sm:items-center lg:py-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Bạn chưa có địa chỉ nào
+                </p>
+
+                <AddAddressForm redirectPath="/checkout" />
+              </div>
+            </div>
+          )
+        ) : (
+          <Loading />
+        )}
+      </CardBody>
+    </Card>
+  );
+};

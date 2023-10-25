@@ -2,12 +2,11 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { NextAuthProvider } from "@/providers/NextAuthProvider";
 import { ToastContainer } from "react-toastify";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Providers } from "./providers";
+import { Provider } from "@/providers/providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,10 +39,8 @@ export default async function RootLayout({
   return (
     <ThemeProvider>
       <body className={`${inter.variable}`}>
-        <Providers>
-          <NextAuthProvider session={session}>{children}</NextAuthProvider>
-          <ToastContainer />
-        </Providers>
+        <Provider session={session}>{children}</Provider>
+        <ToastContainer />
       </body>
     </ThemeProvider>
   );

@@ -4,7 +4,7 @@ import ThemeContext from "@/context/ThemeContext";
 import { ReactNode, useEffect, useState } from "react";
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     const localTheme = window.localStorage.getItem("theme");

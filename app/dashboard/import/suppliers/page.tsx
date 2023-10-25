@@ -1,9 +1,7 @@
 "use client";
-import Button from "@/components/ui/button";
-import IconButton from "@/components/ui/icon-button";
-import InputField from "@/components/ui/input-field";
 import ModalHeader from "@/components/ui/modal-header";
 import useModal from "@/hooks/useModal";
+import { Button, Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
@@ -39,21 +37,21 @@ function AddSupplierForm({ onClose }: { onClose: () => void }) {
           onSubmit={(e) => handleSubmit(e, onClose)}
           className="flex flex-col gap-4"
         >
-          <InputField
+          <Input
             label="Tên nhà cung cấp"
             name="supplierName"
             id="supplierName"
           />
           <div className="flex gap-2">
-            <InputField
+            <Input
               label="Số điện thoại"
               name="phoneNumber"
               id="phoneNumber"
             />
-            <InputField label="Email" name="email" id="email" />
+            <Input label="Email" name="email" id="email" />
           </div>
-          <InputField label="Địa chỉ" id="address" name="address" />
-          <InputField
+          <Input label="Địa chỉ" id="address" name="address" />
+          <Input
             label="Thông tin liên hệ khác"
             id="otherInfo"
             name="otherInfo"
@@ -160,33 +158,33 @@ const ActionModal = ({
           onSubmit={(e) => handleSubmit(e, onClose)}
           className="flex flex-col gap-4"
         >
-          <InputField
+          <Input
             label="Tên nhà cung cấp"
             name="supplierName"
             id="supplierName"
             defaultValue={supplier.supplierName}
           />
           <div className="flex gap-2">
-            <InputField
+            <Input
               label="Số điện thoại"
               name="phoneNumber"
               id="phoneNumber"
               defaultValue={supplier.phoneNumber}
             />
-            <InputField
+            <Input
               label="Email"
               name="email"
               id="email"
               defaultValue={supplier.email}
             />
           </div>
-          <InputField
+          <Input
             label="Địa chỉ"
             id="address"
             name="address"
             defaultValue={supplier.address}
           />
-          <InputField
+          <Input
             label="Thông tin liên hệ khác"
             id="otherInfo"
             name="otherInfo"

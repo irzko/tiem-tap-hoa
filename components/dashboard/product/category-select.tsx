@@ -1,6 +1,6 @@
 "use client";
+import { Button } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Button from "../../ui/button";
 
 export default function CategorySelect({
   toggle,
@@ -151,7 +151,7 @@ export default function CategorySelect({
           </div>
 
           <div className="flex justify-end items-center pt-4 dark:border-gray-600">
-            <Button type="button" onClick={handleClick}>
+            <Button type="button" onPress={handleClick}>
               Xác nhận
             </Button>
           </div>

@@ -1,19 +1,28 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Rating from "@/components/home/rating";
 import Review from "@/components/home/review";
-import Breadcrumb from "@/components/ui/breadcrumb";
-import BreadcrumbItem from "@/components/ui/breadcrumb-item";
 import getBreadcrumb from "@/libs/getBeadcrumb";
 import { getServerSession } from "next-auth/next";
 import Image from "next/image";
 import prisma from "@/libs/prisma";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
+import { revalidatePath, revalidateTag } from "next/cache";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Image as NextImage,
+  Link as NextLink,
+} from "@nextui-org/react";
+import Link from "next/link";
 
 export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
-    `${process.env.API_URL}/api/products`
+    `${process.env.API_URL}/api/products`,
+    {
+      next: { tags: ["products"] },
+    }
   ).then((res) => res.json());
 
   return products.map((product) => ({
@@ -70,35 +79,45 @@ export default async function Page({ params }: { params: { prodId: string } }) {
       }
     }
     revalidatePath("/cart");
+    revalidateTag("cartNum");
+
     redirect(`/cart`);
   };
 
   return (
     <>
-      <div className="max-w-screen-lg mx-auto space-y-6">
-        <Breadcrumb>
-          {breadcrumb.map((item) => (
-            <BreadcrumbItem
-              href={`/category/${item.categoryId}`}
-              key={item.categoryId}
-            >
-              {item.categoryName}
-            </BreadcrumbItem>
-          ))}
-        </Breadcrumb>
+      <div className="max-w-screen-lg mx-auto space-y-4">
+        <Card>
+          <CardBody>
+            {breadcrumb.map((item) => (
+              <NextLink
+                as={Link}
+                href={`/category/${item.categoryId}`}
+                key={item.categoryId}
+              >
+                {item.categoryName}
+              </NextLink>
+            ))}
+          </CardBody>
+        </Card>
 
         <Card className="border-none" shadow="sm">
           <CardBody>
             <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
-              <div className="relative col-span-6 md:col-span-4">
+              <div className="relative md:col-span-4 col-span-full">
                 {product.images.length > 0 ? (
-                  <Image
+                  <NextImage
+                    as={Image}
                     src={`${process.env.IMAGE_URL}/${product.images[0]}`}
                     alt={product.productName}
-                    className="rounded-lg"
+                    className="rounded-lg object-cover"
                     priority
-                    width={300}
-                    height={300}
+                    isBlurred
+                    classNames={{
+                      wrapper: "!max-w-none w-full aspect-square",
+                    }}
+                    fill
+                    sizes="300px"
                   />
                 ) : (
                   <div className="sm:w-[300px] w-screen aspect-square flex justify-center items-center bg-white dark:bg-gray-700">
@@ -126,7 +145,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                     </h3>
                   </div>
                 </div>
-                <div className="flex w-full items-center justify-center">
+                <div className="flex w-full items-center justify-center md:justify-start">
                   <form action={addToCart}>
                     <Button type="submit" color="primary" variant="shadow">
                       Thêm vào giỏ hàng

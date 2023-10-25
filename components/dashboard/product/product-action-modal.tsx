@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import Button from "../../ui/button";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
 export default function ProductActionModal({
   showModal,

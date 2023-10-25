@@ -15,7 +15,7 @@ export default async function Page() {
   }
   const cart = await getCart(session.user.userId);
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-screen-md mx-auto">
       <CartList data={cart} />
     </div>
   );
