@@ -1,5 +1,5 @@
-import InputField from "@/components/ui/input-field";
 import CategoryContext from "@/context/CategoryContext";
+import { Input } from "@nextui-org/react";
 import {
   Dispatch,
   SetStateAction,
@@ -83,7 +83,7 @@ export default function RenameModal({
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
-              <InputField
+              <Input
                 id="categoryName"
                 name="categoryName"
                 label="Tên danh mục"

@@ -66,7 +66,7 @@ export default function CheckoutContainer({
                               className="flex items-center flex-wrap text-sm font-medium text-gray-900 dark:text-gray-300"
                             >
                               <Image
-                                src={`http://localhost:1337/${product.product.images[0]}`}
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${product.product.images[0]}`}
                                 alt={product.product.productName}
                                 width={80}
                                 height={80}
@@ -155,22 +155,7 @@ const Payment = ({
             <h2 className="text-lg font-semibold text-left">
               Chọn phương thức thanh toán
             </h2>
-            <Button
-              // onClick={() => {
-              //   showModal((onClose) => {
-              //     return (
-              //       <PaymentMethodModal
-              //         onClose={onClose}
-              //         setPaymentMethod={setSelectedPaymentMethod}
-              //         // paymentMethods={paymentMethods}
-              //       />
-              //     );
-              //   });
-              // }}
-              color="primary"
-              variant="flat"
-              className="w-full"
-            >
+            <Button color="primary" variant="flat" className="w-full">
               {selectedPaymentMethod
                 ? paymentMethod[
                     selectedPaymentMethod as keyof typeof paymentMethod
@@ -255,8 +240,8 @@ const AddressShipping = ({ address }: { address: IAddress[] }) => {
                   <p>{addr.fullName}</p>
                   <p>{addr.phoneNumber}</p>
                   <p>
-                    {addr.streetAddress}, {addr.ward.name}, {addr.district.name}
-                    , {addr.city.name}
+                    {addr.streetAddress}, {addr.ward.WardName},{" "}
+                    {addr.district.DistrictName}, {addr.province.ProvinceName}
                   </p>
                 </div>
               </div>

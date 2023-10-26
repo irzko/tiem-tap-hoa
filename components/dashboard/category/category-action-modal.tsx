@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import DeleteCategoryModal from "./detete-category-modal";
 import RenameModal from "./rename-category-modal";
-import Button from "../../ui/button";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
 export default function CategoryActionModal({
   showModal,

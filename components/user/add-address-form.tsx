@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   Button,
@@ -19,24 +19,34 @@ import {
 import useSWR from "swr";
 import { addAddress } from "@/libs/actions";
 
-const ProvinceSelect = ({
-  selectedProvince,
-  setSelectedProvince,
+async function fetchWithToken(url: string, token: string) {
+  return fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+  }).then((res) => res.json());
+}
+
+const AddressSelect = ({
+  selectedAddress,
+  setSelectedAddress,
 }: {
-  selectedProvince: [ICity, IDistrict, IWard];
-  setSelectedProvince: React.Dispatch<
-    React.SetStateAction<[ICity, IDistrict, IWard]>
-  >;
+  selectedAddress: [any, any, any];
+  setSelectedAddress: React.Dispatch<React.SetStateAction<[any, any, any]>>;
 }) => {
   const [currentTab, setCurrentTab] = useState("city");
 
-  const [districts, setDistricts] = useState<IDistrict[] | undefined>();
-  const [wards, setWards] = useState<IWard[] | undefined>();
-  const [toggleProvince, setToggleProvince] = useState(false);
+  const [districts, setDistricts] = useState<any>();
+  const [wards, setWards] = useState<any>();
+  const [toggle, setToggle] = useState(false);
 
-  const { data: cities } = useSWR(
-    "/api/provinces",
-    (url: string): Promise<ICity[]> => fetch(url).then((res) => res.json()),
+  const { data } = useSWR(
+    [
+      "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+      process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+    ],
+    ([url, token]) => fetchWithToken(url, token),
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
@@ -44,46 +54,66 @@ const ProvinceSelect = ({
     }
   );
 
-  const handleSelectCity = (city: ICity) => {
-    setSelectedProvince((prev) => [city, prev[1], prev[2]]);
-    fetch(`/api/districts/${city.cityId}`)
+  const handleSelectCity = (province: any) => {
+    setSelectedAddress((prev) => [province, prev[1], prev[2]]);
+    fetch(
+      `https://online-gateway.ghn.vn/shiip/public-api/master-data/district`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+        },
+        body: JSON.stringify({
+          province_id: province.ProvinceID,
+        }),
+        method: "POST",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
-        setDistricts(data);
+        setDistricts(data.data);
       });
     setCurrentTab("district");
   };
 
-  const handleSelectDistrict = (district: IDistrict) => {
-    setSelectedProvince((prev) => [prev[0], district, prev[2]]);
-    fetch(`/api/wards/${district.districtId}`)
+  const handleSelectDistrict = (district: any) => {
+    setSelectedAddress((prev) => [prev[0], district, prev[2]]);
+    fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward`, {
+      headers: {
+        "Content-Type": "application/json",
+        token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+      },
+      body: JSON.stringify({
+        district_id: district.DistrictID,
+      }),
+      method: "POST",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setWards(data);
+        setWards(data.data);
       });
     setCurrentTab("ward");
   };
 
-  const handleSelectWard = (ward: IWard) => {
-    setSelectedProvince((prev) => [prev[0], prev[1], ward]);
-    setToggleProvince(false);
+  const handleSelectWard = (ward: any) => {
+    setSelectedAddress((prev) => [prev[0], prev[1], ward]);
+    setToggle(false);
   };
+
   return (
     <>
       <Input
         isReadOnly
-        // variant=""
         onChange={() => {}}
         value={
-          selectedProvince[2].name
-            ? selectedProvince.map((item) => item.name).join(", ")
-            : ""
+          selectedAddress[2].WardCode &&
+          `${selectedAddress[0].ProvinceName}, ${selectedAddress[1].DistrictName}, ${selectedAddress[2].WardName}`
         }
         label="Địa chỉ"
         placeholder="Chọn địa chỉ"
-        onClick={() => setToggleProvince((prev) => !prev)}
+        onClick={() => setToggle((prev) => !prev)}
       />
-      {toggleProvince && (
+      {toggle && (
         <Tabs
           fullWidth
           aria-label="Options"
@@ -92,14 +122,14 @@ const ProvinceSelect = ({
         >
           <Tab key="city" title="Tỉnh / Thành Phố">
             <RadioGroup
-              value={selectedProvince[0].cityId}
+              value={selectedAddress[0].CityId}
               className="h-64 overflow-auto"
             >
-              {cities?.map((city) => (
+              {data?.data.map((province: any) => (
                 <Radio
-                  onChange={() => handleSelectCity(city)}
-                  key={city.cityId}
-                  value={city.cityId}
+                  onChange={() => handleSelectCity(province)}
+                  key={province.ProvinceID}
+                  value={province.ProvinceID}
                   classNames={{
                     base: cn(
                       "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
@@ -108,7 +138,7 @@ const ProvinceSelect = ({
                     ),
                   }}
                 >
-                  {city.name}
+                  {province.ProvinceName}
                 </Radio>
               ))}
             </RadioGroup>
@@ -116,13 +146,13 @@ const ProvinceSelect = ({
           <Tab key="district" title="Quận / Huyện">
             <RadioGroup
               className="h-64 overflow-auto"
-              value={selectedProvince[1].districtId}
+              value={selectedAddress[1].DistrictId}
             >
-              {districts?.map((district) => (
+              {districts?.map((district: any) => (
                 <Radio
                   onChange={() => handleSelectDistrict(district)}
-                  key={district.districtId}
-                  value={district.districtId}
+                  key={district.DistrictID}
+                  value={district.DistrictID}
                   classNames={{
                     base: cn(
                       "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
@@ -131,7 +161,7 @@ const ProvinceSelect = ({
                     ),
                   }}
                 >
-                  {district.name}
+                  {district.DistrictName}
                 </Radio>
               ))}
             </RadioGroup>
@@ -139,13 +169,13 @@ const ProvinceSelect = ({
           <Tab key="ward" title="Phường / Xã">
             <RadioGroup
               className="h-64 overflow-auto"
-              value={selectedProvince[2].wardId}
+              value={selectedAddress[2].WardCode}
             >
-              {wards?.map((ward) => (
+              {wards?.map((ward: any) => (
                 <Radio
-                  key={ward.wardId}
+                  key={ward.WardCode}
                   onChange={() => handleSelectWard(ward)}
-                  value={ward.wardId}
+                  value={ward.WardCode}
                   classNames={{
                     base: cn(
                       "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
@@ -154,7 +184,7 @@ const ProvinceSelect = ({
                     ),
                   }}
                 >
-                  {ward.name}
+                  {ward.WardName}
                 </Radio>
               ))}
             </RadioGroup>
@@ -170,9 +200,11 @@ export default function AddAddressForm({
 }: {
   redirectPath: string;
 }) {
-  const [selectedProvince, setSelectedProvince] = useState<
-    [ICity, IDistrict, IWard]
-  >([{} as ICity, {} as IDistrict, {} as IWard]);
+  const [selectedAddress, setSelectedAddress] = useState<[any, any, any]>([
+    {},
+    {},
+    {},
+  ]);
   const { data: session } = useSession();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -192,9 +224,15 @@ export default function AddAddressForm({
               <form
                 action={(formData) => {
                   formData.append("userId", session?.user?.userId as string);
-                  formData.append("cityId", selectedProvince[0].cityId);
-                  formData.append("districtId", selectedProvince[1].districtId);
-                  formData.append("wardId", selectedProvince[2].wardId);
+                  formData.append(
+                    "province",
+                    JSON.stringify(selectedAddress[0])
+                  );
+                  formData.append(
+                    "district",
+                    JSON.stringify(selectedAddress[1])
+                  );
+                  formData.append("ward", JSON.stringify(selectedAddress[2]));
                   addAddress(formData, redirectPath);
                 }}
                 className="flex flex-col space-y-4"
@@ -211,9 +249,9 @@ export default function AddAddressForm({
                       label="Số điện thoại"
                     />
                   </div>
-                  <ProvinceSelect
-                    selectedProvince={selectedProvince}
-                    setSelectedProvince={setSelectedProvince}
+                  <AddressSelect
+                    selectedAddress={selectedAddress}
+                    setSelectedAddress={setSelectedAddress}
                   />
 
                   <Input

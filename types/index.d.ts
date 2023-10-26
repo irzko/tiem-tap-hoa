@@ -52,42 +52,6 @@ interface ICart {
   product: IProduct;
 }
 
-interface IAddress {
-  addressId: string;
-  userId: string;
-  fullName: string;
-  streetAddress: string;
-  phoneNumber: string;
-  cityId: string;
-  districtId: string;
-  wardId: string;
-  city: ICity;
-  district: IDistrict;
-  ward: IWard;
-  user: User;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface IWard {
-  wardId: string;
-  name: string;
-  districtId: string;
-}
-
-interface IDistrict {
-  districtId: string;
-  name: string;
-  cityId: string;
-  wards?: IWard[];
-}
-
-interface ICity {
-  cityId: string;
-  name: string;
-  districts?: IDistrict[];
-}
-
 interface IPaymentCard {
   cardNumber: string;
   cardHolderName: string;
@@ -152,6 +116,20 @@ interface IOrder {
   user: User;
   orderDetails: IOrderDetail[];
   paymentMethods: IPaymentMethod[];
+}
+
+interface IAddress {
+  addressId: string;
+  phoneNumber: string;
+  fullName: string;
+  streetAddress: string;
+  ward: any;
+  district: any;
+  province: any;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  Order: IOrder[];
 }
 
 interface IReview {

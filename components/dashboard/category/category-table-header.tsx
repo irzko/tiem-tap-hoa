@@ -1,7 +1,7 @@
 import vietnameseToAscii from "@/libs/vietnameseToAscii";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import Button from "../../ui/button";
 import AddCategoryModal from "./add-category-modal";
+import { Button } from "@nextui-org/react";
 
 export default function CategoryTableHeader({
   data,

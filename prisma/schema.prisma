@@ -23,10 +23,14 @@ model Product {
   productId     String         @id @default(uuid())
   productName   String         @unique
   description   String
-  price         Float
+  price         Int
   images        String[]       @default([])
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  weight        Int
+  height        Int
+  width         Int
+  length        Int
   stockQuantity Int
   categoryId    String
   Cart          Cart[]
@@ -168,45 +172,18 @@ model Coupon {
   user       User     @relation(fields: [userId], references: [userId])
 }
 
-model City {
-  cityId    String     @id @default(uuid())
-  name      String
-  districts District[]
-  Address   Address[]
-}
-
-model District {
-  districtId String    @id @default(uuid())
-  name       String
-  cityId     String
-  city       City      @relation(fields: [cityId], references: [cityId])
-  wards      Ward[]
-  Address    Address[]
-}
-
-model Ward {
-  wardId     String    @id @default(uuid())
-  name       String
-  districtId String
-  Address    Address[]
-  district   District  @relation(fields: [districtId], references: [districtId])
-}
-
 model Address {
   addressId     String   @id @default(uuid())
   phoneNumber   String
   fullName      String
   streetAddress String
-  wardId        String
-  districtId    String
-  cityId        String
+  ward          Json
+  district      Json
+  province      Json
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   userId        String
   user          User     @relation(fields: [userId], references: [userId])
-  ward          Ward     @relation(fields: [wardId], references: [wardId])
-  district      District @relation(fields: [districtId], references: [districtId])
-  city          City     @relation(fields: [cityId], references: [cityId])
   Order         Order[]
 }
 

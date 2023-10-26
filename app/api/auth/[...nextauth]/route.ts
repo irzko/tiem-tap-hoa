@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/auth",
+    signIn: "/login",
   },
   callbacks: {
     async session({ session, token, user }) {

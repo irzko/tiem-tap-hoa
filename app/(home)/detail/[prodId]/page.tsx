@@ -108,7 +108,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                 {product.images.length > 0 ? (
                   <NextImage
                     as={Image}
-                    src={`${process.env.IMAGE_URL}/${product.images[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${product.images[0]}`}
                     alt={product.productName}
                     className="rounded-lg object-cover"
                     priority

@@ -88,10 +88,13 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
         formData.append("images", file);
       });
 
-      const res = await fetch(`http://localhost:1337/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const data = await res.json();
       setSelectedImages([...selectedImages, ...data.files]);
     }

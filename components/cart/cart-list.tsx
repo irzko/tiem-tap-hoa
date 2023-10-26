@@ -124,7 +124,7 @@ export default function CartList({ data }: { data?: ICart[] }) {
                       <div className="relative w-full aspect-square">
                         <Image
                           className="object-cover rounded-lg"
-                          src={`http://localhost:1337/${cart.product.images[0]}`}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${cart.product.images[0]}`}
                           alt={cart.product.productName}
                           fill
                           // sizes="200px"

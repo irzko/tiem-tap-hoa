@@ -61,7 +61,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Sidebar>
           <DashboardSidebarItem />
         </Sidebar>
-        <div className="p-4 sm:ml-64">{children}</div>
+        <div className=" sm:ml-64">
+          <div className="p-4 max-w-screen-xl mx-auto">{children}</div>
+        </div>
       </main>
     </div>
   );

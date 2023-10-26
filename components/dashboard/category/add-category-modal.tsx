@@ -1,7 +1,6 @@
-import InputField from "@/components/ui/input-field";
 import CategoryContext from "@/context/CategoryContext";
+import { Input, Select, SelectItem } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
-import Select from "../../ui/select";
 
 export default function AddCategoryModal({
   toggle,
@@ -73,20 +72,18 @@ export default function AddCategoryModal({
           </div>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-4 space-y-4">
-              {categories && (
-                <Select name="parentId" defaultValue="">
-                  <option value="">Danh mục chính</option>
-                  {categories.map((category) => (
-                    <option
-                      key={category.categoryId}
-                      value={category.categoryId}
-                    >
-                      {category.categoryName}
-                    </option>
-                  ))}
-                </Select>
-              )}
-              <InputField
+              <Select
+                items={categories}
+                title="Danh mục"
+                placeholder="Chọn danh mục"
+              >
+                {(category) => (
+                  <SelectItem key={category.categoryId}>
+                    {category.categoryName}
+                  </SelectItem>
+                )}
+              </Select>
+              <Input
                 id="categoryName"
                 name="categoryName"
                 label="Tên danh mục"

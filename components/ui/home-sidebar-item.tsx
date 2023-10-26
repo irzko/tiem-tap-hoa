@@ -28,7 +28,7 @@ export default function HomeSidebarItem({
               catg.subCategories.map((subCatg) => {
                 return (
                   <li key={subCatg.categoryId}>
-                    <Button as={Link} href={`/category/${subCatg.categoryId}`} className="line-clamp-1">
+                    <Button as={Link} href={`/category/${subCatg.categoryId}`}>
                       {subCatg.categoryName}
                     </Button>
                   </li>

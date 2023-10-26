@@ -1,6 +1,6 @@
 import CategoryContext from "@/context/CategoryContext";
+import { Button } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useContext } from "react";
-import Button from "../../ui/button";
 
 export default function DeleteCategoryModal({
   showModal,
@@ -76,7 +76,7 @@ export default function DeleteCategoryModal({
             >
               Huỷ
             </button>
-            <Button color="red" onClick={handleDelete}>
+            <Button color="danger" onClick={handleDelete}>
               Xác nhận xóa
             </Button>
           </div>

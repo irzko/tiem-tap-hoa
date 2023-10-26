@@ -1,9 +1,9 @@
 import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
-import Sidebar from "@/components/menu-button";
 import DropdownUser from "@/components/dropdown-user";
 import UserSidebarItem from "@/components/user/user-sidebar-item";
 import { Navbar } from "@nextui-org/react";
+import Sidebar from "@/components/ui/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

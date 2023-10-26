@@ -13,7 +13,7 @@ function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
       {thumbnails.map((thumbnail, index) => (
         <div key={index}>
           <Image
-            src={`http://localhost:1337/${thumbnail}`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${thumbnail}`}
             alt="preview"
             className="rounded-lg object-cover"
             width={64}

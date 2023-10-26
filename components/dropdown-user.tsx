@@ -41,7 +41,7 @@ export default function DropdownUser() {
           </DropdownMenu>
         </Dropdown>
       ) : (
-        <Button color="primary" variant="flat" onClick={() => signIn()}>
+        <Button as={Link} color="primary" variant="flat" href="/login">
           Đăng nhập
         </Button>
       )}

@@ -18,7 +18,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
             classNames={{
               wrapper: "!max-w-none w-full aspect-square",
             }}
-            src={`${process.env.IMAGE_URL}/${product.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${product.images[0]}`}
             alt=""
             fill
             sizes="200px"
