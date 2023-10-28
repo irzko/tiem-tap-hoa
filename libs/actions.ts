@@ -86,6 +86,28 @@ export const addProduct = async (formData: FormData) => {
   redirect(`/dashboard/products`);
 };
 
+export const updateproduct = async (formData: FormData, id: string) => {
+  await prisma.product.update({
+    where: {
+      productId: id,
+    },
+    data: {
+      productName: formData.get("productName") as string,
+      price: Number(formData.get("price") as string),
+      description: formData.get("description") as string,
+      images: JSON.parse(formData.get("images") as string),
+      stockQuantity: Number(formData.get("stockQuantity") as string),
+      categoryId: formData.get("categoryId") as string,
+      weight: Number(formData.get("weight") as string),
+      height: Number(formData.get("height") as string),
+      length: Number(formData.get("length") as string),
+      width: Number(formData.get("width") as string),
+    },
+  });
+  revalidateTag("products");
+  redirect(`/dashboard/products`);
+};
+
 export const addAddress = async (formData: FormData, redirectPath?: string) => {
   await prisma.address.create({
     data: {

@@ -4,40 +4,33 @@ import SelectPaymentMethod from "./select-payment-method";
 
 export default function PaymentMethodModal({
   setPaymentMethod,
-  // paymentMethods,
-  onClose,
 }: {
   setPaymentMethod: (paymentMethod: string) => void;
-  // paymentMethods: IPaymentMethod[];
-  onClose: () => void;
 }) {
-  const [indexPage, setIndexPage] = useState(0);
-
-  // const paymentCard = useMemo(
-  //   () =>
-  //     paymentMethods?.find(
-  //       (paymentMethod) => paymentMethod.paymentType === "PAYMENT_CARD"
-  //     ),
-  //   [paymentMethods]
-  // );
-
-  const page = useMemo(() => {
-    return [
-      <SelectPaymentMethod
-        key={0}
-        setPaymentMethod={setPaymentMethod}
-        onClose={onClose}
-        setIndex={setIndexPage}
-        // data={paymentCard}
-      />,
-      <PaymentCardAddForm
-        key={1}
-        onClose={onClose}
-        onBack={setIndexPage}
-        // data={paymentCard}
-      />,
-    ];
-  }, [onClose, setPaymentMethod]);
-
-  return <>{page[indexPage]}</>;
+  const [step, setStep] = useState(0);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const paymentMethod = useMemo(
+    () => ({
+      PAYMENT_CARD: "Thẻ",
+      PAYMENT_BANK: "Chuyển khoản ngân hàng",
+    }),
+    []
+  );
+  return (
+    <div className="max-w-lg">
+      {step === 0 ? (
+        <SelectPaymentMethod
+          paymentMethod={paymentMethod}
+          setStep={setStep}
+          setSelectedPaymentMethod={setSelectedPaymentMethod}
+        />
+      ) : (
+        <PaymentCardAddForm
+          setPaymentMethod={setPaymentMethod}
+          selectedPaymentMethod={selectedPaymentMethod}
+          paymentMethod={paymentMethod}
+        />
+      )}
+    </div>
+  );
 }

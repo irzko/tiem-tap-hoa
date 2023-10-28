@@ -36,6 +36,10 @@ interface IProduct {
   description: string;
   images: string[];
   categoryId: string;
+  width: number;
+  height: number;
+  length: number;
+  weight: number;
   createdAt: Date;
   updatedAt: Date;
   Review: IReview[];
@@ -126,6 +130,7 @@ interface IAddress {
   ward: any;
   district: any;
   province: any;
+  isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
   userId: string;

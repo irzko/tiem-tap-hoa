@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <ToggleTheme />
           </NavbarItem>
           <NavbarItem>
-            <Link href={`/message/`}>
+            <Link href={`chat/`}>
               <Button isIconOnly variant="flat">
                 <svg
                   className="w-4 h-4"

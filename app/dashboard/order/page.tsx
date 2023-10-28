@@ -15,7 +15,7 @@ export default async function Page() {
           return (
             <div
               key={order.orderId}
-              className="bg-white px-6 py-3 w-full text-sm text-left text-gray-500 dark:text-gray-400 grid grid-cols-2 md:grid-cols-4 gap-2 dark:bg-gray-800 dark:border-gray-700"
+              className="px-6 py-3 w-full text-sm text-left text-gray-500 dark:text-gray-400 grid grid-cols-2 md:grid-cols-4 gap-2 dark:border-gray-700"
             >
               <div className="flex flex-col">
                 {order.orderDetails.map((orderDetail) => {

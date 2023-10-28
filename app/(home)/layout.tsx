@@ -50,7 +50,7 @@ export default async function Layout({
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Link href={`/message/`}>
+            <Link href={`/chat/`}>
               <Button isIconOnly variant="flat">
                 <svg
                   className="w-4 h-4"

@@ -1,4 +1,5 @@
 import ButtonConfirm from "@/components/dashboard/order/unpaid/button-confirm";
+import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 
 const getUnpaidOrder = async () => {
   return await fetch(`${process.env.API_URL}/api/orders/unpaid`, {
@@ -9,13 +10,15 @@ const getUnpaidOrder = async () => {
 export default async function Page() {
   const orders: IOrder[] = await getUnpaidOrder();
   return (
-    <div className="max-w-screen-2xl mx-auto">
-      <div className="divide-y">
+    <Card className="max-w-screen-2xl mx-auto">
+      <CardHeader>Đơn hàng chưa thanh toán</CardHeader>
+      <Divider />
+      <CardBody className="divide-y">
         {orders.map((order) => {
           return (
             <div
               key={order.orderId}
-              className="bg-white px-6 py-3 w-full text-sm text-left text-gray-500 dark:text-gray-400 grid grid-cols-2 md:grid-cols-4 gap-2 dark:bg-gray-800 dark:border-gray-700"
+              className="px-6 py-3 w-full text-sm text-left text-gray-500 dark:text-gray-400 grid grid-cols-2 md:grid-cols-4 gap-2 dark:border-gray-700"
             >
               <div className="flex flex-col">
                 {order.orderDetails.map((orderDetail) => {
@@ -34,7 +37,7 @@ export default async function Page() {
             </div>
           );
         })}
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   );
 }

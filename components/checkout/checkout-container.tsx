@@ -1,26 +1,44 @@
 "use client";
-import Loading from "@/components/loading";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 
 import {
   Button,
-  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Input,
   Link as NextLink,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import AddAddressForm from "../user/add-address-form";
+import useSWR from "swr";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+const paymentMethod = [
+  {
+    label: "Thanh toán khi nhận hàng",
+    value: "COD",
+  },
+  {
+    label: "PayPal",
+    value: "PAYPAL",
+  },
+  {
+    label: "Thẻ ngân hàng",
+    value: "PAYMENT_CARD",
+  },
+];
 
 export default function CheckoutContainer({
   address,
   userId,
 }: {
-  address: IAddress[];
+  address: IAddress;
   userId: string;
 }) {
   const [productsOrdered, setProductsOrdered] = useState<ICart[]>([]);
@@ -111,10 +129,17 @@ export default function CheckoutContainer({
   );
 }
 
-const paymentMethod = {
-  COD: "Thanh toán khi nhận hàng",
-  PAYPAL: "PayPal",
-  PAYMENT_CARD: "Thẻ ngân hàng",
+const getServiceFetcher = async (url: string, data: any) => {
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((data) => data.data);
 };
 
 const Payment = ({
@@ -122,17 +147,77 @@ const Payment = ({
   userId,
   productsOrdered,
 }: {
-  address: IAddress[];
+  address: IAddress;
   userId: string;
   productsOrdered: ICart[];
 }) => {
-  const shippingFee = 30000;
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>();
+  const [selectedServiceId, setSelectedServiceId] = useState<Set<Key>>(
+    new Set([])
+  );
+
+  const router = useRouter();
+
+  const [shippingFee, setShippingFee] = useState<number>(0);
+
+  const { data: services, error: servicesError } = useSWR(
+    `${process.env.NEXT_PUBLIC_GHN_API_URL}/v2/shipping-order/available-services`,
+    (url) =>
+      getServiceFetcher(url, {
+        shop_id: parseInt(process.env.NEXT_PUBLIC_GHN_SHOP_ID as string),
+        from_district: parseInt(
+          process.env.NEXT_PUBLIC_GHN_SHOP_DISTRICT_ID as string
+        ),
+        to_district: address.district.DistrictID,
+      }),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  useEffect(() => {
+    const serviceId = selectedServiceId.values().next().value;
+    if (serviceId && address.addressId && productsOrdered.length > 0) {
+      fetch(`${process.env.NEXT_PUBLIC_GHN_API_URL}/v2/shipping-order/fee`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+          ShopId: process.env.NEXT_PUBLIC_GHN_SHOP_ID as string,
+        },
+        body: JSON.stringify({
+          from_district_id: parseInt(
+            process.env.NEXT_PUBLIC_GHN_SHOP_DISTRICT_ID as string
+          ),
+          from_ward_code: process.env.NEXT_PUBLIC_GHN_SHOP_WARD_CODE as string,
+          service_id: parseInt(serviceId),
+          to_district_id: parseInt(address.district.DistrictID),
+          to_ward_code: address.ward.WardCode,
+          height: productsOrdered[0].product.height,
+          length: productsOrdered[0].product.length,
+          weight: productsOrdered[0].product.weight,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.code === 200) {
+            setShippingFee(data.data.total);
+          }
+        });
+    }
+  }, [address, productsOrdered, selectedServiceId]);
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Set<Key>>(
+    new Set([])
+  );
+
+
   const handleCheckout = () => {
     const data = {
       userId: userId,
-      addressId: address[0].addressId,
-      paymentMethod: selectedPaymentMethod,
+      addressId: address.addressId,
+      paymentMethod: selectedPaymentMethod.entries().next().value[0],
       shippingFee: shippingFee,
       products: productsOrdered,
     };
@@ -142,44 +227,55 @@ const Payment = ({
     }).then((res) => {
       if (res.ok) {
         res.json().then((data) => {
-          console.log(data);
+          toast.success("Đặt hàng thành công");
+          router.push("/user/purchase/unpaid");
         });
       }
     });
   };
+
   return (
     <div className="col-auto lg:col-span-4">
       <Card>
         <CardBody className="space-y-4">
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-left">
-              Chọn phương thức thanh toán
-            </h2>
-            <Button color="primary" variant="flat" className="w-full">
-              {selectedPaymentMethod
-                ? paymentMethod[
-                    selectedPaymentMethod as keyof typeof paymentMethod
-                  ]
-                : "Chọn phương thức thanh toán"}
-            </Button>
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-left">Mã giảm giá</h2>
-            <form>
-              <ButtonGroup className="w-full">
-                <Input
-                  className=""
-                  classNames={{
-                    inputWrapper: "rounded-r-none",
-                  }}
-                  placeholder="Mã giảm giá (mã chỉ áp dụng 1 lần)"
-                />
-                <Button color="primary" variant="flat">
-                  Áp dụng
-                </Button>
-              </ButtonGroup>
-            </form>
-          </div>
+          <Select
+            selectedKeys={selectedPaymentMethod}
+            onSelectionChange={(key) => setSelectedPaymentMethod(new Set(key))}
+            label="Phương thức thanh toán"
+            placeholder="Chọn phương thức thanh toán"
+            items={paymentMethod}
+          >
+            {(item) => (
+              <SelectItem key={item.value}>
+                {item.label}
+              </SelectItem>
+            )}
+          </Select>
+
+          <Select
+            selectedKeys={selectedServiceId}
+            onSelectionChange={(key) => setSelectedServiceId(new Set(key))}
+            label="Phương thức vận chuyển"
+            placeholder="Chọn phương thức vận chuyển"
+            items={services ?? []}
+          >
+            {(item: any) => (
+              <SelectItem key={item.service_id} value={item.service_id}>
+                {item.short_name}
+              </SelectItem>
+            )}
+          </Select>
+          <form className="space-y-4">
+            <Input
+              label="Mã giảm giá"
+              placeholder="Mã giảm giá (mã chỉ áp dụng 1 lần)"
+            />
+            <div className="flex justify-end">
+              <Button color="primary" variant="flat">
+                Áp dụng
+              </Button>
+            </div>
+          </form>
         </CardBody>
         <CardFooter className="flex flex-col items-start gap-2">
           <h2 className="text-lg font-semibold text-left">
@@ -220,45 +316,39 @@ const Payment = ({
   );
 };
 
-const AddressShipping = ({ address }: { address: IAddress[] }) => {
+const AddressShipping = ({ address }: { address: IAddress }) => {
   return (
     <Card>
       <CardHeader>
         <div className="w-full flex justify-between items-center">
           <h2 className="text-lg font-semibold text-left">Địa chỉ nhận hàng</h2>
-          <NextLink as={Link} href="/user/address/add">
+          <NextLink as={Link} href="/user/address">
             Chỉnh sửa
           </NextLink>
         </div>
       </CardHeader>
       <CardBody>
         {address ? (
-          address.length > 0 ? (
-            address.map((addr) => (
-              <div key={addr.addressId}>
-                <div className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                  <p>{addr.fullName}</p>
-                  <p>{addr.phoneNumber}</p>
-                  <p>
-                    {addr.streetAddress}, {addr.ward.WardName},{" "}
-                    {addr.district.DistrictName}, {addr.province.ProvinceName}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>
-              <div className="flex gap-8 justify-between items-start py-3 px-4 w-full sm:items-center lg:py-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Bạn chưa có địa chỉ nào
-                </p>
-
-                <AddAddressForm redirectPath="/checkout" />
-              </div>
+          <div>
+            <div className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+              <p>{address.fullName}</p>
+              <p>{address.phoneNumber}</p>
+              <p>
+                {address.streetAddress}, {address.ward.WardName},{" "}
+                {address.district.DistrictName}, {address.province.ProvinceName}
+              </p>
             </div>
-          )
+          </div>
         ) : (
-          <Loading />
+          <div>
+            <div className="flex gap-8 justify-between items-start py-3 px-4 w-full sm:items-center lg:py-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Bạn chưa có địa chỉ nào
+              </p>
+
+              <AddAddressForm redirectPath="/checkout" />
+            </div>
+          </div>
         )}
       </CardBody>
     </Card>

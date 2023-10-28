@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     paymentMethod: PaymentType;
   } = await req.json();
 
+
   data.products.forEach((product) => {
     if (product.quantity > product.product.stockQuantity) {
       return NextResponse.json(

@@ -31,7 +31,7 @@ export default async function Layout({
       </Navbar>
       <main>
         <div className="max-w-screen-md mx-auto">
-          <div className="mt-14">{children}</div>
+          <div>{children}</div>
         </div>
       </main>
     </>

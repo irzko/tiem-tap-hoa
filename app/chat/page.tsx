@@ -39,13 +39,13 @@ export default function Page() {
       </ul>
       <form
         onSubmit={handleSubmit}
-        className="flex bg-white fixed bottom-0 inset-x-0 p-2"
+        className="flex fixed bottom-0 inset-x-0 p-2"
       >
         <div className="flex w-full mx-auto max-w-3xl">
           <div className="mr-2 w-full">
             <Input name="content" />
           </div>
-          <Button type="submit">
+          <Button isIconOnly type="submit">
             <svg
               className="w-4 h-4"
               aria-hidden="true"

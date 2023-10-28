@@ -1,6 +1,4 @@
 "use client";
-import ModalHeader from "@/components/ui/modal-header";
-import useModal from "@/hooks/useModal";
 import { Button, Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";

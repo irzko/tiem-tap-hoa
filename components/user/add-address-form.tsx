@@ -43,7 +43,7 @@ const AddressSelect = ({
 
   const { data } = useSWR(
     [
-      "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+      `${process.env.NEXT_PUBLIC_GHN_API_URL}/master-data/province`,
       process.env.NEXT_PUBLIC_GHN_TOKEN as string,
     ],
     ([url, token]) => fetchWithToken(url, token),
@@ -56,19 +56,16 @@ const AddressSelect = ({
 
   const handleSelectCity = (province: any) => {
     setSelectedAddress((prev) => [province, prev[1], prev[2]]);
-    fetch(
-      `https://online-gateway.ghn.vn/shiip/public-api/master-data/district`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
-        },
-        body: JSON.stringify({
-          province_id: province.ProvinceID,
-        }),
-        method: "POST",
-      }
-    )
+    fetch(`${process.env.NEXT_PUBLIC_GHN_API_URL}/master-data/district`, {
+      headers: {
+        "Content-Type": "application/json",
+        token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
+      },
+      body: JSON.stringify({
+        province_id: province.ProvinceID,
+      }),
+      method: "POST",
+    })
       .then((res) => res.json())
       .then((data) => {
         setDistricts(data.data);
@@ -78,7 +75,7 @@ const AddressSelect = ({
 
   const handleSelectDistrict = (district: any) => {
     setSelectedAddress((prev) => [prev[0], district, prev[2]]);
-    fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward`, {
+    fetch(`${process.env.NEXT_PUBLIC_GHN_API_URL}/master-data/ward`, {
       headers: {
         "Content-Type": "application/json",
         token: process.env.NEXT_PUBLIC_GHN_TOKEN as string,
@@ -211,7 +208,7 @@ export default function AddAddressForm({
   return (
     <>
       <Button color="primary" variant="flat" onPress={onOpen}>
-        Thêm địa chỉ
+        Thêm địa chỉ mới
       </Button>
       <Modal
         scrollBehavior="inside"

@@ -49,8 +49,6 @@ model User {
   role               Role                 @default(USER)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  defaultAddressId   String?
-  defaultPaymentId   String?
   Address            Address[]
   Cart               Cart[]
   Coupon             Coupon[]
@@ -180,6 +178,7 @@ model Address {
   ward          Json
   district      Json
   province      Json
+  isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   userId        String
