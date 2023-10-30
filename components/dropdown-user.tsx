@@ -1,5 +1,5 @@
 "use client";
-import { useSession, signOut, signIn } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import {
   Avatar,
   Button,
@@ -9,6 +9,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import Link from "next/link";
+import ThemeSwitcher from "./ui/theme-switcher";
 
 export default function DropdownUser() {
   const { data: session } = useSession();
@@ -28,15 +29,18 @@ export default function DropdownUser() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem  showDivider key="profile" className="h-14 gap-2">
               <p className="font-semibold">Đăng nhập với</p>
               <p className="font-semibold">{session.user.email}</p>
+            </DropdownItem>
+            <DropdownItem variant="light">
+              <ThemeSwitcher />
             </DropdownItem>
             <DropdownItem as={Link} key="team_settings" href="/dashboard">
               Dashboard
             </DropdownItem>
             <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
-              Log Out
+              Đăng xuất
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

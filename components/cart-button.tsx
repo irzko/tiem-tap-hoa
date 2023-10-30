@@ -1,4 +1,4 @@
-import getSession from "@/libs/getSession";
+import getSession from "@/lib/getSession";
 import { Badge, Button } from "@nextui-org/react";
 import Link from "next/link";
 

@@ -13,7 +13,6 @@ export const deleteCart = async (id: string) => {
   });
   revalidatePath("/cart");
   revalidateTag("cartNum");
-  redirect("/cart");
 };
 
 export const adjustProductQuantity = async (
@@ -29,7 +28,6 @@ export const adjustProductQuantity = async (
     },
   });
   revalidatePath("/cart");
-  redirect(`/cart`);
 };
 
 export const addRating = async (
@@ -47,7 +45,6 @@ export const addRating = async (
     },
   });
   revalidatePath(`/detail/${productId}`);
-  redirect(`/detail/${productId}`);
 };
 
 export const loginAction = async (
@@ -82,7 +79,7 @@ export const addProduct = async (formData: FormData) => {
       width: Number(formData.get("width") as string),
     },
   });
-  revalidateTag("products");
+  revalidateTag("product");
   redirect(`/dashboard/products`);
 };
 
@@ -104,11 +101,11 @@ export const updateproduct = async (formData: FormData, id: string) => {
       width: Number(formData.get("width") as string),
     },
   });
-  revalidateTag("products");
+  revalidateTag("product");
   redirect(`/dashboard/products`);
 };
 
-export const addAddress = async (formData: FormData, redirectPath?: string) => {
+export const addAddress = async (formData: FormData) => {
   await prisma.address.create({
     data: {
       province: JSON.parse(formData.get("province") as string),
@@ -121,7 +118,6 @@ export const addAddress = async (formData: FormData, redirectPath?: string) => {
     },
   });
   revalidateTag("address");
-  redirectPath && redirect(redirectPath);
 };
 
 export const signUp = async (data: any) => {
@@ -145,4 +141,59 @@ export const signUp = async (data: any) => {
   }
   revalidateTag("user");
   redirect("/login");
+};
+
+export const createCategory = async (prevState: any, formData: FormData) => {
+  const categoryName = formData.get("categoryName") as string;
+  const parentCategoryId = formData.get("parentCategoryId") as string;
+  const exists = await prisma.category.findUnique({
+    where: {
+      categoryName,
+    },
+  });
+  if (exists) {
+    return { type: "error", message: "Danh mục này đã tồn tại" };
+  } else {
+    await prisma.category.create({
+      data: {
+        categoryName,
+        parentCategoryId,
+      },
+    });
+    revalidateTag("category");
+    return { type: "success", message: "Tạo danh mục thành công" };
+  }
+};
+
+export const deleteCategory = async (prevState: any, categoryId: string) => {
+  const category = await prisma.category.delete({
+    where: {
+      categoryId,
+    },
+  });
+  if (category) {
+    revalidateTag("category");
+    return { type: "success", message: "Xóa danh mục thành công" };
+  } else {
+    return { type: "error", message: "Xóa danh mục thất bại" };
+  }
+};
+
+export const updateCategory = async (prevState: any, formData: FormData) => {
+  const categoryId = formData.get("categoryId") as string;
+  const categoryName = formData.get("categoryName") as string;
+  const category = await prisma.category.update({
+    where: {
+      categoryId,
+    },
+    data: {
+      categoryName,
+    },
+  });
+  if (category) {
+    revalidateTag("category");
+    return { type: "success", message: "Cập nhật danh mục thành công" };
+  } else {
+    return { type: "error", message: "Cập nhật danh mục thất bại" };
+  }
 };

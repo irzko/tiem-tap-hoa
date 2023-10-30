@@ -1,6 +1,6 @@
 const getProduct = async (): Promise<IProduct[]> => {
   return await fetch(`${process.env.API_URL}/api/products`, {
-    next: { tags: ["products"] },
+    next: { tags: ["product"] },
   }).then((res) => res.json());
 };
 

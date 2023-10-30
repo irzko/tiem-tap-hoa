@@ -4,7 +4,7 @@ import SearchForm from "@/components/search-form";
 import Logo from "@/components/ui/logo";
 import Sidebar from "@/components/ui/sidebar";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
-import ToggleTheme from "@/components/ui/toggle-theme";
+import ThemeSwitcher from "@/components/ui/theme-switcher";
 import {
   Button,
   Link,
@@ -21,16 +21,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <NavbarItem>
           <SidebarToggle />
         </NavbarItem>
-        <NavbarBrand>
+        <NavbarBrand className="hidden md:block">
           <Logo />
         </NavbarBrand>
         <NavbarContent as="div" className="items-center" justify="center">
           <SearchForm />
         </NavbarContent>
         <NavbarContent justify="end">
-          <NavbarItem>
-            <ToggleTheme />
-          </NavbarItem>
           <NavbarItem>
             <Link href={`chat/`}>
               <Button isIconOnly variant="flat">

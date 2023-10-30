@@ -346,7 +346,7 @@ const AddressShipping = ({ address }: { address: IAddress }) => {
                 Bạn chưa có địa chỉ nào
               </p>
 
-              <AddAddressForm redirectPath="/checkout" />
+              <AddAddressForm />
             </div>
           </div>
         )}

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import { signUp } from "@/libs/actions";
+import { signUp } from "@/lib/actions";
 import { useState } from "react";
 
 const schema = z.object({

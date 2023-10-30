@@ -1,7 +1,7 @@
 import CartButton from "@/components/cart-button";
 import DropdownUser from "@/components/dropdown-user";
 import Logo from "@/components/ui/logo";
-import ToggleTheme from "@/components/ui/toggle-theme";
+import ThemeSwitcher from "@/components/ui/theme-switcher";
 import {
   Navbar,
   NavbarBrand,
@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </NavbarBrand>
         <NavbarContent justify="end">
           <NavbarItem>
-            <ToggleTheme />
+            <ThemeSwitcher />
           </NavbarItem>
           <NavbarItem>
             <CartButton />

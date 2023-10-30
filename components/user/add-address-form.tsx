@@ -17,7 +17,7 @@ import {
   cn,
 } from "@nextui-org/react";
 import useSWR from "swr";
-import { addAddress } from "@/libs/actions";
+import { addAddress } from "@/lib/actions";
 
 async function fetchWithToken(url: string, token: string) {
   return fetch(url, {
@@ -192,11 +192,7 @@ const AddressSelect = ({
   );
 };
 
-export default function AddAddressForm({
-  redirectPath,
-}: {
-  redirectPath: string;
-}) {
+export default function AddAddressForm() {
   const [selectedAddress, setSelectedAddress] = useState<[any, any, any]>([
     {},
     {},
@@ -230,7 +226,7 @@ export default function AddAddressForm({
                     JSON.stringify(selectedAddress[1])
                   );
                   formData.append("ward", JSON.stringify(selectedAddress[2]));
-                  addAddress(formData, redirectPath);
+                  addAddress(formData);
                 }}
                 className="flex flex-col space-y-4"
               >

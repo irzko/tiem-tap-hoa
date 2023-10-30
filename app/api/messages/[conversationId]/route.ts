@@ -1,4 +1,4 @@
-import prisma from "@/libs/prisma";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
@@ -19,7 +19,7 @@ export const GET = async (
           role: true,
         },
       },
-    }
+    },
   });
 
   return NextResponse.json(messages, { status: 200 });

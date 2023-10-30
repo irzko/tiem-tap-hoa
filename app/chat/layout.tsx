@@ -1,7 +1,7 @@
 import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
 import DropdownUser from "@/components/dropdown-user";
-import ToggleTheme from "@/components/ui/toggle-theme";
+import ThemeSwitcher from "@/components/ui/theme-switcher";
 import SearchForm from "@/components/search-form";
 import { Navbar } from "@nextui-org/react";
 
@@ -21,7 +21,7 @@ export default async function Layout({
         </div>
         <div className="flex items-center">
           <span>
-            <ToggleTheme />
+            <ThemeSwitcher />
           </span>
           <span className="mx-2">
             <CartButton />

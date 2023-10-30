@@ -1,5 +1,6 @@
-import prisma from "@/libs/prisma";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { pusherServer } from "@/lib/pusher";
 
 export const POST = async (req: Request) => {
   const {
@@ -19,7 +20,7 @@ export const POST = async (req: Request) => {
     },
   });
 
-  console.log(message);
+  await pusherServer.trigger(conversationId, "messages:new", message);
 
   return NextResponse.json(message, { status: 201 });
 };

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
 import AdjustProdQuantity from "./adjust-prod-quantity";
-import { deleteCart } from "@/libs/actions";
+import { deleteCart } from "@/lib/actions";
 import {
   Button,
   Card,

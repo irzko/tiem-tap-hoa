@@ -2,7 +2,7 @@ import UpdateProductForm from "@/components/dashboard/product/update-product-for
 
 export async function generateStaticParams() {
   const products = await fetch(`${process.env.API_URL}/api/products`, {
-    next: { tags: ["products"] },
+    next: { tags: ["product"] },
   }).then((res) => res.json());
 
   const params = products.map((product: IProduct) => ({
@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 const getProduct = async (prodId: string) => {
   return await fetch(`${process.env.API_URL}/api/products/${prodId}`, {
-    next: { tags: ["products"] },
+    next: { tags: ["product"] },
   }).then((res) => res.json());
 };
 

@@ -2,7 +2,7 @@ import ProductCard from "@/components/product-card";
 
 async function getProducts(): Promise<IProduct[]> {
   const res = await fetch(`${process.env.API_URL}/api/products`, {
-    next: { tags: ["products"] },
+    next: { tags: ["product"] },
   });
 
   if (!res.ok) {

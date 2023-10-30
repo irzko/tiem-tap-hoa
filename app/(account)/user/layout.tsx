@@ -10,7 +10,7 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
-import ToggleTheme from "@/components/ui/toggle-theme";
+import ThemeSwitcher from "@/components/ui/theme-switcher";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
 import Sidebar from "@/components/ui/sidebar";
 import UserSidebarItem from "@/components/user/user-sidebar-item";
@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <ToggleTheme />
+            <ThemeSwitcher />
           </NavbarItem>
           <NavbarItem>
             <CartButton />

@@ -1,87 +1,104 @@
-import CategoryContext from "@/context/CategoryContext";
-import { Button } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useContext } from "react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
+import { useFormState, useFormStatus } from "react-dom";
+import { deleteCategory } from "@/lib/actions";
 
-export default function DeleteCategoryModal({
-  showModal,
-  setShowModal,
-  category,
-}: {
-  showModal: boolean;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
-  category?: ICategory;
-}) {
-  const { mutate } = useContext(CategoryContext);
-  const handleDelete = () => {
-    fetch("/api/catgs", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        categoryId: category?.categoryId,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        setShowModal(false);
-        mutate("/api/catgs");
-      }
-    });
-  };
+const initialState = {
+  type: null,
+  message: null,
+};
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
 
   return (
-    <div
-      tabIndex={-1}
-      aria-hidden="true"
-      className={`overflow-y-auto bg-gray-900/80 overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal h-full ${
-        showModal ? "flex" : "hidden"
-      }`}
-    >
-      <div className="relative p-4 w-full max-w-md h-full md:h-auto">
-        <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-          <button
-            type="button"
-            className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            onClick={() => setShowModal(false)}
+    <Button type="submit" color="danger" isLoading={pending}>
+      Xác nhận xóa
+    </Button>
+  );
+}
+
+export default function DeleteCategoryModal({
+  category,
+}: {
+  category?: ICategory;
+}) {
+  const [state, formAction] = useFormState(deleteCategory, initialState);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  // const handleDelete = () => {
+  //   fetch("/api/catgs", {
+  //     method: "DELETE",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       categoryId: category?.categoryId,
+  //     }),
+  //   }).then((res) => {
+  //     if (res.ok) {
+  //       setShowModal(false);
+  //       mutate("/api/catgs");
+  //     }
+  //   });
+  // };
+
+  return (
+    <>
+      <Button
+        startContent={
+          <svg
+            className="w-3.5 h-3.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 18 20"
           >
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <span className="sr-only">Close modal</span>
-          </button>
-          <h3 className="text-lg text-center font-semibold text-gray-900 dark:text-white">
-            Xác nhận xoá danh mục
-          </h3>
-          <p className="mb-4 text-center text-gray-500 dark:text-gray-300">
-            Bạn có chắc chắn muốn xóa danh mục này?
-          </p>
-          <div className="mb-4 font-medium text-gray-900 dark:text-white dark:bg-gray-700 rounded-lg bg-white px-4 py-3.5">
-            {category?.categoryName}
-          </div>
-          <div className="flex justify-center items-center space-x-4">
-            <button
-              onClick={() => setShowModal(false)}
-              type="button"
-              className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-            >
-              Huỷ
-            </button>
-            <Button color="danger" onClick={handleDelete}>
-              Xác nhận xóa
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"
+            />
+          </svg>
+        }
+        color="danger"
+        onPress={onOpen}
+      >
+        Xóa danh mục
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              {state.type === "success" && onClose()}
+              <form action={() => formAction(category?.categoryId!)}>
+                <ModalHeader className="flex flex-col gap-1">
+                  Xác nhận xoá danh mục
+                </ModalHeader>
+                <ModalBody>
+                  <p>Bạn có chắc chắn muốn xóa danh mục này?</p>
+                  <p>{category?.categoryName}</p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                  <SubmitButton />
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

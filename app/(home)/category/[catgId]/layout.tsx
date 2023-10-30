@@ -1,9 +1,7 @@
 import Breadcrumb from "@/components/ui/breadcrumb";
 import BreadcrumbItem from "@/components/ui/breadcrumb-item";
-import getBreadcrumb from "@/libs/getBeadcrumb";
+import getBreadcrumb from "@/lib/getBeadcrumb";
 import React from "react";
-
-
 
 export default async function Layout({
   children,

@@ -1,10 +1,10 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Rating from "@/components/home/rating";
 import Review from "@/components/home/review";
-import getBreadcrumb from "@/libs/getBeadcrumb";
+import getBreadcrumb from "@/lib/getBeadcrumb";
 import { getServerSession } from "next-auth/next";
 import Image from "next/image";
-import prisma from "@/libs/prisma";
+import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import {
@@ -21,7 +21,7 @@ export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
     `${process.env.API_URL}/api/products`,
     {
-      next: { tags: ["products"] },
+      next: { tags: ["product"] },
     }
   ).then((res) => res.json());
 

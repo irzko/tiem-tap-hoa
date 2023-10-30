@@ -10,7 +10,6 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
-import ToggleTheme from "@/components/ui/toggle-theme";
 import Sidebar from "@/components/ui/sidebar";
 import HomeSidebarItem from "@/components/ui/home-sidebar-item";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
@@ -50,29 +49,25 @@ export default async function Layout({
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Link href={`/chat/`}>
-              <Button isIconOnly variant="flat">
-                <svg
-                  className="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 5h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-2v3l-4-3H8m4-13H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2v3l4-3h4a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                  />
-                </svg>
-              </Button>
-            </Link>
+            <Button as={Link} href={`/chat/`} isIconOnly variant="flat">
+              <svg
+                className="w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 5h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-2v3l-4-3H8m4-13H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2v3l4-3h4a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                />
+              </svg>
+            </Button>
           </NavbarItem>
-          <NavbarItem>
-            <ToggleTheme />
-          </NavbarItem>
+
           <NavbarItem>
             <CartButton />
           </NavbarItem>
@@ -83,7 +78,7 @@ export default async function Layout({
       </Navbar>
       <main>
         <Sidebar>
-          <HomeSidebarItem categories={categories}/>
+          <HomeSidebarItem categories={categories} />
         </Sidebar>
         <div className="p-2 sm:ml-64">{children}</div>
       </main>

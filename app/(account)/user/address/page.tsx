@@ -1,6 +1,6 @@
 import AddAddressForm from "@/components/user/add-address-form";
-import getSession from "@/libs/getSession";
-import prisma from "@/libs/prisma";
+import getSession from "@/lib/getSession";
+import prisma from "@/lib/prisma";
 import {
   Button,
   Card,
@@ -61,7 +61,7 @@ export default async function Page() {
       <Card>
         <CardHeader className="flex justify-between">
           <h4 className="font-bold text-large">Địa chỉ của tôi</h4>
-          <AddAddressForm redirectPath="/user/address" />
+          <AddAddressForm />
         </CardHeader>
         <Divider />
 

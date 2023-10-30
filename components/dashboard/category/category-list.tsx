@@ -1,15 +1,8 @@
-import { Button, Listbox, ListboxItem } from "@nextui-org/react";
+import { Chip, Listbox, ListboxItem } from "@nextui-org/react";
 import Link from "next/link";
+import CategoryActionModal from "./category-action-modal";
 
-export default function CategoryList({
-  data,
-  setItemSelected,
-  setShowActionModal,
-}: {
-  data?: ICategory[];
-  setItemSelected: React.Dispatch<React.SetStateAction<ICategory | undefined>>;
-  setShowActionModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+export default function CategoryList({ data }: { data?: ICategory[] }) {
   return (
     <>
       <Listbox
@@ -22,41 +15,20 @@ export default function CategoryList({
       >
         {(item) => (
           <ListboxItem
-            as={Link}
-            href={`/dashboard/category/${item.categoryId}`}
             key={item.categoryId}
             endContent={
               <div className="flex items-center gap-1 text-default-400">
-                <span className="text-small">{item._count.subCategories}</span>
-                <Button
-                  isIconOnly
-                  variant="light"
-                  radius="full"
-                  onPress={() => {
-                    setItemSelected(item);
-                    setShowActionModal(true);
-                  }}
-                >
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 8 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"
-                    />
-                  </svg>
-                </Button>
+                <Chip color="danger" variant="flat">
+                  {item._count.subCategories} danh mục con
+                </Chip>
+
+                <CategoryActionModal category={item} />
               </div>
             }
           >
-            {item.categoryName}
+            <Link href={`/category/${item.categoryId}`}>
+              {item.categoryName}
+            </Link>
           </ListboxItem>
         )}
       </Listbox>

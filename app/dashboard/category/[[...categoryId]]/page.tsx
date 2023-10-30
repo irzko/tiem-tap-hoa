@@ -2,7 +2,7 @@ import CategoryContainer from "@/components/dashboard/category/category-containe
 
 export async function generateStaticParams() {
   const categories = await fetch(`${process.env.API_URL}/api/catgs/all`, {
-    cache: "no-store",
+    next: { tags: ["category"] },
   }).then((res) => res.json());
 
   const params = categories.map((category: ICategory) => ({
@@ -15,11 +15,11 @@ export async function generateStaticParams() {
 const getCategories = async (categoryId: string) => {
   if (categoryId) {
     return await fetch(`${process.env.API_URL}/api/catgs/${categoryId}`, {
-      cache: "no-store",
+      next: { tags: ["category"] },
     }).then((res) => res.json());
   } else {
     return await fetch(`${process.env.API_URL}/api/catgs`, {
-      cache: "no-store",
+      next: { tags: ["category"] },
     }).then((res) => res.json());
   }
 };

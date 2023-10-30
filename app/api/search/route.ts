@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/libs/prisma";
+import prisma from "@/lib/prisma";
 
 export const GET = async (req: NextRequest) => {
   const keyword = req.nextUrl.searchParams.get("keyword");

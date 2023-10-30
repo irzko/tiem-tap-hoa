@@ -1,8 +1,8 @@
 "use client";
 import CategorySelect from "@/components/dashboard/product/category-select";
 import ImageSelect from "@/components/dashboard/product/image-select";
-import { addProduct } from "@/libs/actions";
-import { productSchema } from "@/libs/validateSchema";
+import { addProduct } from "@/lib/actions";
+import { productSchema } from "@/lib/validateSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,

@@ -1,4 +1,4 @@
-import { adjustProductQuantity } from "@/libs/actions";
+import { adjustProductQuantity } from "@/lib/actions";
 import { Button, ButtonGroup, Input } from "@nextui-org/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 

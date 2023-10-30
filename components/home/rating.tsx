@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { addRating } from "@/libs/actions";
+import { addRating } from "@/lib/actions";
 import { Button, Textarea } from "@nextui-org/react";
 import { useFormStatus } from "react-dom";
 

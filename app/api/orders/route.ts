@@ -1,4 +1,4 @@
-import prisma from "@/libs/prisma";
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -8,7 +8,6 @@ export async function POST(req: Request) {
     products: ICart[];
     paymentMethod: PaymentType;
   } = await req.json();
-
 
   data.products.forEach((product) => {
     if (product.quantity > product.product.stockQuantity) {
