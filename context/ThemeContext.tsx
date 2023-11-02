@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 const ThemeContext = createContext({
-  theme: "dark",
+  theme: "light",
   setTheme: (theme: string) => {},
 });
 

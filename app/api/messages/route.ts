@@ -10,17 +10,27 @@ export const POST = async (req: Request) => {
   }: { userId: string; content: string; conversationId: string } =
     await req.json();
 
-  console.log(userId, content, conversationId);
-
   const message = await prisma.message.create({
     data: {
       userId,
       content,
       conversationId,
     },
+    include: {
+      user: {
+        select: {
+          fullName: true,
+          role: true,
+        },
+      },
+    },
   });
 
   await pusherServer.trigger(conversationId, "messages:new", message);
+  pusherServer.trigger(conversationId, "conversation:update", {
+    conversationId,
+    messages: message,
+  });
 
   return NextResponse.json(message, { status: 201 });
 };

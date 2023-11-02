@@ -1,50 +1,121 @@
 "use client";
-import { Button, Input } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import React, { FormEvent, useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
+import { Button, Chip, Input, User } from "@nextui-org/react";
+import { signIn, useSession } from "next-auth/react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { find } from "lodash";
 
 export default function Page() {
+  const bottomRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const conversationId = useRef<string>("");
+  const [content, setContent] = useState<string>("");
+
+  if (session?.user.userId) {
+    conversationId.current = session?.user.userId;
+  } else {
+    signIn();
+  }
 
   useEffect(() => {
-    fetch(`/api/messages/${session?.user.userId}`)
+    fetch(`/api/messages/${conversationId.current}`)
       .then((res) => res.json())
       .then((data) => setMessages(data));
-  }, [session?.user.userId]);
+  }, [conversationId]);
+
+  useEffect(() => {
+    pusherClient.subscribe(conversationId.current);
+    bottomRef?.current?.scrollIntoView();
+
+    const messageHandler = (message: IMessage) => {
+      setMessages((current) => {
+        if (find(current, { messageId: message.messageId })) {
+          return current;
+        }
+
+        return [...current, message];
+      });
+
+      bottomRef?.current?.scrollIntoView();
+    };
+
+    const updateMessageHandler = (newMessage: IMessage) => {
+      setMessages((current) =>
+        current.map((currentMessage) => {
+          if (currentMessage.messageId === newMessage.messageId) {
+            return newMessage;
+          }
+
+          return currentMessage;
+        })
+      );
+    };
+
+    pusherClient.bind("messages:new", messageHandler);
+    pusherClient.bind("message:update", updateMessageHandler);
+    return () => {
+      pusherClient.unsubscribe(conversationId.current);
+      pusherClient.unbind("messages:new", messageHandler);
+      pusherClient.unbind("message:update", updateMessageHandler);
+    };
+  }, [conversationId]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetch(`/api/messages/`, {
       method: "POST",
       body: JSON.stringify({
-        userId: session?.user.userId,
-        content: e.currentTarget.content.value,
-        conversationId: session?.user.userId,
+        userId: conversationId.current,
+        content,
+        conversationId: conversationId.current,
       }),
+    }).then((res) => {
+      if (res.ok) {
+        setContent("");
+      }
     });
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
+
   return (
-    <>
-      <ul className="flex flex-col mb-14 p-4">
+    <div>
+      <div className="flex z-40 h-auto items-center justify-center fixed top-16 left-64 right-0 border-y border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70">
+        <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center justify-between h-16 max-w-4xl">
+          <User name="Tiệm tạp hóa" description="Quản trị viên" />
+        </div>
+      </div>
+      <ul className="flex flex-col px-4 gap-1">
         {messages.map((message) => (
-          <li
-            className={`${message.user.role === "ADMIN" ? "" : "text-right"}`}
+          <Chip
+            as="li"
+            size="lg"
+            variant={message.user.role === "USER" ? "solid" : "flat"}
+            color={message.user.role === "USER" ? "primary" : "default"}
+            className={`${message.user.role === "USER" ? "self-end" : ""}`}
             key={message.messageId}
           >
             {message.content}
-          </li>
+          </Chip>
         ))}
       </ul>
+      <div className="mt-24" ref={bottomRef} />
       <form
         onSubmit={handleSubmit}
-        className="flex fixed bottom-0 inset-x-0 p-2"
+        className="flex z-40 h-auto items-center justify-center fixed bottom-0 left-64 right-0 border-t border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70"
       >
-        <div className="flex w-full mx-auto max-w-3xl">
-          <div className="mr-2 w-full">
-            <Input name="content" />
-          </div>
+        <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center justify-between h-16 max-w-4xl">
+          <Input
+            // variant="bordered"
+            name="content"
+            fullWidth
+            placeholder="Nhập tin nhắn..."
+            onChange={handleChange}
+            value={content}
+          />
           <Button isIconOnly type="submit">
             <svg
               className="w-4 h-4"
@@ -64,6 +135,6 @@ export default function Page() {
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 }

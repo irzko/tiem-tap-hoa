@@ -18,6 +18,7 @@ import AddAddressForm from "../user/add-address-form";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { orderAction } from "@/lib/actions";
 
 const paymentMethod = [
   {
@@ -212,7 +213,6 @@ const Payment = ({
     new Set([])
   );
 
-
   const handleCheckout = () => {
     const data = {
       userId: userId,
@@ -221,17 +221,7 @@ const Payment = ({
       shippingFee: shippingFee,
       products: productsOrdered,
     };
-    fetch(`/api/orders`, {
-      body: JSON.stringify(data),
-      method: "POST",
-    }).then((res) => {
-      if (res.ok) {
-        res.json().then((data) => {
-          toast.success("Đặt hàng thành công");
-          router.push("/user/purchase/unpaid");
-        });
-      }
-    });
+    orderAction(data);
   };
 
   return (
@@ -245,11 +235,7 @@ const Payment = ({
             placeholder="Chọn phương thức thanh toán"
             items={paymentMethod}
           >
-            {(item) => (
-              <SelectItem key={item.value}>
-                {item.label}
-              </SelectItem>
-            )}
+            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
           </Select>
 
           <Select

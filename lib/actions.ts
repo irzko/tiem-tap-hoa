@@ -83,7 +83,7 @@ export const addProduct = async (formData: FormData) => {
   redirect(`/dashboard/products`);
 };
 
-export const updateproduct = async (formData: FormData, id: string) => {
+export const updateProduct = async (formData: FormData, id: string) => {
   await prisma.product.update({
     where: {
       productId: id,
@@ -196,4 +196,142 @@ export const updateCategory = async (prevState: any, formData: FormData) => {
   } else {
     return { type: "error", message: "Cập nhật danh mục thất bại" };
   }
+};
+
+export const generateDescription = async (input: any) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_COPY_AI_END_POINT}`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "x-copy-ai-api-key": `${process.env.NEXT_PUBLIC_COPY_AI_API_KEY!}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      startVariables: {
+        input,
+      },
+      metadata: { api: true },
+    }),
+  });
+  const data = await res.json();
+
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  return fetch(`${process.env.NEXT_PUBLIC_COPY_AI_END_POINT}/${data.data.id}`, {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      "x-copy-ai-api-key": `${process.env.NEXT_PUBLIC_COPY_AI_API_KEY!}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => data.data.output.generate_description);
+};
+
+export const addSupplier = async (prevState: any, formData: FormData) => {
+  const supplierName = formData.get("supplierName") as string;
+  const address = formData.get("address") as string;
+  const email = formData.get("email") as string;
+  const phoneNumber = formData.get("phoneNumber") as string;
+  const otherInfo = formData.get("otherInfo") as string;
+  const supplier = await prisma.supplier.create({
+    data: {
+      supplierName,
+      address,
+      email,
+      phoneNumber,
+      otherInfo,
+    },
+  });
+  if (supplier) {
+    revalidateTag("supplier");
+    return { type: "success", message: "Tạo nhà cung cấp thành công" };
+  } else {
+    return { type: "error", message: "Tạo nhà cung cấp thất bại" };
+  }
+};
+
+export const unpaidAction = async (orderId: string, userId: string) => {
+  await prisma.order.update({
+    where: {
+      orderId: orderId,
+    },
+    data: {
+      statusId: "toship",
+    },
+  });
+
+  await prisma.orderStatusHistory.create({
+    data: {
+      orderId: orderId,
+      statusId: "unpaid",
+      userId: userId,
+    },
+  });
+  revalidateTag("order");
+};
+
+export const orderAction = async (data: {
+  userId: string;
+  addressId: string;
+  products: ICart[];
+  paymentMethod: PaymentType;
+}) => {
+  data.products.forEach((product) => {
+    if (product.quantity > product.product.stockQuantity) {
+      return {
+        type: "error",
+        message: `Product ${product.product.productName} is out of stock`,
+      };
+    }
+  });
+
+  await prisma.order.create({
+    data: {
+      userId: data.userId,
+      addressId: data.addressId,
+      statusId: "unpaid",
+      totalAmount: data.products.reduce(
+        (acc, product) => acc + product.product.price * product.quantity,
+        0
+      ),
+      orderDetails: {
+        create: data.products.map((product) => ({
+          productId: product.productId,
+          quantity: product.quantity,
+        })),
+      },
+      paymentMethod: {
+        create: {
+          paymentType: data.paymentMethod,
+          accountInfo: "",
+        },
+      },
+    },
+  });
+
+  data.products.forEach(async (product) => {
+    await prisma.product.update({
+      where: {
+        productId: product.productId,
+      },
+      data: {
+        stockQuantity: {
+          decrement: product.quantity,
+        },
+      },
+    });
+  });
+
+  await prisma.cart.deleteMany({
+    where: {
+      productId: {
+        in: data.products.map((product) => product.productId),
+      },
+    },
+  });
+  revalidateTag("cart");
+  revalidateTag("cartNum");
+  revalidateTag("order");
+  redirect("/user/purchase/unpaid");
 };

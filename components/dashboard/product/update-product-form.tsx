@@ -1,7 +1,7 @@
 "use client";
 import CategorySelect from "@/components/dashboard/product/category-select";
 import ImageSelect from "@/components/dashboard/product/image-select";
-import { updateproduct } from "@/lib/actions";
+import { updateProduct } from "@/lib/actions";
 import { productSchema } from "@/lib/validateSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -64,7 +64,7 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
       action={(formData) => {
         formData.append("images", JSON.stringify(selectedImages));
         formData.append("categoryId", selectedCategory?.categoryId as string);
-        updateproduct(formData, product?.productId as string);
+        updateProduct(formData, product?.productId as string);
       }}
     >
       <Card>

@@ -184,3 +184,11 @@ interface ISupplier {
   updatedAt: Date;
   products: IProduct[];
 }
+interface IProductImport {
+  productImportId: string;
+  supplierId: string;
+  importDate: Date;
+  totalValue: number;
+  status: "Đang nhập" | "Đã nhập" | "Đã hủy";
+  supplier: ISupplier;
+}

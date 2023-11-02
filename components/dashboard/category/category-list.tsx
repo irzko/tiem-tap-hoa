@@ -26,7 +26,7 @@ export default function CategoryList({ data }: { data?: ICategory[] }) {
               </div>
             }
           >
-            <Link href={`/category/${item.categoryId}`}>
+            <Link href={`/dashboard/category/${item.categoryId}`}>
               {item.categoryName}
             </Link>
           </ListboxItem>

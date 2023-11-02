@@ -33,7 +33,7 @@ export default async function Page({
   const categories = await getCategories(categoryId);
   return (
     <>
-      <CategoryContainer data={categories} />
+      <CategoryContainer data={categories}  />
     </>
   );
 }

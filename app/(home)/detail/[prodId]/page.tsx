@@ -12,10 +12,11 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Image as NextImage,
   Link as NextLink,
 } from "@nextui-org/react";
 import Link from "next/link";
+import { Metadata, ResolvingMetadata } from "next";
+import slugify from "slugify";
 
 export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
@@ -30,7 +31,39 @@ export async function generateStaticParams() {
   }));
 }
 
+type Props = {
+  params: { prodId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const prodId = params.prodId;
+
+  // fetch data
+  const products: IProduct = await fetch(
+    `${process.env.API_URL}/api/products/${prodId}`,
+    {
+      next: { tags: ["product"] },
+    }
+  ).then((res) => res.json());
+
+  // optionally access and extend (rather than replace) parent metadata
+  // const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: products.productName,
+    // openGraph: {
+    //   images: ["/some-specific-page-image.jpg", ...previousImages],
+    // },
+  };
+}
+
 async function getData(productId: string) {
+  slugify("hello world");
   const res = await fetch(`${process.env.API_URL}/api/products/${productId}`);
 
   if (!res.ok) {
@@ -111,7 +144,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                       src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${product.images[0]}`}
                       fill
                       priority
-                      className="rounded-lg object-cove"
+                      className="rounded-lg object-cover"
                       sizes="300px"
                       alt={product.productName}
                     />

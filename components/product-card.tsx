@@ -11,6 +11,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${product.images[0]}`}
               fill
+              className="object-cover"
               sizes="200px"
               alt={product.productName}
             />

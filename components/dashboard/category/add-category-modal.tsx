@@ -1,6 +1,6 @@
 import CategoryContext from "@/context/CategoryContext";
 import { Input, Select, SelectItem } from "@nextui-org/react";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext } from "react";
 import {
   Modal,
   ModalContent,
@@ -12,6 +12,7 @@ import {
 } from "@nextui-org/react";
 import { useFormState, useFormStatus } from "react-dom";
 import { createCategory } from "@/lib/actions";
+import { usePathname } from "next/navigation";
 
 const initialState = {
   type: null,
@@ -30,9 +31,9 @@ function SubmitButton() {
 
 export default function AddCategoryModal() {
   const [state, formAction] = useFormState(createCategory, initialState);
-
   const { categories } = useContext(CategoryContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const pathname = usePathname().split("/").at(-1);
 
   return (
     <>
@@ -64,7 +65,15 @@ export default function AddCategoryModal() {
           {(onClose) => (
             <>
               {state?.type === "success" && onClose()}
-              <form action={formAction}>
+              <form
+                action={(formData) => {
+                  if (pathname === "category") {
+                    formData.set("parentId", null);
+                  } else {
+                    formData.set("parentId", pathname);
+                  }
+                }}
+              >
                 <ModalHeader className="flex flex-col gap-1">
                   Thêm danh mục
                 </ModalHeader>
@@ -73,7 +82,8 @@ export default function AddCategoryModal() {
                   <Select
                     items={categories}
                     title="Danh mục"
-                    placeholder="Chọn danh mục gốc"
+                    aria-label="Chọn danh mục"
+                    placeholder="Danh mục gốc"
                   >
                     {(category) => (
                       <SelectItem key={category.categoryId}>
@@ -85,7 +95,7 @@ export default function AddCategoryModal() {
                     id="categoryName"
                     name="categoryName"
                     label="Tên danh mục"
-                    required
+                    isRequired
                   />
                 </ModalBody>
                 <ModalFooter>

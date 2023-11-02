@@ -29,7 +29,7 @@ export default function DropdownUser() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem  showDivider key="profile" className="h-14 gap-2">
+            <DropdownItem showDivider key="profile" className="h-14 gap-2">
               <p className="font-semibold">Đăng nhập với</p>
               <p className="font-semibold">{session.user.email}</p>
             </DropdownItem>
@@ -38,6 +38,9 @@ export default function DropdownUser() {
             </DropdownItem>
             <DropdownItem as={Link} key="team_settings" href="/dashboard">
               Dashboard
+            </DropdownItem>
+            <DropdownItem as={Link} key="profile" href="/user/profile">
+              Tài khoản
             </DropdownItem>
             <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
               Đăng xuất

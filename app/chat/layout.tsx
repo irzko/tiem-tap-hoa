@@ -1,9 +1,20 @@
 import CartButton from "@/components/cart-button";
 import Logo from "@/components/ui/logo";
 import DropdownUser from "@/components/dropdown-user";
-import ThemeSwitcher from "@/components/ui/theme-switcher";
 import SearchForm from "@/components/search-form";
-import { Navbar } from "@nextui-org/react";
+import Link from "next/link";
+import {
+  Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chat",
+};
 
 export default async function Layout({
   children,
@@ -12,22 +23,41 @@ export default async function Layout({
 }) {
   return (
     <>
-      <Navbar>
-        <div className="flex items-center justify-start">
+      <Navbar isBordered>
+        <NavbarBrand className="hidden md:block">
           <Logo />
-        </div>
-        <div className="w-full flex justify-center mx-2">
+        </NavbarBrand>
+        <NavbarContent as="div" className="items-center" justify="center">
           <SearchForm />
-        </div>
-        <div className="flex items-center">
-          <span>
-            <ThemeSwitcher />
-          </span>
-          <span className="mx-2">
+        </NavbarContent>
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <Button as={Link} href={`/chat/`} isIconOnly variant="flat">
+              <svg
+                className="w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 5h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-2v3l-4-3H8m4-13H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2v3l4-3h4a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                />
+              </svg>
+            </Button>
+          </NavbarItem>
+
+          <NavbarItem>
             <CartButton />
-          </span>
-          <DropdownUser />
-        </div>
+          </NavbarItem>
+          <NavbarItem>
+            <DropdownUser />
+          </NavbarItem>
+        </NavbarContent>
       </Navbar>
       <main>
         <div className="max-w-screen-md mx-auto">

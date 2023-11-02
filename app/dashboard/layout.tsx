@@ -17,7 +17,7 @@ import {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <Navbar isBordered>
+      <Navbar isBordered isBlurred={false}>
         <NavbarItem>
           <SidebarToggle />
         </NavbarItem>
@@ -29,7 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Link href={`chat/`}>
+            <Link href={`/dashboard/chat/`}>
               <Button isIconOnly variant="flat">
                 <svg
                   className="w-4 h-4"
