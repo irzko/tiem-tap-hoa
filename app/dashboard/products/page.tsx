@@ -1,3 +1,5 @@
+import ProductList from "@/components/dashboard/product/product-list";
+
 const getProduct = async (): Promise<IProduct[]> => {
   return await fetch(`${process.env.API_URL}/api/products`, {
     next: { tags: ["product"] },
@@ -9,7 +11,9 @@ export default async function Page() {
 
   return (
     <>
-      <div className="overflow-x-auto">
+    <ProductList products={products} />
+      
+      {/* <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -47,7 +51,7 @@ export default async function Page() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </>
   );
 }

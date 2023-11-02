@@ -11,7 +11,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import Sidebar from "@/components/ui/sidebar";
-import HomeSidebarItem from "@/components/ui/home-sidebar-item";
+import HomeSidebarItem from "@/components/home/home-sidebar-item";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
 
 async function getCategories() {

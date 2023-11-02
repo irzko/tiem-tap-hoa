@@ -1,5 +1,6 @@
 "use client";
 import CategorySelect from "@/components/dashboard/product/category-select";
+import DescriptionGenerator from "@/components/dashboard/product/description-generator";
 import ImageSelect from "@/components/dashboard/product/image-select";
 import { addProduct } from "@/lib/actions";
 import { productSchema } from "@/lib/validateSchema";
@@ -18,6 +19,8 @@ import { useForm } from "react-hook-form";
 export default function Page() {
   const {
     register,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(productSchema),
@@ -47,6 +50,10 @@ export default function Page() {
       const data = await res.json();
       setSelectedImages([...selectedImages, ...data.files]);
     }
+  };
+
+  const setValueDescription = (output: string) => {
+    setValue("description", output);
   };
 
   const handleRemoveImage = (index: number) => {
@@ -90,6 +97,12 @@ export default function Page() {
             isInvalid={Boolean(errors.description)}
             errorMessage={errors.description?.message?.toString()}
           />
+          <div className="flex justify-end">
+            <DescriptionGenerator
+              getInput={() => getValues("productName")}
+              setOutput={setValueDescription}
+            />
+          </div>
           <Input
             label="Giá"
             {...register("price")}
@@ -137,6 +150,7 @@ export default function Page() {
             <Input
               label="Chiều rộng"
               {...register("width")}
+              isRequired
               endContent={<span>cm</span>}
               isInvalid={Boolean(errors.width)}
               errorMessage={errors.width?.message?.toString()}
@@ -144,12 +158,14 @@ export default function Page() {
             <Input
               label="Chiều dài"
               {...register("length")}
+              isRequired
               endContent={<span>cm</span>}
               isInvalid={Boolean(errors.length)}
               errorMessage={errors.length?.message?.toString()}
             />
             <Input
               label="Chiều cao"
+              isRequired
               {...register("height")}
               endContent={<span>cm</span>}
               isInvalid={Boolean(errors.height)}
@@ -158,6 +174,7 @@ export default function Page() {
             <Input
               type="number"
               className="col-span-1"
+              isRequired
               label="Cân nặng"
               {...register("weight")}
               endContent={<span>gr</span>}

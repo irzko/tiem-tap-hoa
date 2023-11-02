@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes } from "react";
 import Image from "next/image";
-import { Button } from "@nextui-org/react";
+import { Badge, Button } from "@nextui-org/react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   thumbnails: string[];
@@ -12,28 +12,29 @@ function ImageSelect({ thumbnails, onRemoveImage, ...rest }: InputProps) {
     <div className="flex gap-2">
       {thumbnails.map((thumbnail, index) => (
         <div key={index}>
-          <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${thumbnail}`}
-            alt="preview"
-            className="rounded-lg object-cover"
-            width={64}
-            height={64}
-          />
-          <button
-            type="button"
-            className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center"
-            onClick={() => onRemoveImage(index)}
-          >
-            <svg
-              className="w-6 h-6 text-red-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+          <div className="relative h-16 w-16">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${thumbnail}`}
+              alt="preview"
+              className="rounded-lg object-cover"
+              fill
+            />
+            <button
+              type="button"
+              className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center"
+              onClick={() => onRemoveImage(index)}
             >
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
-            </svg>
-          </button>
+              <svg
+                className="w-6 h-6 text-red-500"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+              </svg>
+            </button>
+          </div>
         </div>
       ))}
       <Button

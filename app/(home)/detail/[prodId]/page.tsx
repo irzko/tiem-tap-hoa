@@ -14,9 +14,9 @@ import {
   CardHeader,
   Link as NextLink,
 } from "@nextui-org/react";
-import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import slugify from "slugify";
+import BreadcrumbItem from "@/components/ui/breadcrumb-item";
 
 export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
@@ -63,7 +63,6 @@ export async function generateMetadata(
 }
 
 async function getData(productId: string) {
-  slugify("hello world");
   const res = await fetch(`${process.env.API_URL}/api/products/${productId}`);
 
   if (!res.ok) {
@@ -76,8 +75,13 @@ async function getData(productId: string) {
 export default async function Page({ params }: { params: { prodId: string } }) {
   const { prodId } = params;
   const product: IProduct = await getData(prodId);
+  console.log(product);
 
   const breadcrumb = await getBreadcrumb(product.categoryId);
+  // breadcrumb.push({
+  //   categoryId: product.categoryId,
+  //   categoryName: product.category.categoryName,
+  // });
 
   const addToCart = async () => {
     "use server";
@@ -122,15 +126,16 @@ export default async function Page({ params }: { params: { prodId: string } }) {
       <div className="max-w-screen-lg mx-auto space-y-4">
         <Card>
           <CardBody>
-            {breadcrumb.map((item) => (
-              <NextLink
-                as={Link}
-                href={`/category/${item.categoryId}`}
-                key={item.categoryId}
-              >
-                {item.categoryName}
-              </NextLink>
-            ))}
+            <div className="flex gap-2">
+              {breadcrumb.map((item) => (
+                <BreadcrumbItem
+                  href={`/category/${item.categoryId}`}
+                  key={item.categoryId}
+                >
+                  {item.categoryName}
+                </BreadcrumbItem>
+              ))}
+            </div>
           </CardBody>
         </Card>
 

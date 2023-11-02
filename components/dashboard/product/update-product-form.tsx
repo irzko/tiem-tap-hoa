@@ -12,6 +12,7 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -181,6 +182,9 @@ const UpdateProductForm = ({ product }: { product?: IProduct }) => {
       <Card>
         <CardBody>
           <div className="flex gap-2 w-full justify-end">
+            <Button as={Link} href="/dashboard/products">
+              Hủy
+            </Button>
             <Button type="submit" color="primary">
               Lưu
             </Button>

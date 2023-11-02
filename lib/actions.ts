@@ -145,7 +145,7 @@ export const signUp = async (data: any) => {
 
 export const createCategory = async (prevState: any, formData: FormData) => {
   const categoryName = formData.get("categoryName") as string;
-  const parentCategoryId = formData.get("parentCategoryId") as string;
+  const parentCategoryId = formData.get("parentId") as string;
   const exists = await prisma.category.findUnique({
     where: {
       categoryName,
@@ -198,7 +198,7 @@ export const updateCategory = async (prevState: any, formData: FormData) => {
   }
 };
 
-export const generateDescription = async (input: any) => {
+export const initDescription = async (input: string) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_COPY_AI_END_POINT}`, {
     method: "POST",
     headers: {
@@ -208,16 +208,17 @@ export const generateDescription = async (input: any) => {
     },
     body: JSON.stringify({
       startVariables: {
-        input,
+        initial_manual_input: input,
       },
       metadata: { api: true },
     }),
   });
   const data = await res.json();
+  return data.data.id;
+};
 
-  await new Promise((resolve) => setTimeout(resolve, 10000));
-
-  return fetch(`${process.env.NEXT_PUBLIC_COPY_AI_END_POINT}/${data.data.id}`, {
+export const getDescription = async (id: string) => {
+  return fetch(`${process.env.NEXT_PUBLIC_COPY_AI_END_POINT}/${id}`, {
     method: "GET",
     headers: {
       accept: "application/json",

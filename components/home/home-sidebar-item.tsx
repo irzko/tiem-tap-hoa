@@ -1,5 +1,5 @@
 "use client";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Link as NextLink } from "@nextui-org/react";
 import Link from "next/link";
 
 export default function HomeSidebarItem({
@@ -27,11 +27,16 @@ export default function HomeSidebarItem({
             {catg.subCategories &&
               catg.subCategories.map((subCatg) => {
                 return (
-                  <li key={subCatg.categoryId}>
-                    <Button as={Link} href={`/category/${subCatg.categoryId}`}>
-                      {subCatg.categoryName}
-                    </Button>
-                  </li>
+                  <ul className="ml-2" key={subCatg.categoryId}>
+                    <li>
+                      <NextLink
+                        as={Link}
+                        href={`/category/${subCatg.categoryId}`}
+                      >
+                        {subCatg.categoryName}
+                      </NextLink>
+                    </li>
+                  </ul>
                 );
               })}
           </AccordionItem>

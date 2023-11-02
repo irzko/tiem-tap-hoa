@@ -67,11 +67,13 @@ export default function AddCategoryModal() {
               {state?.type === "success" && onClose()}
               <form
                 action={(formData) => {
-                  if (pathname === "category") {
-                    formData.set("parentId", null);
-                  } else {
-                    formData.set("parentId", pathname);
+                  if (
+                    formData.get("parentId") === "" &&
+                    pathname !== "category"
+                  ) {
+                    formData.set("parentId", pathname as string);
                   }
+                  formAction(formData);
                 }}
               >
                 <ModalHeader className="flex flex-col gap-1">
@@ -82,6 +84,7 @@ export default function AddCategoryModal() {
                   <Select
                     items={categories}
                     title="Danh mục"
+                    name="parentId"
                     aria-label="Chọn danh mục"
                     placeholder="Danh mục gốc"
                   >
