@@ -1,10 +1,7 @@
-import DashboardSidebarItem from "@/components/dashboard/dashboard-sidebar-item";
 import DropdownUser from "@/components/dropdown-user";
 import SearchForm from "@/components/search-form";
 import Logo from "@/components/ui/logo";
-import Sidebar from "@/components/ui/sidebar";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
-import ThemeSwitcher from "@/components/ui/theme-switcher";
 import {
   Button,
   Link,
@@ -54,14 +51,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <main>
-        <Sidebar>
-          <DashboardSidebarItem />
-        </Sidebar>
-        <div className=" sm:ml-64">
-          <div className="p-4 max-w-screen-xl mx-auto">{children}</div>
-        </div>
-      </main>
+      {children}
     </div>
   );
 }

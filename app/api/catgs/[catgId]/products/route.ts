@@ -6,9 +6,27 @@ export async function GET(
   { params }: { params: { catgId: string } }
 ) {
   const { catgId } = params;
+  const parentId = await prisma.category.findMany({
+    where: {
+      parentCategoryId: catgId,
+    },
+    select: {
+      categoryId: true,
+    },
+  });
+
   const category = await prisma.product.findMany({
     where: {
-      categoryId: catgId,
+      OR: [
+        {
+          categoryId: catgId,
+        },
+        {
+          categoryId: {
+            in: parentId.map((item) => item.categoryId),
+          },
+        },
+      ],
     },
   });
   return NextResponse.json(category);

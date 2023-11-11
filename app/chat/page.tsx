@@ -83,12 +83,12 @@ export default function Page() {
 
   return (
     <div>
-      <div className="flex z-40 h-auto items-center justify-center fixed top-16 left-64 right-0 border-y border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70">
+      <div className="flex z-40 h-auto items-center justify-center fixed top-16 inset-x-0 border-y border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70">
         <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center justify-between h-16 max-w-4xl">
           <User name="Tiệm tạp hóa" description="Quản trị viên" />
         </div>
       </div>
-      <ul className="flex flex-col px-4 gap-1">
+      <ul className="flex flex-col px-4 gap-1 mt-24">
         {messages.map((message) => (
           <Chip
             as="li"

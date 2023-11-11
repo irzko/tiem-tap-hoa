@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
         <small className="text-default-500">
           {product.price.toLocaleString("vi-VN")}&nbsp;₫
         </small>
-        <h4 className="font-bold text-large line-clamp-1">
+        <h4 className="font-bold text-large line-clamp-2">
           {product.productName}
         </h4>
       </CardFooter>

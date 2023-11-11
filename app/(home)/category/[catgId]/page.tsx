@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { catgId: string } }) {
   const { catgId } = params;
   const products = await getProducts(catgId);
   return (
-    <div className="mx-auto max-w-screen-xl">
+    <div className="mx-auto mt-4 max-w-screen-xl">
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
         {products.map((product) => (
           <ProductCard key={product.productId} product={product} />

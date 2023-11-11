@@ -36,8 +36,13 @@ export const POST = async (req: Request) => {
 };
 
 export const GET = async (req: Request) => {
-  const messages = await prisma.message.findMany();
-  console.log(messages);
+  const conversation = await prisma.message.findMany({
+    select: {
+      conversationId: true,
+    },
+    distinct: ["conversationId"],
+    
+  });
 
-  return NextResponse.json(messages, { status: 200 });
+  return NextResponse.json(conversation, { status: 200 });
 };

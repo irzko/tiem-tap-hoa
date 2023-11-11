@@ -7,15 +7,8 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Link as NextLink,
-} from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { Metadata, ResolvingMetadata } from "next";
-import slugify from "slugify";
 import BreadcrumbItem from "@/components/ui/breadcrumb-item";
 
 export async function generateStaticParams() {
@@ -63,7 +56,9 @@ export async function generateMetadata(
 }
 
 async function getData(productId: string) {
-  const res = await fetch(`${process.env.API_URL}/api/products/${productId}`);
+  const res = await fetch(`${process.env.API_URL}/api/products/${productId}`, {
+    next: { tags: ["product"] },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -75,13 +70,7 @@ async function getData(productId: string) {
 export default async function Page({ params }: { params: { prodId: string } }) {
   const { prodId } = params;
   const product: IProduct = await getData(prodId);
-  console.log(product);
-
   const breadcrumb = await getBreadcrumb(product.categoryId);
-  // breadcrumb.push({
-  //   categoryId: product.categoryId,
-  //   categoryName: product.category.categoryName,
-  // });
 
   const addToCart = async () => {
     "use server";
@@ -182,6 +171,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                 </div>
                 <div className="flex w-full items-center justify-center md:justify-start">
                   <form action={addToCart}>
+                    {/* <Input type="number" defaultValue="1" /> */}
                     <Button type="submit" color="primary" variant="shadow">
                       Thêm vào giỏ hàng
                     </Button>

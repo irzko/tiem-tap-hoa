@@ -15,7 +15,7 @@ export default function DashboardSidebarItem() {
       <ul>
         <li className="px-2 w-full">
           <Link
-            href="/dashboard/order"
+            href="/dashboard/order/unpaid"
             className="w-full gap-3 tap-highlight-transparent outline-none z-10 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 transition-opacity px-2 py-0 hover:bg-default-100 rounded-lg h-14 flex items-center"
           >
             <svg

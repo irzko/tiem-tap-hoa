@@ -83,9 +83,8 @@ export default function AddCategoryModal() {
                   <p>{state?.message}</p>
                   <Select
                     items={categories}
-                    title="Danh mục"
                     name="parentId"
-                    aria-label="Chọn danh mục"
+                    label="Chọn danh mục cha"
                     placeholder="Danh mục gốc"
                   >
                     {(category) => (

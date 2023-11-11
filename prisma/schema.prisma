@@ -45,7 +45,27 @@ model Product {
   category      Category       @relation(fields: [categoryId], references: [categoryId])
   Review        Review[]
   ImportDetail  ImportDetail[]
+  // ProductClassification ProductClassification[]
 }
+
+// model Classification {
+//   classificationId String                  @id @default(uuid())
+//   name             String
+//   createdAt        DateTime                @default(now())
+//   updatedAt        DateTime                @updatedAt
+//   products         ProductClassification[]
+// }
+
+// model ProductClassification {
+//   productClassificationId String         @id @default(uuid())
+//   createdAt               DateTime       @default(now())
+//   name                    String
+//   updatedAt               DateTime       @updatedAt
+//   productId               String
+//   classificationId        String
+//   product                 Product        @relation(fields: [productId], references: [productId])
+//   classification          Classification @relation(fields: [classificationId], references: [classificationId])
+// }
 
 model User {
   userId             String               @id @default(uuid())
@@ -81,6 +101,7 @@ model Interaction {
   interactId      String          @id @default(uuid())
   userId          String
   productId       String
+  times           Int             @default(1)
   interactionType InteractionType
   timestamp       DateTime        @default(now())
   product         Product         @relation(fields: [productId], references: [productId])

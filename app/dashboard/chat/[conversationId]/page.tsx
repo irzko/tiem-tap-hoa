@@ -1,6 +1,6 @@
 "use client";
 import { pusherClient } from "@/lib/pusher";
-import { Avatar, Button, Chip, Input, Textarea, User } from "@nextui-org/react";
+import { Button, Chip, Input, User } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { find } from "lodash";
@@ -102,7 +102,7 @@ export default function Page({
           />
         </div>
       </div>
-      <ul className="flex flex-col px-4 gap-1">
+      <ul className="flex flex-col mt-24 px-4 gap-1">
         {messages.map((message) => (
           <Chip
             as="li"
