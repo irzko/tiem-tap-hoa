@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Button,
@@ -16,8 +16,6 @@ import {
 } from "@nextui-org/react";
 import AddAddressForm from "../user/add-address-form";
 import useSWR from "swr";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import { orderAction } from "@/lib/actions";
 
 const paymentMethod = [
@@ -152,11 +150,7 @@ const Payment = ({
   userId: string;
   productsOrdered: ICart[];
 }) => {
-  const [selectedServiceId, setSelectedServiceId] = useState<Set<Key>>(
-    new Set([])
-  );
-
-  const router = useRouter();
+  const [selectedServiceId, setSelectedServiceId] = useState<string>("");
 
   const [shippingFee, setShippingFee] = useState<number>(0);
 
@@ -178,7 +172,7 @@ const Payment = ({
   );
 
   useEffect(() => {
-    const serviceId = selectedServiceId.values().next().value;
+    const serviceId = selectedServiceId;
     if (serviceId && address.addressId && productsOrdered.length > 0) {
       fetch(`${process.env.NEXT_PUBLIC_GHN_API_URL}/v2/shipping-order/fee`, {
         method: "POST",
@@ -209,15 +203,14 @@ const Payment = ({
     }
   }, [address, productsOrdered, selectedServiceId]);
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Set<Key>>(
-    new Set([])
-  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("");
 
   const handleCheckout = () => {
     const data = {
       userId: userId,
       addressId: address.addressId,
-      paymentMethod: selectedPaymentMethod.entries().next().value[0],
+      paymentMethod: selectedPaymentMethod,
       shippingFee: shippingFee,
       products: productsOrdered,
     };
@@ -229,27 +222,32 @@ const Payment = ({
       <Card>
         <CardBody className="space-y-4">
           <Select
-            selectedKeys={selectedPaymentMethod}
-            onSelectionChange={(key) => setSelectedPaymentMethod(new Set(key))}
+            // selectedKeys={selectedPaymentMethod}
+            // onSelectionChange={(key) => setSelectedPaymentMethod(new Set(key))}
+            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
             label="Phương thức thanh toán"
             placeholder="Chọn phương thức thanh toán"
-            items={paymentMethod}
+            // items={paymentMethod}
           >
-            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+            {paymentMethod.map((item) => (
+              <SelectItem key={item.value}>{item.label}</SelectItem>
+            ))}
           </Select>
 
           <Select
-            selectedKeys={selectedServiceId}
-            onSelectionChange={(key) => setSelectedServiceId(new Set(key))}
+            // selectedKeys={selectedServiceId}
+            // onSelectionChange={(key) => setSelectedServiceId(new Set(key))}
+            onChange={(e) => setSelectedServiceId(e.target.value)}
             label="Phương thức vận chuyển"
             placeholder="Chọn phương thức vận chuyển"
-            items={services ?? []}
+            // items={services ?? []}
           >
-            {(item: any) => (
-              <SelectItem key={item.service_id} value={item.service_id}>
-                {item.short_name}
-              </SelectItem>
-            )}
+            {services &&
+              services.map((item: any) => (
+                <SelectItem key={item.service_id} value={item.service_id}>
+                  {item.short_name}
+                </SelectItem>
+              ))}
           </Select>
           <form className="space-y-4">
             <Input

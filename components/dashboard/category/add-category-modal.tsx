@@ -15,8 +15,8 @@ import { createCategory } from "@/lib/actions";
 import { usePathname } from "next/navigation";
 
 const initialState = {
-  type: null,
-  message: null,
+  type: "",
+  message: "",
 };
 
 function SubmitButton() {

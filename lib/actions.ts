@@ -276,7 +276,7 @@ export const orderAction = async (data: {
   userId: string;
   addressId: string;
   products: ICart[];
-  paymentMethod: PaymentType;
+  paymentMethod: string;
 }) => {
   data.products.forEach((product) => {
     if (product.quantity > product.product.stockQuantity) {

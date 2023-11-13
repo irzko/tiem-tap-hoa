@@ -17,6 +17,7 @@ export default function SearchForm() {
         type="text"
         id="topbar-search"
         name="keyword"
+        labelPlacement="outside"
         placeholder="Tìm kiếm"
         startContent={
           <svg

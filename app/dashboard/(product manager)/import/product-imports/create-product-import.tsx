@@ -14,8 +14,8 @@ import {
 import { useFormState, useFormStatus } from "react-dom";
 
 const initialState = {
-  type: null,
-  message: null,
+  type: "",
+  message: "",
 };
 
 export function SubmitButton() {

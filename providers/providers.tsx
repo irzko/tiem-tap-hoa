@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { NextUIProvider } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   children?: React.ReactNode;
@@ -11,8 +12,9 @@ type Props = {
 };
 
 export const Provider = ({ children, session }: Props) => {
+  const router = useRouter();
   return (
-    <NextUIProvider>
+    <NextUIProvider navigate={router.push}>
       <SidebarProvider>
         <SessionProvider refetchOnWindowFocus={false} session={session}>
           {children}

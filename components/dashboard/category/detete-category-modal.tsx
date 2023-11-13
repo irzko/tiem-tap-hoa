@@ -12,8 +12,8 @@ import { useFormState, useFormStatus } from "react-dom";
 import { deleteCategory } from "@/lib/actions";
 
 const initialState = {
-  type: null,
-  message: null,
+  type: "",
+  message: "",
 };
 
 function SubmitButton() {

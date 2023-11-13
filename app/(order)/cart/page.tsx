@@ -1,6 +1,5 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
 import CartList from "@/components/cart/cart-list";
+import getSession from "@/lib/getSession";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +13,7 @@ const getCart = async (userId: string) => {
 };
 
 export default async function Page() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (!session) {
     return null;
   }

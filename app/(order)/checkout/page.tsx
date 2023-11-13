@@ -1,6 +1,5 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
 import CheckoutContainer from "@/components/checkout/checkout-container";
+import getSession from "@/lib/getSession";
 
 const getAddress = async (userId: string): Promise<IAddress> => {
   const res = await fetch(
@@ -14,7 +13,7 @@ const getAddress = async (userId: string): Promise<IAddress> => {
 };
 
 export default async function Page() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (!session) {
     return null;
   }

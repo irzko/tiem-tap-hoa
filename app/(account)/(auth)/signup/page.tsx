@@ -1,20 +1,20 @@
 "use client";
 import { Button, Input } from "@nextui-org/react";
-import { z } from "zod";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useFormStatus } from "react-dom";
 import { signUp } from "@/lib/actions";
 import { useState } from "react";
 
-const schema = z.object({
-  fullName: z.string().min(1, "Tên không được để trống"),
-  email: z
-    .string()
-    .min(1, "Email không được để trống")
+const schema = Yup.object({
+  fullName: Yup.string().required("Tên không được để trống"),
+  email: Yup.string()
+    .required("Email không được để trống")
     .email({ message: "Địa chỉ email không hợp lệ" }),
-  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  password: Yup.string()
+    .required("Mật khẩu không được để trống")
+    .min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
 });
 
 const SignUpForm = () => {
@@ -24,7 +24,7 @@ const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: yupResolver(schema),
     mode: "onBlur",
   });
 

@@ -3,10 +3,9 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Provider } from "@/providers/providers";
+import getSession from "@/lib/getSession";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,7 +32,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
 
   return (
     <ThemeProvider>

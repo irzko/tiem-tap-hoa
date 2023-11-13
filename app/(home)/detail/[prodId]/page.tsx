@@ -1,15 +1,14 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Rating from "@/components/home/rating";
 import Review from "@/components/home/review";
 import getBreadcrumb from "@/lib/getBeadcrumb";
-import { getServerSession } from "next-auth/next";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { Metadata, ResolvingMetadata } from "next";
-import BreadcrumbItem from "@/components/ui/breadcrumb-item";
+import CategoryBreadcrumbs from "@/components/ui/category-breadcrumbs";
+import getSession from "@/lib/getSession";
 
 export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
@@ -44,9 +43,6 @@ export async function generateMetadata(
     }
   ).then((res) => res.json());
 
-  // optionally access and extend (rather than replace) parent metadata
-  // const previousImages = (await parent).openGraph?.images || []
-
   return {
     title: products.productName,
     // openGraph: {
@@ -74,7 +70,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
 
   const addToCart = async () => {
     "use server";
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     if (!session) {
       redirect(`/api/auth/signin`);
     } else {
@@ -113,20 +109,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
   return (
     <>
       <div className="max-w-screen-lg mx-auto space-y-4">
-        <Card>
-          <CardBody>
-            <div className="flex gap-2">
-              {breadcrumb.map((item) => (
-                <BreadcrumbItem
-                  href={`/category/${item.categoryId}`}
-                  key={item.categoryId}
-                >
-                  {item.categoryName}
-                </BreadcrumbItem>
-              ))}
-            </div>
-          </CardBody>
-        </Card>
+        <CategoryBreadcrumbs items={breadcrumb} />
 
         <Card className="border-none" shadow="sm">
           <CardBody>
@@ -171,7 +154,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                 </div>
                 <div className="flex w-full items-center justify-center md:justify-start">
                   <form action={addToCart}>
-                    {/* <Input type="number" defaultValue="1" /> */}
+                    <Input type="number" defaultValue="1" />
                     <Button type="submit" color="primary" variant="shadow">
                       Thêm vào giỏ hàng
                     </Button>
