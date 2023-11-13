@@ -50,7 +50,9 @@ const LoginForm = () => {
               if (res?.error) {
                 toast.error(res.error);
                 setLoading(false);
+                return;
               } else {
+                setLoading(false);
                 router.push(pathname);
               }
             });

@@ -287,7 +287,7 @@ export const orderAction = async (data: {
     }
   });
 
-  await prisma.order.create({
+  const order = await prisma.order.create({
     data: {
       userId: data.userId,
       addressId: data.addressId,

@@ -109,7 +109,7 @@ model Interaction {
 }
 
 model Order {
-  orderId            String               @id @default(uuid())
+  orderId            String               @id @default(cuid())
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   userId             String

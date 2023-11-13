@@ -60,6 +60,7 @@ export default function AdjustProdQuantity({
         radius="none"
         type="number"
         id={cartId}
+        labelPlacement="outside"
         min={0}
         form="adjust-quantity"
         onBlur={handleBlur}

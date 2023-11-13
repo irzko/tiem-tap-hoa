@@ -11,27 +11,15 @@ import {
   CardHeader,
   Input,
   Link as NextLink,
+  Radio,
+  RadioGroup,
   Select,
   SelectItem,
 } from "@nextui-org/react";
 import AddAddressForm from "../user/add-address-form";
 import useSWR from "swr";
+import { useRouter } from "next/navigation";
 import { orderAction } from "@/lib/actions";
-
-const paymentMethod = [
-  {
-    label: "Thanh toán khi nhận hàng",
-    value: "COD",
-  },
-  {
-    label: "PayPal",
-    value: "PAYPAL",
-  },
-  {
-    label: "Thẻ ngân hàng",
-    value: "PAYMENT_CARD",
-  },
-];
 
 export default function CheckoutContainer({
   address,
@@ -59,8 +47,8 @@ export default function CheckoutContainer({
   }, []);
 
   return (
-    <div className="grid lg:grid-cols-12 gap-4 max-w-7xl mx-auto">
-      <div className="col-auto lg:col-span-8 space-y-4">
+    <div className="grid md:grid-cols-12 gap-4 max-w-7xl mx-auto">
+      <div className="col-auto md:col-span-8 space-y-4">
         <AddressShipping address={address} />
         <Card>
           <CardHeader>
@@ -151,7 +139,7 @@ const Payment = ({
   productsOrdered: ICart[];
 }) => {
   const [selectedServiceId, setSelectedServiceId] = useState<string>("");
-
+  const router = useRouter();
   const [shippingFee, setShippingFee] = useState<number>(0);
 
   const { data: services, error: servicesError } = useSWR(
@@ -214,25 +202,59 @@ const Payment = ({
       shippingFee: shippingFee,
       products: productsOrdered,
     };
-    orderAction(data);
+    if (selectedPaymentMethod === "COD") {
+      orderAction(data);
+    } else if (selectedPaymentMethod === "VNPAY") {
+      fetch("/api/orders", {
+        method: "POST",
+        body: JSON.stringify(data),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          if (data.url) {
+            router.push(data.url);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
-    <div className="col-auto lg:col-span-4">
+    <div className="col-auto md:col-span-4">
       <Card>
         <CardBody className="space-y-4">
-          <Select
-            // selectedKeys={selectedPaymentMethod}
-            // onSelectionChange={(key) => setSelectedPaymentMethod(new Set(key))}
+          <RadioGroup
+            defaultValue="VNPAY"
             onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-            label="Phương thức thanh toán"
-            placeholder="Chọn phương thức thanh toán"
-            // items={paymentMethod}
+            label="Chọn phương thức thanh toán"
           >
-            {paymentMethod.map((item) => (
-              <SelectItem key={item.value}>{item.label}</SelectItem>
-            ))}
-          </Select>
+            <Radio
+              value="VNPAY"
+              description="Cổng thanh toán trực tuyến VNPAY"
+              classNames={{
+                base: "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between max-w-full flex-row-reverse cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent data-[selected=true]:border-primary",
+              }}
+            >
+              <Image
+                src="/vnpay-logo.svg"
+                alt="VNPAY"
+                width={100}
+                height={50}
+              />
+            </Radio>
+            <Radio
+              value="COD"
+              classNames={{
+                base: "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between max-w-full flex-row-reverse cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent data-[selected=true]:border-primary",
+              }}
+            >
+              Thanh toán khi nhận hàng
+            </Radio>
+          </RadioGroup>
 
           <Select
             // selectedKeys={selectedServiceId}
@@ -325,7 +347,7 @@ const AddressShipping = ({ address }: { address: IAddress }) => {
           </div>
         ) : (
           <div>
-            <div className="flex gap-8 justify-between items-start py-3 px-4 w-full sm:items-center lg:py-4">
+            <div className="flex gap-8 justify-between items-start py-3 px-4 w-full sm:items-center md:py-4">
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Bạn chưa có địa chỉ nào
               </p>
