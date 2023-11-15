@@ -42,6 +42,9 @@ export default function DropdownUser() {
             <DropdownItem as={Link} key="profile" href="/user/profile">
               Tài khoản
             </DropdownItem>
+            <DropdownItem as={Link} key="profile" href="/user/purchase/unpaid">
+              Đơn hàng
+            </DropdownItem>
             <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
               Đăng xuất
             </DropdownItem>

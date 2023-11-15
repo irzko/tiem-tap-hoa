@@ -252,29 +252,9 @@ export const addSupplier = async (prevState: any, formData: FormData) => {
   }
 };
 
-export const unpaidAction = async (orderId: string, userId: string) => {
-  await prisma.order.update({
-    where: {
-      orderId: orderId,
-    },
-    data: {
-      statusId: "toship",
-    },
-  });
-
-  await prisma.orderStatusHistory.create({
-    data: {
-      orderId: orderId,
-      statusId: "unpaid",
-      userId: userId,
-    },
-  });
-  revalidateTag("order");
-};
-
 export const orderAction = async (data: {
   userId: string;
-  addressId: string;
+  shippingAddress: string;
   products: ICart[];
   paymentMethod: string;
 }) => {
@@ -290,7 +270,7 @@ export const orderAction = async (data: {
   const order = await prisma.order.create({
     data: {
       userId: data.userId,
-      addressId: data.addressId,
+      shippingAddress: data.shippingAddress,
       statusId: "unpaid",
       totalAmount: data.products.reduce(
         (acc, product) => acc + product.product.price * product.quantity,
@@ -329,6 +309,15 @@ export const orderAction = async (data: {
       productId: {
         in: data.products.map((product) => product.productId),
       },
+    },
+  });
+
+  await prisma.orderStatusHistory.create({
+    data: {
+      orderId: order.orderId,
+      statusId: "unpaid",
+      description: "Chờ xác nhận",
+      userId: data.userId,
     },
   });
   revalidateTag("cart");

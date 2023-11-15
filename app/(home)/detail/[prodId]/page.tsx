@@ -141,7 +141,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                 )}
               </div>
 
-              <div className="flex flex-col col-span-6 md:col-span-8">
+              <div className="flex flex-col h-full col-span-6 md:col-span-8">
                 <div className="flex justify-between items-start">
                   <div className="flex flex-col gap-0">
                     <h1 className="text-large font-medium mt-2">
@@ -153,8 +153,8 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-center md:justify-start">
-                  <form action={addToCart}>
-                    <Input type="number" defaultValue="1" />
+                  <form action={addToCart} className="flex gap-4 flex-col">
+                    <Input type="number" defaultValue="1" labelPlacement="outside" />
                     <Button type="submit" color="primary" variant="shadow">
                       Thêm vào giỏ hàng
                     </Button>
@@ -177,8 +177,8 @@ export default async function Page({ params }: { params: { prodId: string } }) {
             <h3 className="font-semibold">Đánh giá</h3>
           </CardHeader>
           <CardBody>
-            <Review data={product.Review} />
-            <Rating productId={prodId} />
+            {/* <Review data={product.Review} />
+            <Rating productId={prodId} /> */}
           </CardBody>
         </Card>
       </div>

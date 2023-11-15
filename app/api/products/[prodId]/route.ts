@@ -12,25 +12,25 @@ export async function GET(
     },
     include: {
       category: true,
-      Review: {
-        select: {
-          reviewId: true,
-          rating: true,
-          review: true,
-          createdAt: true,
-          user: {
-            select: {
-              userId: true,
-              fullName: true,
-            },
-          },
-          _count: {
-            select: {
-              Usefulness: true,
-            },
-          },
-        },
-      },
+      // Review: {
+      //   select: {
+      //     reviewId: true,
+      //     rating: true,
+      //     review: true,
+      //     createdAt: true,
+      //     user: {
+      //       select: {
+      //         userId: true,
+      //         fullName: true,
+      //       },
+      //     },
+      //     _count: {
+      //       select: {
+      //         Usefulness: true,
+      //       },
+      //     },
+      //   },
+      // },
     },
   });
 

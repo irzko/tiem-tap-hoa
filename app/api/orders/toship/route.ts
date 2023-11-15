@@ -16,8 +16,9 @@ export const PUT = async (req: Request) => {
   await prisma.orderStatusHistory.create({
     data: {
       orderId: data.orderId,
-      statusId: "toship",
+      statusId: "shipping",
       userId: data.userId,
+      description: "Đang giao",
     },
   });
   return NextResponse.json(order, { status: 200 });

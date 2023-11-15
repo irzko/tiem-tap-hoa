@@ -1,6 +1,5 @@
 "use client";
 import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
-import { PlusIcon } from "@/components/icons/plus-icon";
 import { SearchIcon } from "@/components/icons/search-icon";
 import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
 import {
@@ -20,14 +19,6 @@ import {
   Pagination,
   Selection,
   SortDescriptor,
-  Link as NextLink,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Textarea,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -38,76 +29,26 @@ const columns = [
   { name: "MÃ", uid: "orderId", sortable: true },
   { name: "TÊN SẢN PHẨM", uid: "productName" },
   { name: "TỔNG CỘNG", uid: "totalAmount", sortable: true },
-  { name: "ĐỊA CHỈ", uid: "shippingAddress", sortable: true },
-  // { name: "TỒN KHO", uid: "stockQuantity", sortable: true },
+  { name: "LÝ DO HỦY", uid: "reason", sortable: true },
 ];
 
 const fetcher: Fetcher<IOrder[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
-const INITIAL_VISIBLE_COLUMNS = ["productName", "totalAmount", "stockQuantity"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "productName",
+  "totalAmount",
+  "stockQuantity",
+  "reason",
+  "actions",
+];
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function CancelModal({ orderId, userId }: { orderId: string; userId: string }) {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [reason, setReason] = useState("");
-  const handleCancel = () => {
-    fetch(`/api/orders/shipping?action=cancel`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ orderId, userId, description: reason }),
-    }).then((res) => {
-      if (res.ok) {
-        mutate("/api/orders/shipping");
-        onClose();
-      }
-    });
-  };
-
-  return (
-    <>
-      <Button onPress={onOpen}>Hủy đơn hàng</Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Xác nhận hủy
-              </ModalHeader>
-              <ModalBody>
-                <Textarea
-                  label="Lý do hủy đơn hàng"
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Nhập lý do hủy đơn hàng"
-                ></Textarea>
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="light" onPress={onClose}>
-                  Không
-                </Button>
-                <Button color="danger" onPress={handleCancel}>
-                  Hủy đơn hàng
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
-}
-
 export default function Page() {
-  const { data: orders, isLoading } = useSWR("/api/orders/shipping", fetcher, {
-    revalidateIfStale: false,
+  const { data: orders, isLoading } = useSWR("/api/orders/cancelled", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
@@ -179,6 +120,23 @@ export default function Page() {
     });
   }, [sortDescriptor, items]);
 
+  const handleConfirm = useCallback(
+    async (orderId: string) => {
+      fetch(`/api/orders/cancelled`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId, userId: session?.user?.userId }),
+      }).then((res) => {
+        if (res.ok) {
+          mutate("/api/orders/cancelled");
+        }
+      });
+    },
+    [session?.user?.userId]
+  );
+
   const renderCell = useCallback((order: IOrder, columnKey: Key) => {
     const cellValue = order[columnKey as keyof IOrder];
 
@@ -203,19 +161,25 @@ export default function Page() {
             })}
           </div>
         );
+      case "reason":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">
+              {
+                order.OrderStatusHistory.filter(
+                  (orderStatusHistory) =>
+                    orderStatusHistory.statusId === "cancelled"
+                )[0].description
+              }
+            </p>
+          </div>
+        );
       case "totalAmount":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">
               {cellValue as string}
             </p>
-          </div>
-        );
-
-      case "shippingAddress":
-        return (
-          <div className="flex flex-col">
-            <p className="text-small capitalize">{cellValue as string}</p>
           </div>
         );
 

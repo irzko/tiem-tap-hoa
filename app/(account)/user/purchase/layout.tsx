@@ -5,7 +5,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div>
       <OrderTabs baseURL="/user/purchase" />
 
-      <div>{children}</div>
+      <div className="mt-4">{children}</div>
     </div>
   );
 }

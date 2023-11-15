@@ -64,7 +64,7 @@ export default function DashboardSidebarItem() {
                   <NextLink
                     as={Link}
                     color="foreground"
-                    href="/dashboard/products/add"
+                    href="/dashboard/products/create"
                   >
                     Thêm sản phẩm
                   </NextLink>
@@ -76,6 +76,15 @@ export default function DashboardSidebarItem() {
                     href="/dashboard/category"
                   >
                     Quản lý danh mục sản phẩm
+                  </NextLink>
+                </li>
+                <li>
+                  <NextLink
+                    as={Link}
+                    color="foreground"
+                    href="/dashboard/products/coupon"
+                  >
+                    Mã giảm giá
                   </NextLink>
                 </li>
               </ul>

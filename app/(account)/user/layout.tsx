@@ -53,9 +53,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <ThemeSwitcher />
-          </NavbarItem>
-          <NavbarItem>
             <CartButton />
           </NavbarItem>
           <NavbarItem>

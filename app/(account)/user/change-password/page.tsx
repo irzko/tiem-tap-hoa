@@ -9,30 +9,18 @@ import {
 } from "@nextui-org/react";
 import prisma from "@/lib/prisma";
 import { revalidateTag } from "next/cache";
-import { toast } from "react-toastify";
-
-const getUser = async (userId: string) => {
-  return fetch(`${process.env.API_URL}/api/user/profile/${userId}`, {
-    next: {
-      tags: ["user"],
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => data);
-};
+import { hash } from "bcryptjs";
 
 export default async function Page() {
   const session = await getSession();
-  const profile = await getUser(session?.user.userId!);
-  const updateProfile = async (formData: FormData) => {
+  const changePassword = async (formData: FormData) => {
     "use server";
     await prisma.user.update({
       where: {
         userId: session?.user.userId!,
       },
       data: {
-        fullName: formData.get("fullName") as string,
-        email: formData.get("email") as string,
+        password: await hash(formData.get("newPassword") as string, 10),
       },
     });
     revalidateTag("user");
@@ -41,21 +29,33 @@ export default async function Page() {
     <div className="max-w-screen-md mx-auto">
       <form
         className="space-y-4 md:space-y-6 flex flex-col"
-        action={updateProfile}
+        action={changePassword}
       >
         <Card>
           <CardHeader>
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Hồ Sơ Của Tôi
+              Đổi mật khẩu
             </h1>
           </CardHeader>
           <CardBody className="gap-4">
             <Input
-              label="Tên"
-              name="fullName"
-              defaultValue={profile.fullName}
+              label="Mật khẩu hiện tại"
+              type="password"
+              placeholder="Nhập mật khẩu hiện tại"
+              name="currentPassword"
             />
-            <Input label="Email" name="email" defaultValue={profile.email} />
+            <Input
+              label="Mật khẩu mới"
+              type="password"
+              name="newPassword"
+              placeholder="Nhập mật khẩu mới"
+            />
+            <Input
+              label="Nhập lại mật khẩu mới"
+              type="password"
+              name="rePassword"
+              placeholder="Nhập lại mật khẩu mới"
+            />
           </CardBody>
           <CardFooter>
             <Button color="primary" type="submit">

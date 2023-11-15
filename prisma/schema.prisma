@@ -77,7 +77,6 @@ model User {
   updatedAt          DateTime             @updatedAt
   Address            Address[]
   Cart               Cart[]
-  Coupon             Coupon[]
   interaction        Interaction[]
   order              Order[]
   review             Review[]
@@ -114,15 +113,14 @@ model Order {
   updatedAt          DateTime             @updatedAt
   userId             String
   totalAmount        Float
-  Coupon             Coupon[]
-  addressId          String
   orderDetails       OrderDetail[]
   paymentMethod      PaymentMethod?
   statusId           String
   OrderStatusHistory OrderStatusHistory[]
   user               User                 @relation(fields: [userId], references: [userId])
-  address            Address              @relation(fields: [addressId], references: [addressId])
+  shippingAddress    String
   orderStatus        OrderStatus          @relation(fields: [statusId], references: [statusId])
+  coupons            Coupon[]
 }
 
 model OrderStatus {
@@ -136,6 +134,7 @@ model OrderStatusHistory {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   orderId              String
+  description          String
   statusId             String
   userId               String
   order                Order?   @relation(fields: [orderId], references: [orderId])
@@ -187,14 +186,13 @@ model Usefulness {
 }
 
 model Coupon {
-  couponId   String   @id @default(uuid())
-  couponCode String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     String
-  orderId    String
-  order      Order    @relation(fields: [orderId], references: [orderId])
-  user       User     @relation(fields: [userId], references: [userId])
+  couponCode  String   @id @unique
+  discount    Float
+  description String?
+  quantity    Int
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Address {
@@ -210,7 +208,6 @@ model Address {
   updatedAt     DateTime @updatedAt
   userId        String
   user          User     @relation(fields: [userId], references: [userId])
-  Order         Order[]
 }
 
 enum Role {

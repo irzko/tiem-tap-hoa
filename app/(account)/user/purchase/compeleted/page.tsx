@@ -1,6 +1,5 @@
 "use client";
 import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
-import { PlusIcon } from "@/components/icons/plus-icon";
 import { SearchIcon } from "@/components/icons/search-icon";
 import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
 import {
@@ -55,7 +54,7 @@ function CancelModal({ orderId, userId }: { orderId: string; userId: string }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [reason, setReason] = useState("");
   const handleCancel = () => {
-    fetch(`/api/orders/shipping?action=cancel`, {
+    fetch(`/api/orders/compeleted?action=cancel`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +62,7 @@ function CancelModal({ orderId, userId }: { orderId: string; userId: string }) {
       body: JSON.stringify({ orderId, userId, description: reason }),
     }).then((res) => {
       if (res.ok) {
-        mutate("/api/orders/shipping");
+        mutate("/api/orders/compeleted");
         onClose();
       }
     });
@@ -106,11 +105,15 @@ function CancelModal({ orderId, userId }: { orderId: string; userId: string }) {
 }
 
 export default function Page() {
-  const { data: orders, isLoading } = useSWR("/api/orders/shipping", fetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data: orders, isLoading } = useSWR(
+    "/api/orders/compeleted",
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 
   const { data: session } = useSession();
   const loadingState = isLoading || orders?.length === 0 ? "loading" : "idle";

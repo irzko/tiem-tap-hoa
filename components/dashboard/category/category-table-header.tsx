@@ -1,7 +1,7 @@
-import vietnameseToAscii from "@/lib/vietnameseToAscii";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import AddCategoryModal from "./add-category-modal";
 import { Card, CardBody, Input } from "@nextui-org/react";
+import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
 
 export default function CategoryTableHeader({
   data,
@@ -19,9 +19,9 @@ export default function CategoryTableHeader({
       setData(data);
     } else {
       const result = data.filter((item) => {
-        const string = vietnameseToAscii(item.categoryName);
-        const stringNotSigned = vietnameseToAscii(inputValue);
-        return string.includes(stringNotSigned);
+        return toLowerCaseNonAccentVietnamese(item.categoryName).includes(
+          toLowerCaseNonAccentVietnamese(inputValue)
+        );
       });
       setData(result);
     }

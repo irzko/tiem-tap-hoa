@@ -28,7 +28,7 @@ async function fetchWithToken(url: string, token: string) {
   }).then((res) => res.json());
 }
 
-const AddressSelect = ({
+export const AddressSelect = ({
   selectedAddress,
   setSelectedAddress,
 }: {

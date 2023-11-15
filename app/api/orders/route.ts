@@ -7,16 +7,17 @@ import { redirect } from "next/navigation";
 export async function POST(req: NextRequest) {
   const data: {
     userId: string;
-    addressId: string;
+    shippingAddress: string;
     products: ICart[];
     paymentMethod: PaymentType;
+    totalAmount: number;
   } = await req.json();
 
   data.products.forEach((product) => {
     if (product.quantity > product.product.stockQuantity) {
       return NextResponse.json(
         {
-          error: `Product ${product.product.productName} is out of stock`,
+          message: `Product ${product.product.productName} is out of stock`,
         },
         { status: 400 }
       );
@@ -26,12 +27,9 @@ export async function POST(req: NextRequest) {
   const order = await prisma.order.create({
     data: {
       userId: data.userId,
-      addressId: data.addressId,
+      shippingAddress: data.shippingAddress,
       statusId: "unpaid",
-      totalAmount: data.products.reduce(
-        (acc, product) => acc + product.product.price * product.quantity,
-        0
-      ),
+      totalAmount: data.totalAmount,
       orderDetails: {
         create: data.products.map((product) => ({
           productId: product.productId,
@@ -44,6 +42,36 @@ export async function POST(req: NextRequest) {
           accountInfo: "",
         },
       },
+    },
+  });
+
+  data.products.forEach(async (product) => {
+    await prisma.product.update({
+      where: {
+        productId: product.productId,
+      },
+      data: {
+        stockQuantity: {
+          decrement: product.quantity,
+        },
+      },
+    });
+  });
+
+  await prisma.cart.deleteMany({
+    where: {
+      productId: {
+        in: data.products.map((product) => product.productId),
+      },
+    },
+  });
+
+  await prisma.orderStatusHistory.create({
+    data: {
+      orderId: order.orderId,
+      statusId: "unpaid",
+      description: "Chờ xác nhận",
+      userId: data.userId,
     },
   });
 

@@ -120,6 +120,17 @@ interface IOrder {
   user: User;
   orderDetails: IOrderDetail[];
   paymentMethods: IPaymentMethod[];
+  OrderStatusHistory: IOrderStatusHistory[];
+}
+
+interface IOrderStatusHistory {
+  orderStatusHistoryId: string;
+  orderId: string;
+  statusId: string;
+  userId: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IAddress {
