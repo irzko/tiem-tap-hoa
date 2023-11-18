@@ -15,6 +15,7 @@ export const POST = async (req: Request) => {
       status: "Đang chờ",
     },
   });
+  return NextResponse.json({ message: "" }, { status: 201 });
 };
 
 export const PUT = async (req: Request) => {

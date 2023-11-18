@@ -202,4 +202,22 @@ interface IProductImport {
   totalValue: number;
   status: "Đang nhập" | "Đã nhập" | "Đã hủy";
   supplier: ISupplier;
+  ImportDetail: IImportDetail[];
+}
+
+interface IImportDetail {
+  importDetailId: string;
+  productImportId: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  productImport: IProductImport;
+  product: IProduct;
+}
+
+interface IWarehouse {
+  warehouseId: string;
+  warehouseName: string;
+  address: string;
+  description?: string;
 }

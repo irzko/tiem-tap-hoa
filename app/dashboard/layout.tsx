@@ -4,6 +4,7 @@ import Logo from "@/components/ui/logo";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
 import {
   Button,
+  Chip,
   Link,
   Navbar,
   NavbarBrand,
@@ -19,7 +20,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SidebarToggle />
         </NavbarItem>
         <NavbarBrand className="hidden md:block">
-          <Logo />
+          <div className="flex items-center">
+            <div className="mr-2">
+              <Logo />
+            </div>
+            <Chip color="danger" variant="flat">Quản trị viên</Chip>
+          </div>
         </NavbarBrand>
         <NavbarContent as="div" className="items-center" justify="center">
           <SearchForm />

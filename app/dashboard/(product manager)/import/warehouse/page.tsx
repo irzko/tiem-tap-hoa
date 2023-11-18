@@ -2,7 +2,6 @@
 import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
 import { PlusIcon } from "@/components/icons/plus-icon";
 import { SearchIcon } from "@/components/icons/search-icon";
-import useProducts from "@/hooks/useProducts";
 import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
 import {
   Table,
@@ -36,58 +35,30 @@ import {
   useMemo,
   useState,
 } from "react";
-import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
-import Select from "react-select";
 
-const supplierFetcher: Fetcher<ISupplier[], string> = async (url) => {
-  return fetch(url).then((res) => res.json());
-};
-
-const warehouseFetcher: Fetcher<IWarehouse[], string> = (url) =>
-  fetch(url).then((res) => res.json());
-
-function AddProductImportForm() {
+function AddWarehouseForm() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { products } = useProducts();
-  const { data: suppliers } = useSWR(`/api/suppliers`, supplierFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
-
-  const { data: warehouses } = useSWR(`/api/warehouses`, warehouseFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    fetch(`/api/product-imports`, {
+    fetch(`/api/warehouses`, {
       method: "POST",
       body: JSON.stringify({
-        supplierId: e.currentTarget.supplierId.value,
-        productId: e.currentTarget.productId.value,
-        quantity: e.currentTarget.quantity.value,
-        price: e.currentTarget.price.value,
-        status: "Đang chờ",
+        warehouseName: e.currentTarget.warehouseName.value,
+        address: e.currentTarget.address.value,
+        description: e.currentTarget.description.value,
       }),
     }).then((res) => {
-      if (res.status === 201) {
-        toast.success("Thêm nhà cung cấp thành công");
-        mutate(`/api/product-imports`);
+      if (res.ok) {
+        mutate("/api/warehouses");
         onClose();
-      } else {
-        toast.error("Thêm nhà cung cấp thất bại");
       }
     });
   };
   return (
     <>
       <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>
-        Tạo hóa đơn mới
+        Thêm nhà kho
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -95,50 +66,21 @@ function AddProductImportForm() {
             <>
               <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <ModalHeader className="flex flex-col gap-1">
-                  Tạo hóa đơn mới
+                  Thêm nhà kho
                 </ModalHeader>
                 <ModalBody>
-                  <Select
-                    name="supplierId"
-                    placeholder="Chọn nhà cung cấp"
-                    options={
-                      suppliers?.map((supplier) => ({
-                        label: supplier.supplierName,
-                        value: supplier.supplierId,
-                      })) ?? []
-                    }
+                  <Input
+                    label="Tên nhà kho"
+                    name="warehouseName"
+                    id="warehouseName"
                   />
 
-                  <Select
-                    name="warehouseId"
-                    placeholder="Chọn nhà kho"
-                    options={
-                      warehouses?.map((warehouse) => ({
-                        label: warehouse.warehouseName,
-                        value: warehouse.warehouseId,
-                      })) ?? []
-                    }
-                  />
-
-                  <Select
-                    name="productId"
-                    placeholder="Chọn sản phẩm"
-                    options={
-                      products?.map((product) => ({
-                        label: product.productName,
-                        value: product.productId,
-                      })) ?? []
-                    }
-                  />
-
-                  <div className="flex gap-2">
-                    <Input label="Số lượng" name="quantity" id="quantity" />
-                    <Input label="Giá nhập hàng" name="price" id="price" />
-                  </div>
+                  <Input label="Địa chỉ" id="address" name="address" />
+                  <Input label="Mô tả" id="description" name="description" />
                 </ModalBody>
                 <ModalFooter>
                   <Button variant="light" onPress={onClose}>
-                    Close
+                    Hủy
                   </Button>
                   <Button color="primary" type="submit">
                     Lưu
@@ -154,35 +96,92 @@ function AddProductImportForm() {
 }
 
 const columns = [
-  { name: "MÃ", uid: "productImportId", sortable: true },
-  { name: "TÊN SẢN PHẨM", uid: "productName", sortable: true },
-  { name: "NHÀ CUNG CẤP", uid: "supplierName", sortable: true },
+  { name: "MÃ", uid: "warehouseId", sortable: true },
+  { name: "TÊN KHO", uid: "warehouseName", sortable: true },
+  { name: "ĐỊA CHỈ", uid: "address", sortable: true },
+  { name: "MÔ TẢ", uid: "description" },
   { name: "THAO TÁC", uid: "actions" },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["productName", "supplierName"];
+const fetcher: Fetcher<IWarehouse[], string> = (url) =>
+  fetch(url).then((res) => res.json());
+
+const INITIAL_VISIBLE_COLUMNS = ["warehouseName", "address", "description", "actions"];
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const fetcher: Fetcher<IProductImport[], string> = (url) =>
-  fetch(url).then((res) => res.json());
+function DeleteModal({ warehouseId }: { warehouseId: string }) {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const handleDelete = () => {
+    fetch(`/api/warehouses`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ warehouseId }),
+    }).then((res) => {
+      if (res.ok) {
+        mutate("/api/warehouses");
+        onClose();
+      }
+    });
+  };
+
+  return (
+    <>
+      <Button variant="light" color="danger" isIconOnly onPress={onOpen}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Xóa nhà kho
+              </ModalHeader>
+              <ModalBody>
+                <p>Bạn có chắc chắn xóa nhà kho này?</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="light" onPress={onClose}>
+                  Hủy
+                </Button>
+                <Button color="danger" onPress={handleDelete}>
+                  Xóa
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
 
 export default function Page() {
-  const { data: productImports, isLoading } = useSWR(
-    "/api/product-imports",
-    fetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data: warehouses, isLoading } = useSWR("/api/warehouses", fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const { data: session } = useSession();
   const loadingState =
-    isLoading || productImports?.length === 0 ? "loading" : "idle";
+    isLoading || warehouses?.length === 0 ? "loading" : "idle";
+
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -207,18 +206,18 @@ export default function Page() {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredProductImports = productImports as IProductImport[];
+    let filteredWarehouses = warehouses as IWarehouse[];
 
     if (hasSearchFilter) {
-      filteredProductImports = filteredProductImports.filter((productImport) =>
-        toLowerCaseNonAccentVietnamese(productImport.productImportId).includes(
+      filteredWarehouses = filteredWarehouses.filter((warehouse) =>
+        toLowerCaseNonAccentVietnamese(warehouse.warehouseName).includes(
           toLowerCaseNonAccentVietnamese(filterValue)
         )
       );
     }
 
-    return filteredProductImports;
-  }, [filterValue, hasSearchFilter, productImports]);
+    return filteredWarehouses;
+  }, [filterValue, hasSearchFilter, warehouses]);
 
   const pages = filteredItems
     ? Math.ceil(filteredItems.length / rowsPerPage)
@@ -237,12 +236,12 @@ export default function Page() {
 
   const sortedItems = useMemo(() => {
     if (!items) return undefined;
-    return [...items].sort((a: IProductImport, b: IProductImport) => {
+    return [...items].sort((a: IWarehouse, b: IWarehouse) => {
       const first = a[
-        sortDescriptor.column as keyof IProductImport
+        sortDescriptor.column as keyof IWarehouse
       ] as unknown as number;
       const second = b[
-        sortDescriptor.column as keyof IProductImport
+        sortDescriptor.column as keyof IWarehouse
       ] as unknown as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -251,83 +250,71 @@ export default function Page() {
   }, [sortDescriptor, items]);
 
   const handleConfirm = useCallback(
-    async (productImportId: string) => {
-      fetch(`/api/productImports/unpaid`, {
+    async (warehouseId: string) => {
+      fetch(`/api/warehouses/unpaid`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          productImportId,
-          userId: session?.user?.userId,
-        }),
+        body: JSON.stringify({ warehouseId, userId: session?.user?.userId }),
       }).then((res) => {
         if (res.ok) {
-          mutate("/api/productImports/unpaid");
+          mutate("/api/warehouses/unpaid");
         }
       });
     },
     [session?.user?.userId]
   );
 
-  const renderCell = useCallback(
-    (productImport: IProductImport, columnKey: Key) => {
-      const cellValue = productImport[columnKey as keyof IProductImport];
+  const renderCell = useCallback((warehouse: IWarehouse, columnKey: Key) => {
+    const cellValue = warehouse[columnKey as keyof IWarehouse];
 
-      switch (columnKey) {
-        case "productImportName":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {productImport.ImportDetail}
-              </p>
-            </div>
-          );
-        case "phoneNumber":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+    switch (columnKey) {
+      case "warehouseName":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">
+              {cellValue as string}
+            </p>
+          </div>
+        );
 
-        case "address":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+      case "address":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{cellValue as string}</p>
+          </div>
+        );
 
-        case "email":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+      case "description":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{cellValue as string}</p>
+          </div>
+        );
 
-        case "actions":
-          return (
-            <div className="relative flex items-center gap-2">
-              <Button variant="light" isIconOnly>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
-                </svg>
-              </Button>
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Button variant="light" isIconOnly>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="w-5 h-5"
+              >
+                <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+              </svg>
+            </Button>
 
-              {/* <DeleteModal productImportId={productImport.productImportId} /> */}
-            </div>
-          );
+            <DeleteModal warehouseId={warehouse.warehouseId} />
+          </div>
+        );
 
-        default:
-          return cellValue;
-      }
-    },
-    []
-  );
+      default:
+        return cellValue;
+    }
+  }, []);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -371,7 +358,7 @@ export default function Page() {
             isClearable
             labelPlacement="outside"
             className="w-full sm:max-w-[44%]"
-            placeholder="Nhập tên nhà cung cấp..."
+            placeholder="Nhập tên nhà kho..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -402,12 +389,12 @@ export default function Page() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <AddProductImportForm />
+            <AddWarehouseForm />
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Có {productImports?.length} nhà cung cấp
+            Có {warehouses?.length} nhà kho
           </span>
           <label className="flex items-center text-default-400 text-small">
             Dòng mỗi trang:
@@ -427,7 +414,7 @@ export default function Page() {
     filterValue,
     onSearchChange,
     visibleColumns,
-    productImports?.length,
+    warehouses?.length,
     onRowsPerPageChange,
     onClear,
   ]);
@@ -504,14 +491,14 @@ export default function Page() {
         </TableHeader>
         <TableBody
           emptyContent={
-            isLoading ? "Đang tải..." : "Không tìm thấy nhà cung cấp nào"
+            isLoading ? "Đang tải..." : "Không tìm thấy nhà kho nào"
           }
           items={sortedItems ?? []}
           // loadingContent={<Spinner />}
           loadingState={loadingState}
         >
           {(item) => (
-            <TableRow key={item.productImportId}>
+            <TableRow key={item.warehouseId}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey) as string}</TableCell>
               )}
