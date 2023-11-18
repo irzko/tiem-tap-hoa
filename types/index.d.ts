@@ -165,23 +165,27 @@ interface IReview {
 
 interface IConversation {
   conversationId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  user1Id: string;
-  user2Id: string;
-  user1: User;
-  user2: User;
+  userId: string;
+  startTime: Date;
   messages: IMessage[];
+  Participant: IParticipant[];
+}
+
+interface IParticipant {
+  participantId: string;
+  conversationId: string;
+  userId: string;
+  user: IUser;
 }
 
 interface IMessage {
   messageId: string;
+  conversationId: string;
   userId: string;
   content: string;
-  conversationId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  timestamp: Date;
   user: IUser;
+  conversation: IConversation;
 }
 
 interface ISupplier {

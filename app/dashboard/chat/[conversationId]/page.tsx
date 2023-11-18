@@ -15,23 +15,23 @@ export default function Page({
   const { data: session } = useSession();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [content, setContent] = useState<string>("");
-  const [customer, setCustomer] = useState<IUser>();
+  // const [customer, setCustomer] = useState<IUser>();
 
   useEffect(() => {
     if (conversationId) {
-      fetch(`/api/messages/${conversationId}`)
+      fetch(`/api/chat/${conversationId}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [conversationId]);
 
-  useEffect(() => {
-    if (conversationId) {
-      fetch(`/api/user/profile/${conversationId}`)
-        .then((res) => res.json())
-        .then((data) => setCustomer(data));
-    }
-  }, [conversationId]);
+  // useEffect(() => {
+  //   if (conversationId) {
+  //     fetch(`/api/user/profile/${conversationId}`)
+  //       .then((res) => res.json())
+  //       .then((data) => setCustomer(data));
+  //   }
+  // }, [conversationId]);
 
   useEffect(() => {
     if (conversationId) {
@@ -74,7 +74,7 @@ export default function Page({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetch(`/api/messages/`, {
+    fetch(`/api/chat/`, {
       method: "POST",
       body: JSON.stringify({
         userId: session?.user.userId,
@@ -91,18 +91,19 @@ export default function Page({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
   };
+  console.log(messages);
 
   return (
     <div>
       <div className="flex z-40 h-auto items-center justify-center fixed top-16 left-64 right-0 border-y border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70">
         <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center justify-between h-16 max-w-4xl">
-          <User
+          {/* <User
             name={customer && customer.fullName}
             description={customer && customer.email}
-          />
+          /> */}
         </div>
       </div>
-      <ul className="flex flex-col mt-24 px-4 gap-1">
+      <ul className="flex flex-col mt-24 px-4 gap-1 md:ml-64">
         {messages.map((message) => (
           <Chip
             as="li"

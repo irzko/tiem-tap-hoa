@@ -43,13 +43,19 @@ export const POST = async (req: Request) => {
   }
 };
 
-
 export const GET = async (req: Request) => {
   const conversation = await prisma.conversation.findMany({
     select: {
+      conversationId: true,
       Participant: {
         select: {
           userId: true,
+          user: {
+            select: {
+              fullName: true,
+              role: true,
+            },
+          },
         },
       },
     },
