@@ -1,42 +1,55 @@
+import { data } from "./../../../dashboard/(product manager)/page";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
   const { userId }: { userId: string } = await req.json();
 
-  const conversation = await prisma.participant.findFirst({
+  const participant = await prisma.participant.findFirst({
     where: {
       userId,
     },
     select: {
-      conversation: true,
+      conversation: {
+        select: {
+          conversationId: true,
+        },
+      },
     },
   });
 
-  if (conversation) {
+  console.log(participant);
+
+  if (participant) {
     return NextResponse.json(
       {
         message: "success",
-        data: conversation,
+        data: participant,
       },
       { status: 200 }
     );
   } else {
     const conversation = await prisma.conversation.create({
+      data: {},
+    });
+    const data = await prisma.participant.create({
       data: {
-        Participant: {
-          create: [
-            {
-              userId,
-            },
-          ],
+        conversationId: conversation.conversationId,
+        userId,
+      },
+      select: {
+        conversation: {
+          select: {
+            conversationId: true,
+          },
         },
       },
     });
+
     return NextResponse.json(
       {
         message: "success",
-        data: conversation,
+        data,
       },
       { status: 201 }
     );

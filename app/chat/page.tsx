@@ -2,35 +2,40 @@
 import { pusherClient } from "@/lib/pusher";
 import { Button, Chip, Input, User } from "@nextui-org/react";
 import { signIn, useSession } from "next-auth/react";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { find } from "lodash";
 
 export default function Page() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const [messages, setMessages] = useState<IMessage[]>();
-  const userId = useRef<string>("");
   const [content, setContent] = useState<string>("");
   const [conversationId, setConversationId] = useState<string>();
 
-  if (session?.user.userId) {
-    userId.current = session?.user.userId;
-  } else {
+  if (!session) {
     signIn();
   }
 
   useEffect(() => {
-    fetch(`/api/chat/conversation`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: userId.current,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setConversationId(data.data.conversation.conversationId);
-      });
-  }, []);
+    if (session?.user.userId) {
+      fetch(`/api/chat/conversation`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: session.user.userId,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setConversationId(data.data.conversation.conversationId);
+        });
+    }
+  }, [session?.user.userId]);
 
   useEffect(() => {
     if (conversationId) {
@@ -85,21 +90,24 @@ export default function Page() {
     };
   }, [conversationId]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    fetch(`/api/chat/`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: userId.current,
-        content,
-        conversationId: conversationId,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        setContent("");
-      }
-    });
-  };
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      fetch(`/api/chat/`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: session?.user.userId,
+          content,
+          conversationId: conversationId,
+        }),
+      }).then((res) => {
+        if (res.ok) {
+          setContent("");
+        }
+      });
+    },
+    [content, conversationId, session?.user.userId]
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);

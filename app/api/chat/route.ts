@@ -10,7 +10,6 @@ export const POST = async (req: Request) => {
   }: { userId: string; content: string; conversationId: string } =
     await req.json();
 
-    console.log(userId, content, conversationId);
     
 
   const message = await prisma.message.create({
