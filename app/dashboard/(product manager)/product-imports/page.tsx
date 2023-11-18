@@ -44,8 +44,8 @@ const supplierFetcher: Fetcher<ISupplier[], string> = async (url) => {
   return fetch(url).then((res) => res.json());
 };
 
-const warehouseFetcher: Fetcher<IWarehouse[], string> = (url) =>
-  fetch(url).then((res) => res.json());
+// const warehouseFetcher: Fetcher<IWarehouse[], string> = (url) =>
+//   fetch(url).then((res) => res.json());
 
 function AddProductImportForm() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -56,11 +56,11 @@ function AddProductImportForm() {
     revalidateOnReconnect: false,
   });
 
-  const { data: warehouses } = useSWR(`/api/warehouses`, warehouseFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  // const { data: warehouses } = useSWR(`/api/warehouses`, warehouseFetcher, {
+  //   revalidateIfStale: false,
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: false,
+  // });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -109,7 +109,7 @@ function AddProductImportForm() {
                     }
                   />
 
-                  <Select
+                  {/* <Select
                     name="warehouseId"
                     placeholder="Chọn nhà kho"
                     options={
@@ -118,7 +118,7 @@ function AddProductImportForm() {
                         value: warehouse.warehouseId,
                       })) ?? []
                     }
-                  />
+                  /> */}
 
                   <Select
                     name="productId"
@@ -279,7 +279,7 @@ export default function Page() {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {productImport.ImportDetail}
+                {/* {productImport.ImportDetail} */}
               </p>
             </div>
           );

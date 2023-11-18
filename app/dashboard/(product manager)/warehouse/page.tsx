@@ -106,7 +106,12 @@ const columns = [
 const fetcher: Fetcher<IWarehouse[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
-const INITIAL_VISIBLE_COLUMNS = ["warehouseName", "address", "description", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "warehouseName",
+  "address",
+  "description",
+  "actions",
+];
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);

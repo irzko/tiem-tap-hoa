@@ -248,7 +248,6 @@ model ProductImport {
   totalValue      Float
   status          String
   Shipping        Shipping[]
-  QualityControl  QualityControl[]
   ImportHistory   ImportHistory[]
   ImportDetail    ImportDetail[]
 }
@@ -282,16 +281,6 @@ model Shipping {
   productImport   ProductImport @relation(fields: [productImportId], references: [productImportId])
   estimatedTime   DateTime
   actualTime      DateTime
-}
-
-model QualityControl {
-  qualityControlId String        @id @default(uuid())
-  productImportId  String
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  productImport    ProductImport @relation(fields: [productImportId], references: [productImportId])
-  result           String
-  note             String?
 }
 
 model ImportHistory {

@@ -112,7 +112,7 @@ export default function DashboardSidebarItem() {
                   <NextLink
                     as={Link}
                     color="foreground"
-                    href="/dashboard/import/suppliers"
+                    href="/dashboard/suppliers"
                   >
                     Nhà cung cấp
                   </NextLink>
@@ -121,7 +121,7 @@ export default function DashboardSidebarItem() {
                   <NextLink
                     as={Link}
                     color="foreground"
-                    href="/dashboard/import/product-imports"
+                    href="/dashboard/product-imports"
                   >
                     Nhập hàng
                   </NextLink>
@@ -130,7 +130,7 @@ export default function DashboardSidebarItem() {
                   <NextLink
                     as={Link}
                     color="foreground"
-                    href="/dashboard/import/warehouse"
+                    href="/dashboard/warehouse"
                   >
                     Kho hàng
                   </NextLink>
