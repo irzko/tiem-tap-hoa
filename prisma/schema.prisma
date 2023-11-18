@@ -83,6 +83,7 @@ model User {
   orderStatusHistory OrderStatusHistory[]
   usefulness         Usefulness[]
   Message            Message[]
+  Participant        Participant[]
 }
 
 model Cart {
@@ -220,13 +221,29 @@ enum InteractionType {
   REVIEW
 }
 
+model Conversation {
+  conversationId String        @id @default(uuid())
+  startTime      DateTime      @default(now())
+  Participant    Participant[]
+  Message        Message[]
+}
+
+model Participant {
+  participantId  String       @id @default(uuid())
+  conversationId String
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
+  user           User         @relation(fields: [userId], references: [userId])
+}
+
 model Message {
-  messageId      String   @id @default(uuid())
+  messageId      String       @id @default(uuid())
   conversationId String
   userId         String
   content        String
-  timestamp      DateTime @default(now())
-  user           User     @relation(fields: [userId], references: [userId])
+  timestamp      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [userId])
+  conversation   Conversation @relation(fields: [conversationId], references: [conversationId])
 }
 
 model Supplier {

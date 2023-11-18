@@ -8,24 +8,43 @@ import { find } from "lodash";
 export default function Page() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const conversationId = useRef<string>("");
+  const [messages, setMessages] = useState<IMessage[]>();
+  const userId = useRef<string>("");
   const [content, setContent] = useState<string>("");
+  const [conversationId, setConversationId] = useState<string>();
 
   if (session?.user.userId) {
-    conversationId.current = session?.user.userId;
+    userId.current = session?.user.userId;
   } else {
     signIn();
   }
 
   useEffect(() => {
-    fetch(`/api/messages/${conversationId.current}`)
+    fetch(`/api/chat/conversation`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: userId.current,
+      }),
+    })
       .then((res) => res.json())
-      .then((data) => setMessages(data));
+      .then((data) => {
+        setConversationId(data.data.conversation.conversationId);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (conversationId) {
+      fetch(`/api/chat/${conversationId}`)
+        .then((res) => res.json())
+        .then((data: IMessage[]) => setMessages(data));
+    }
   }, [conversationId]);
 
   useEffect(() => {
-    pusherClient.subscribe(conversationId.current);
+    if (!conversationId) {
+      return;
+    }
+    pusherClient.subscribe(conversationId);
     bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: IMessage) => {
@@ -33,7 +52,9 @@ export default function Page() {
         if (find(current, { messageId: message.messageId })) {
           return current;
         }
-
+        if (!current) {
+          return [message];
+        }
         return [...current, message];
       });
 
@@ -41,21 +62,24 @@ export default function Page() {
     };
 
     const updateMessageHandler = (newMessage: IMessage) => {
-      setMessages((current) =>
+      setMessages((current) => {
+        if (!current) {
+          return [newMessage];
+        }
         current.map((currentMessage) => {
           if (currentMessage.messageId === newMessage.messageId) {
             return newMessage;
           }
 
           return currentMessage;
-        })
-      );
+        });
+      });
     };
 
     pusherClient.bind("messages:new", messageHandler);
     pusherClient.bind("message:update", updateMessageHandler);
     return () => {
-      pusherClient.unsubscribe(conversationId.current);
+      pusherClient.unsubscribe(conversationId);
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
     };
@@ -63,12 +87,12 @@ export default function Page() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetch(`/api/messages/`, {
+    fetch(`/api/chat/`, {
       method: "POST",
       body: JSON.stringify({
-        userId: conversationId.current,
+        userId: userId.current,
         content,
-        conversationId: conversationId.current,
+        conversationId: conversationId,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -84,23 +108,43 @@ export default function Page() {
   return (
     <div>
       <div className="flex z-40 h-auto items-center justify-center fixed top-16 inset-x-0 border-y border-divider backdrop-blur-lg backdrop-saturate-150 bg-background/70">
-        <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center justify-between h-16 max-w-4xl">
-          <User name="Tiệm tạp hóa" description="Quản trị viên" />
+        <div className="z-40 flex px-6 gap-4 w-full relative flex-nowrap items-center h-16 max-w-4xl">
+          <User
+            name={
+              <div className="flex gap-2">
+                Tiệm tạp hóa
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            }
+            description="Tư vấn viên"
+          />
         </div>
       </div>
       <ul className="flex flex-col px-4 gap-1 mt-24">
-        {messages.map((message) => (
-          <Chip
-            as="li"
-            size="lg"
-            variant={message.user.role === "USER" ? "solid" : "flat"}
-            color={message.user.role === "USER" ? "primary" : "default"}
-            className={`${message.user.role === "USER" ? "self-end" : ""}`}
-            key={message.messageId}
-          >
-            {message.content}
-          </Chip>
-        ))}
+        {messages &&
+          messages.map((message) => (
+            <Chip
+              as="li"
+              size="lg"
+              variant={message.user.role === "USER" ? "solid" : "flat"}
+              color={message.user.role === "USER" ? "primary" : "default"}
+              className={`${message.user.role === "USER" ? "self-end" : ""}`}
+              key={message.messageId}
+            >
+              {message.content}
+            </Chip>
+          ))}
       </ul>
       <div className="mt-24" ref={bottomRef} />
       <form
