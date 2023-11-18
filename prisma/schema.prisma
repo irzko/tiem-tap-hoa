@@ -190,9 +190,8 @@ model Coupon {
   discount    Float
   description String?
   quantity    Int
+  expiredDate DateTime
   orders      Order[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model Address {
@@ -242,7 +241,7 @@ model Supplier {
 }
 
 model ProductImport {
-  productImportId String           @id @default(uuid())
+  productImportId String          @id @default(uuid())
   supplierId      String
   importDate      DateTime
   totalValue      Float

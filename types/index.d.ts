@@ -221,3 +221,11 @@ interface IWarehouse {
   address: string;
   description?: string;
 }
+
+interface ICoupon {
+  couponCode: string;
+  discount: number;
+  description: string;
+  quantity: number;
+  expiredDate: Date;
+}

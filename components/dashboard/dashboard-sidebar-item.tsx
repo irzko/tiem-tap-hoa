@@ -84,7 +84,7 @@ export default function DashboardSidebarItem() {
                   <NextLink
                     as={Link}
                     color="foreground"
-                    href="/dashboard/products/coupon"
+                    href="/dashboard/coupon"
                   >
                     Mã giảm giá
                   </NextLink>

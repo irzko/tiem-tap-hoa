@@ -7,6 +7,7 @@ export const POST = async (req: NextRequest) => {
     quantity: string;
     discount: string;
     description: string;
+    expiredDate: string;
   } = await req.json();
   await prisma.coupon.create({
     data: {
@@ -14,6 +15,7 @@ export const POST = async (req: NextRequest) => {
       quantity: parseInt(data.quantity),
       discount: parseInt(data.discount),
       description: data.description,
+      expiredDate: new Date(data.expiredDate),
     },
   });
   return NextResponse.json({ message: "Coupon created" }, { status: 201 });

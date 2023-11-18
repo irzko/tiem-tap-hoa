@@ -154,7 +154,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
                 </div>
                 <div className="flex w-full items-center justify-center md:justify-start">
                   <form action={addToCart} className="flex gap-4 flex-col">
-                    <Input type="number" defaultValue="1" labelPlacement="outside" />
+                    {/* <Input type="number" defaultValue="1" min={1} max={product.stockQuantity} labelPlacement="outside" /> */}
                     <Button type="submit" color="primary" variant="shadow">
                       Thêm vào giỏ hàng
                     </Button>

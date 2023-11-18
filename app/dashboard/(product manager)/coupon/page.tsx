@@ -3,6 +3,7 @@ import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
 import { PlusIcon } from "@/components/icons/plus-icon";
 import { SearchIcon } from "@/components/icons/search-icon";
 import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
+import dateFormat from "dateformat";
 import {
   Table,
   TableHeader,
@@ -19,45 +20,141 @@ import {
   Pagination,
   Selection,
   SortDescriptor,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, Key, useCallback, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  Key,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import useSWR, { Fetcher, mutate } from "swr";
-import Link from "next/link";
 
-// const warehouseFetcher: Fetcher<IWarehouse[], string> = (url) =>
-//   fetch(url).then((res) => res.json());
 
 const columns = [
-  { name: "MÃ", uid: "productImportId", sortable: true },
-  { name: "TÊN SẢN PHẨM", uid: "productName", sortable: true },
-  { name: "NHÀ CUNG CẤP", uid: "supplierName", sortable: true },
+  { name: "MÃ", uid: "couponCode", sortable: true },
+  { name: "GIẢM GIÁ", uid: "discount", sortable: true },
+  { name: "SỐ LƯỢNG", uid: "quantity", sortable: true },
+  { name: "MÔ TẢ", uid: "description", sortable: true },
+  {
+    name: "HẠN SỬ DỤNG",
+    uid: "expiredDate",
+    sortable: true,
+  },
   { name: "THAO TÁC", uid: "actions" },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["productName", "supplierName"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "couponCode",
+  "discount",
+  "quantity",
+  "expiredDate",
+  "actions",
+];
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const fetcher: Fetcher<IProductImport[], string> = (url) =>
+export function AddCouponModal() {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    fetch("/api/coupon", {
+      method: "POST",
+      body: JSON.stringify({
+        couponCode: event.currentTarget.couponCode.value,
+        description: event.currentTarget.description.value,
+        discount: event.currentTarget.discount.value,
+        quantity: event.currentTarget.quantity.value,
+        expiredDate: event.currentTarget.expiredDate.value,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        mutate("/api/coupon");
+        onClose();
+      }
+    });
+  };
+
+  return (
+    <>
+      <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>
+        Thêm mã giảm giá
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <form onSubmit={handleSubmit}>
+                <ModalHeader className="flex flex-col gap-1">
+                  Thêm mã giảm giá
+                </ModalHeader>
+                <ModalBody>
+                  <Input
+                    name="couponCode"
+                    label="Mã giảm giá"
+                    placeholder="Nhập mã giảm giá"
+                  />
+                  <Input
+                    name="description"
+                    label="Mô tả"
+                    placeholder="Nhập mô tả"
+                  />
+                  <Input
+                    name="discount"
+                    label="Giảm giá"
+                    placeholder="Nhập giảm giá"
+                  />
+                  <Input
+                    name="quantity"
+                    label="Số lượng"
+                    placeholder="Nhập số lượng"
+                  />
+                  <Input
+                    name="expiredDate"
+                    type="date"
+                    label="Hạn sử dụng"
+                    placeholder="Nhập hạn sử dụng"
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="light" onPress={onClose}>
+                    Hủy
+                  </Button>
+                  <Button color="primary" type="submit">
+                    Thêm
+                  </Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+const fetcher: Fetcher<ICoupon[], string> = (url) =>
   fetch(url).then((res) => res.json());
 
 export default function Page() {
-  const { data: productImports, isLoading } = useSWR(
-    "/api/product-imports",
-    fetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data: coupons, isLoading } = useSWR("/api/coupon", fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const { data: session } = useSession();
-  const loadingState =
-    isLoading || productImports?.length === 0 ? "loading" : "idle";
+  const loadingState = isLoading || coupons?.length === 0 ? "loading" : "idle";
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -82,18 +179,18 @@ export default function Page() {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredProductImports = productImports as IProductImport[];
+    let filteredCoupons = coupons as ICoupon[];
 
     if (hasSearchFilter) {
-      filteredProductImports = filteredProductImports.filter((productImport) =>
-        toLowerCaseNonAccentVietnamese(productImport.productImportId).includes(
+      filteredCoupons = filteredCoupons.filter((coupon) =>
+        toLowerCaseNonAccentVietnamese(coupon.couponCode).includes(
           toLowerCaseNonAccentVietnamese(filterValue)
         )
       );
     }
 
-    return filteredProductImports;
-  }, [filterValue, hasSearchFilter, productImports]);
+    return filteredCoupons;
+  }, [filterValue, hasSearchFilter, coupons]);
 
   const pages = filteredItems
     ? Math.ceil(filteredItems.length / rowsPerPage)
@@ -112,12 +209,12 @@ export default function Page() {
 
   const sortedItems = useMemo(() => {
     if (!items) return undefined;
-    return [...items].sort((a: IProductImport, b: IProductImport) => {
+    return [...items].sort((a: ICoupon, b: ICoupon) => {
       const first = a[
-        sortDescriptor.column as keyof IProductImport
+        sortDescriptor.column as keyof ICoupon
       ] as unknown as number;
       const second = b[
-        sortDescriptor.column as keyof IProductImport
+        sortDescriptor.column as keyof ICoupon
       ] as unknown as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -125,84 +222,68 @@ export default function Page() {
     });
   }, [sortDescriptor, items]);
 
-  const handleConfirm = useCallback(
-    async (productImportId: string) => {
-      fetch(`/api/productImports/unpaid`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productImportId,
-          userId: session?.user?.userId,
-        }),
-      }).then((res) => {
-        if (res.ok) {
-          mutate("/api/productImports/unpaid");
-        }
-      });
-    },
-    [session?.user?.userId]
-  );
+  const renderCell = useCallback((coupon: ICoupon, columnKey: Key) => {
+    const cellValue = coupon[columnKey as keyof ICoupon];
 
-  const renderCell = useCallback(
-    (productImport: IProductImport, columnKey: Key) => {
-      const cellValue = productImport[columnKey as keyof IProductImport];
+    switch (columnKey) {
+      case "couponCode":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">
+              {cellValue as string}
+            </p>
+          </div>
+        );
+      case "discount":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{cellValue.toLocaleString("vi-VN")}</p>
+          </div>
+        );
 
-      switch (columnKey) {
-        case "productImportName":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {/* {productImport.ImportDetail} */}
-              </p>
-            </div>
-          );
-        case "phoneNumber":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+      case "quantity":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{cellValue as string}</p>
+          </div>
+        );
 
-        case "address":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+      case "description":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{cellValue as string}</p>
+          </div>
+        );
 
-        case "email":
-          return (
-            <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
-            </div>
-          );
+      case "expiredDate":
+        return (
+          <div className="flex flex-col">
+            <p className="text-small capitalize">{dateFormat(cellValue, "HH:MM dd-mm-yy")}</p>
+          </div>
+        );
 
-        case "actions":
-          return (
-            <div className="relative flex items-center gap-2">
-              <Button variant="light" isIconOnly>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
-                </svg>
-              </Button>
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Button variant="light" isIconOnly>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="w-5 h-5"
+              >
+                <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+              </svg>
+            </Button>
 
-              {/* <DeleteModal productImportId={productImport.productImportId} /> */}
-            </div>
-          );
+            {/* <DeleteModal couponId={coupon.couponId} /> */}
+          </div>
+        );
 
-        default:
-          return cellValue;
-      }
-    },
-    []
-  );
+      default:
+        return cellValue;
+    }
+  }, []);
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -246,7 +327,7 @@ export default function Page() {
             isClearable
             labelPlacement="outside"
             className="w-full sm:max-w-[44%]"
-            placeholder="Nhập tên nhà cung cấp..."
+            placeholder="Nhập mã giảm giá..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -277,19 +358,12 @@ export default function Page() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              color="primary"
-              endContent={<PlusIcon />}
-              as={Link}
-              href="/dashboard/product-imports/add"
-            >
-              Tạo hóa đơn mới
-            </Button>
+            <AddCouponModal />
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Có {productImports?.length} nhà cung cấp
+            Có {coupons?.length} mã giảm giá
           </span>
           <label className="flex items-center text-default-400 text-small">
             Dòng mỗi trang:
@@ -309,7 +383,7 @@ export default function Page() {
     filterValue,
     onSearchChange,
     visibleColumns,
-    productImports?.length,
+    coupons?.length,
     onRowsPerPageChange,
     onClear,
   ]);
@@ -386,14 +460,14 @@ export default function Page() {
         </TableHeader>
         <TableBody
           emptyContent={
-            isLoading ? "Đang tải..." : "Không tìm thấy nhà cung cấp nào"
+            isLoading ? "Đang tải..." : "Không tìm thấy mã giảm giá nào"
           }
           items={sortedItems ?? []}
           // loadingContent={<Spinner />}
           loadingState={loadingState}
         >
           {(item) => (
-            <TableRow key={item.productImportId}>
+            <TableRow key={item.couponCode}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey) as string}</TableCell>
               )}
