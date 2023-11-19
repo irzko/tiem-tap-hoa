@@ -187,7 +187,7 @@ export default function Page() {
 
   const handleConfirm = useCallback(
     async (orderId: string) => {
-      fetch(`/api/orders/unpaid`, {
+      fetch(`/api/orders/unpaid?action=confirm`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

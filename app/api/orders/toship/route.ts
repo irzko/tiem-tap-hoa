@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export const PUT = async (req: Request) => {
+export const PATCH = async (req: Request) => {
   const data: { orderId: string; userId: string } = await req.json();
 
   const order = await prisma.order.update({

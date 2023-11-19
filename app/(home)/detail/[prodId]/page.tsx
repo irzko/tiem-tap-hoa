@@ -1,5 +1,3 @@
-import Rating from "@/components/home/rating";
-import Review from "@/components/home/review";
 import getBreadcrumb from "@/lib/getBeadcrumb";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
@@ -9,6 +7,7 @@ import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
 import { Metadata, ResolvingMetadata } from "next";
 import CategoryBreadcrumbs from "@/components/ui/category-breadcrumbs";
 import getSession from "@/lib/getSession";
+import Review from "@/components/home/review";
 
 export async function generateStaticParams() {
   const products: IProduct[] = await fetch(
@@ -177,8 +176,7 @@ export default async function Page({ params }: { params: { prodId: string } }) {
             <h3 className="font-semibold">Đánh giá</h3>
           </CardHeader>
           <CardBody>
-            {/* <Review data={product.Review} />
-            <Rating productId={prodId} /> */}
+            <Review productId={prodId} />
           </CardBody>
         </Card>
       </div>
