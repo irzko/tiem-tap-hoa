@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import dateFormat from "dateformat";
 import crypto from "crypto";
 import { redirect } from "next/navigation";
+import moment from "moment";
 
 export async function POST(req: NextRequest) {
   const data: {
@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
   const locale = "vn";
   let date = new Date();
 
-  const createDate = dateFormat(date, "yyyymmddHHMMss");
-  const orderId = dateFormat(date, "HHMMss");
+  const createDate = moment(date).format("YYYYMMDDHHmmss");
+  const orderId = moment(date).format("HHmmss");
   const params = new URLSearchParams();
   params.append("vnp_Version", "2.1.0");
   params.append("vnp_Command", "pay");

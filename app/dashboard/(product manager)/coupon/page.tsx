@@ -3,7 +3,6 @@ import { ChevronDownIcon } from "@/components/icons/chevron-down-icon";
 import { PlusIcon } from "@/components/icons/plus-icon";
 import { SearchIcon } from "@/components/icons/search-icon";
 import { toLowerCaseNonAccentVietnamese } from "@/lib/nonAccentVietnamese";
-import dateFormat from "dateformat";
 import {
   Table,
   TableHeader,
@@ -27,6 +26,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
+import moment from "moment";
 import { useSession } from "next-auth/react";
 import {
   ChangeEvent,
@@ -37,7 +37,6 @@ import {
   useState,
 } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
-
 
 const columns = [
   { name: "MÃ", uid: "couponCode", sortable: true },
@@ -237,7 +236,9 @@ export default function Page() {
       case "discount":
         return (
           <div className="flex flex-col">
-            <p className="text-small capitalize">{cellValue.toLocaleString("vi-VN")}</p>
+            <p className="text-small capitalize">
+              {cellValue.toLocaleString("vi-VN")}
+            </p>
           </div>
         );
 
@@ -258,7 +259,9 @@ export default function Page() {
       case "expiredDate":
         return (
           <div className="flex flex-col">
-            <p className="text-small capitalize">{dateFormat(cellValue, "HH:MM dd-mm-yy")}</p>
+            <p className="text-small capitalize">
+              {moment(cellValue).format("HH:mm DD/MM/YY")}
+            </p>
           </div>
         );
 

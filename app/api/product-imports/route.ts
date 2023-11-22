@@ -2,27 +2,44 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
-  return NextResponse.json(await prisma.productImport.findMany());
+  return NextResponse.json(
+    await prisma.productImport.findMany({
+      include: {
+        Supplier: true,
+        _count: {
+          select: { ImportDetail: true },
+        },
+      },
+    })
+  );
 };
 
 export const POST = async (req: Request) => {
-  const data = await req.json();
+  const data: {
+    supplierId: string;
+    data: {
+      productId: string;
+      quantity: string;
+      price: string;
+    }[];
+  } = await req.json();
 
   await prisma.productImport.create({
     data: {
       supplierId: data.supplierId,
-      totalValue: data.totalValue,
       importDate: new Date(),
       status: "Đang chờ",
+      totalValue: data.data.reduce(
+        (acc, cur) => acc + Number(cur.quantity) * Number(cur.price),
+        0
+      ),
       ImportDetail: {
-        create: [
-          {
-            productId: data.productId,
-            quantity: data.quantity,
-            price: data.price,
-            totalValue: data.totalValue,
-          },
-        ],
+        create: data.data.map((item) => ({
+          quantity: Number(item.quantity),
+          price: Number(item.price),
+          productId: item.productId,
+          totalValue: Number(item.quantity) * Number(item.price),
+        })),
       },
     },
   });

@@ -3,7 +3,7 @@ import React, { FormEvent, SVGProps, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button, Textarea, User } from "@nextui-org/react";
 import useSWR, { Fetcher, mutate } from "swr";
-import dateFormat from "dateformat";
+import moment from "moment";
 
 const OutlineStar = ({ ...prop }: SVGProps<SVGSVGElement>) => {
   return (
@@ -185,7 +185,9 @@ export default function Review({ productId }: { productId: string }) {
               <p className="">{review.review}</p>
               <p className="text-gray-500 dark:text-gray-400 text-xs">
                 Đánh giá vào lúc{" "}
-                <time>{dateFormat(review.createdAt, "HH:MM dd/mm/yyyy")}</time>
+                <time>
+                  {moment(review.createdAt).format("HH:mm DD/MM/YYYY")}
+                </time>
               </p>
               <aside>
                 <div className="flex items-center mt-3 space-x-3 divide-x divide-gray-200 dark:divide-gray-600">

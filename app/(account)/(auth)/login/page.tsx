@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Link as NextLink } from "@nextui-org/react";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
@@ -77,10 +77,13 @@ const LoginForm = () => {
               Đăng nhập
             </Button>
           </div>
+        <NextLink color="primary" as={Link} href="/forgot-password" className="flex justify-center">
+          Quên mật khẩu?
+        </NextLink>
         </form>
       </div>
     </>
   );
 };
-
+    
 export default LoginForm;

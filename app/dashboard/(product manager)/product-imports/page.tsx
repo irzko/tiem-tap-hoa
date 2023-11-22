@@ -24,18 +24,36 @@ import { useSession } from "next-auth/react";
 import { ChangeEvent, Key, useCallback, useMemo, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import Link from "next/link";
+import moment from "moment";
 
 // const warehouseFetcher: Fetcher<IWarehouse[], string> = (url) =>
 //   fetch(url).then((res) => res.json());
 
 const columns = [
-  { name: "MÃ", uid: "productImportId", sortable: true },
-  { name: "TÊN SẢN PHẨM", uid: "productName", sortable: true },
+  { name: "MÃ", uid: "productImportId" },
+  { name: "Ngày nhập", uid: "importDate", sortable: true },
   { name: "NHÀ CUNG CẤP", uid: "supplierName", sortable: true },
+  {
+    name: "TỔNG GIÁ TRỊ",
+    uid: "totalValue",
+    sortable: true,
+  },
+  {
+    name: "SỐ LƯỢNG",
+    uid: "totalQuantity",
+    sortable: true,
+  },
+
   { name: "THAO TÁC", uid: "actions" },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["productName", "supplierName"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "importDate",
+  "supplierName",
+  "totalQuantity",
+  "totalValue",
+  "actions",
+];
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -150,39 +168,45 @@ export default function Page() {
       const cellValue = productImport[columnKey as keyof IProductImport];
 
       switch (columnKey) {
-        case "productImportName":
+        case "importDate":
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {/* {productImport.ImportDetail} */}
+                {moment(cellValue.toString()).format("HH:mm DD/MM/YYYY")}
               </p>
             </div>
           );
-        case "phoneNumber":
+        case "supplierName":
           return (
             <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
+              <p className="text-small capitalize">
+                {productImport.Supplier.supplierName}
+              </p>
             </div>
           );
 
-        case "address":
+        case "totalValue":
           return (
             <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toLocaleString("vi-VN")}₫
+              </p>
             </div>
           );
 
-        case "email":
+        case "totalQuantity":
           return (
             <div className="flex flex-col">
-              <p className="text-small capitalize">{cellValue as string}</p>
+              <p className="text-bold text-sm capitalize">
+                {productImport._count.ImportDetail}
+              </p>
             </div>
           );
 
         case "actions":
           return (
             <div className="relative flex items-center gap-2">
-              <Button variant="light" isIconOnly>
+              {/* <Button variant="light" isIconOnly>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -191,7 +215,7 @@ export default function Page() {
                 >
                   <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
                 </svg>
-              </Button>
+              </Button> */}
 
               {/* <DeleteModal productImportId={productImport.productImportId} /> */}
             </div>
@@ -246,7 +270,7 @@ export default function Page() {
             isClearable
             labelPlacement="outside"
             className="w-full sm:max-w-[44%]"
-            placeholder="Nhập tên nhà cung cấp..."
+            placeholder="Nhập mã đơn đặt hàng..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -283,13 +307,13 @@ export default function Page() {
               as={Link}
               href="/dashboard/product-imports/add"
             >
-              Tạo hóa đơn mới
+              Tạo đơn đặt hàng
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Có {productImports?.length} nhà cung cấp
+            Có {productImports?.length} đơn đặt hàng
           </span>
           <label className="flex items-center text-default-400 text-small">
             Dòng mỗi trang:
@@ -386,7 +410,7 @@ export default function Page() {
         </TableHeader>
         <TableBody
           emptyContent={
-            isLoading ? "Đang tải..." : "Không tìm thấy nhà cung cấp nào"
+            isLoading ? "Đang tải..." : "Không tìm thấy đơn đặt hàng nào"
           }
           items={sortedItems ?? []}
           // loadingContent={<Spinner />}

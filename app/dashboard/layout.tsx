@@ -5,12 +5,12 @@ import SidebarToggle from "@/components/ui/sidebar-toggle";
 import {
   Button,
   Chip,
-  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

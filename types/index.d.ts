@@ -205,8 +205,11 @@ interface IProductImport {
   importDate: Date;
   totalValue: number;
   status: "Đang nhập" | "Đã nhập" | "Đã hủy";
-  supplier: ISupplier;
+  Supplier: ISupplier;
   ImportDetail: IImportDetail[];
+  _count: {
+    ImportDetail: number;
+  };
 }
 
 interface IImportDetail {

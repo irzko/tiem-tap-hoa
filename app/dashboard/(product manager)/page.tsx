@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import useSWR, { Fetcher } from "swr";
 
 ChartJS.register(
   CategoryScale,
@@ -49,7 +50,11 @@ export const data = {
   ],
 };
 
+const fetcher: Fetcher<IOrder[], string> = (url) =>
+  fetch(url).then((r) => r.json());
+
 export default function Page() {
+  const { data: report } = useSWR<IOrder[], string>(`/api/orders`, fetcher);
   return (
     <div className="relative">
       <Line options={options} data={data} />

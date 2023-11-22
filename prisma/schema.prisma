@@ -247,14 +247,15 @@ model Message {
 }
 
 model Supplier {
-  supplierId   String   @id @default(uuid())
-  supplierName String
-  phoneNumber  String
-  email        String
-  address      String
-  otherInfo    String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  supplierId    String          @id @default(uuid())
+  supplierName  String
+  phoneNumber   String
+  email         String
+  address       String
+  otherInfo     String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  ProductImport ProductImport[]
 }
 
 model ProductImport {
@@ -264,6 +265,7 @@ model ProductImport {
   totalValue      Float
   status          String
   Shipping        Shipping[]
+  Supplier        Supplier        @relation(fields: [supplierId], references: [supplierId])
   ImportHistory   ImportHistory[]
   ImportDetail    ImportDetail[]
 }
