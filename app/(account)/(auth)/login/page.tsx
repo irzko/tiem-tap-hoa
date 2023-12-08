@@ -9,6 +9,7 @@ import Link from "next/link";
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
+
   const router = useRouter();
   return (
     <>
@@ -53,7 +54,9 @@ const LoginForm = () => {
                 return;
               } else {
                 setLoading(false);
-                router.push(pathname);
+                pathname === "/login"
+                  ? router.push("/")
+                  : router.push(pathname);
               }
             });
           }}
@@ -77,13 +80,18 @@ const LoginForm = () => {
               Đăng nhập
             </Button>
           </div>
-        <NextLink color="primary" as={Link} href="/forgot-password" className="flex justify-center">
-          Quên mật khẩu?
-        </NextLink>
+          <NextLink
+            color="primary"
+            as={Link}
+            href="/forgot-password"
+            className="flex justify-center"
+          >
+            Quên mật khẩu?
+          </NextLink>
         </form>
       </div>
     </>
   );
 };
-    
+
 export default LoginForm;

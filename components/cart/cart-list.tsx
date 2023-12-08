@@ -133,16 +133,20 @@ export default function CartList({ data }: { data?: ICart[] }) {
                     </div>
                     <div className="grid md:grid-cols-3 col-span-3 sm:col-span-5 md:col-span-10 gap-2">
                       <h3 className="flex items-center font-semibold">
-                        {cart.product.price} VNĐ
+                        {cart.product.price.toLocaleString("vi-VN")} ₫
                       </h3>
                       <div>
                         <AdjustProdQuantity
+                          stockQuantity={cart.product.stockQuantity}
                           cartId={cart.cartId}
                           quantity={cart.quantity}
                         />
                       </div>
                       <h3 className="flex items-center font-semibold">
-                        {cart.product.price * cart.quantity} VNĐ
+                        {(cart.product.price * cart.quantity).toLocaleString(
+                          "vi-VN"
+                        )}{" "}
+                        ₫
                       </h3>
                     </div>
                   </div>

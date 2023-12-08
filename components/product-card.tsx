@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ProductCard({ product }: { product: IProduct }) {
   return (
-    <Card isPressable as={Link} href={`/detail/${product.productId}`}>
+    <Card isPressable as={Link} href={`/p/${product.productId}`}>
       <CardBody className="overflow-visible p-0">
         {product.images.length > 0 && (
           <div className="relative aspect-square">

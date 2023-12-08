@@ -71,7 +71,7 @@ export default function Page() {
       }}
     >
       <Card>
-        <CardHeader>Thông tin sản phẩm</CardHeader>
+        <CardHeader>Thêm sản phẩm</CardHeader>
         <CardBody className="flex flex-col gap-4">
           <ImageSelect
             onChange={handleFileChange}

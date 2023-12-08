@@ -35,7 +35,6 @@ import AddAddressForm, { AddressSelect } from "../user/add-address-form";
 import useSWR, { Fetcher, mutate } from "swr";
 import { useRouter } from "next/navigation";
 import { orderAction } from "@/lib/actions";
-import { Coupon } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 export default function CheckoutContainer({
@@ -102,7 +101,7 @@ export default function CheckoutContainer({
                             </div>
                             <div>
                               Đơn giá:{" "}
-                              {product.product.price.toLocaleString("vi-VN")}
+                              {product.product.price.toLocaleString("vi-VN")} ₫
                             </div>
 
                             <div>Số lượng: {product.quantity}</div>
@@ -111,7 +110,8 @@ export default function CheckoutContainer({
                               Thành tiền:{" "}
                               {(
                                 product.product.price * product.quantity
-                              ).toLocaleString("vi-VN")}
+                              ).toLocaleString("vi-VN")}{" "}
+                              ₫
                             </div>
                           </div>
                         </div>
@@ -152,8 +152,8 @@ const Coupon = ({
   setDiscount,
   discount,
 }: {
-  discount: Coupon[];
-  setDiscount: Dispatch<SetStateAction<Coupon[]>>;
+  discount: ICoupon[];
+  setDiscount: Dispatch<SetStateAction<ICoupon[]>>;
 }) => {
   const [couponCode, setCouponCode] = useState<string>("");
   const handleSubmitCoupon = (e: FormEvent<HTMLFormElement>) => {
@@ -205,7 +205,7 @@ const Payment = ({
   const [selectedServiceId, setSelectedServiceId] = useState<string>("");
   const router = useRouter();
   const [shippingFee, setShippingFee] = useState<number>(0);
-  const [discount, setDiscount] = useState<Coupon[]>([]);
+  const [discount, setDiscount] = useState<ICoupon[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
   useEffect(() => {
@@ -235,6 +235,15 @@ const Payment = ({
       revalidateOnReconnect: false,
     }
   );
+
+  useEffect(() => {
+    if (services) {
+      setSelectedServiceId(services[0].service_id);
+    }
+  }, [services]);
+
+  console.log(selectedServiceId);
+  
 
   useEffect(() => {
     const serviceId = selectedServiceId;
@@ -353,6 +362,7 @@ const Payment = ({
             onChange={(e) => setSelectedServiceId(e.target.value)}
             label="Phương thức vận chuyển"
             placeholder="Chọn phương thức vận chuyển"
+            value={selectedServiceId}
             // items={services ?? []}
           >
             {services &&
@@ -592,8 +602,8 @@ const AddressShipping = ({ address }: { address: IAddress }) => {
       <CardBody>
         {address ? (
           <div>
-            <div className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-              <p>{address.fullName}</p>
+            <div className="mt-1 text-sm font-normal">
+              <p className="font-bold">{address.fullName}</p>
               <p>{address.phoneNumber}</p>
               <p>
                 {address.streetAddress}, {address.ward.WardName},{" "}

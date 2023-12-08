@@ -11,7 +11,7 @@ const schema = Yup.object({
   fullName: Yup.string().required("Tên không được để trống"),
   email: Yup.string()
     .required("Email không được để trống")
-    .email({ message: "Địa chỉ email không hợp lệ" }),
+    .email("Địa chỉ email không hợp lệ"),
   password: Yup.string()
     .required("Mật khẩu không được để trống")
     .min(6, "Mật khẩu phải có ít nhất 6 ký tự"),

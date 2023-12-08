@@ -36,7 +36,12 @@ export default function DropdownUser() {
             <DropdownItem variant="light">
               <ThemeSwitcher />
             </DropdownItem>
-            <DropdownItem as={Link} key="team_settings" href="/dashboard">
+            <DropdownItem
+              as={Link}
+              className={session.user.role === "ADMIN" ? "" : "hidden"}
+              key="team_settings"
+              href="/dashboard/order/unpaid"
+            >
               Dashboard
             </DropdownItem>
             <DropdownItem as={Link} key="profile" href="/user/profile">

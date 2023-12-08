@@ -16,6 +16,7 @@ export async function GET(
           productName: true,
           price: true,
           images: true,
+          stockQuantity: true,
         },
       },
     },

@@ -2,6 +2,7 @@ import DropdownUser from "@/components/dropdown-user";
 import SearchForm from "@/components/search-form";
 import Logo from "@/components/ui/logo";
 import SidebarToggle from "@/components/ui/sidebar-toggle";
+import getSession from "@/lib/getSession";
 import {
   Button,
   Chip,
@@ -12,7 +13,15 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getSession();
+  if (session?.user.role !== "ADMIN") {
+    return <div>Không có quyền truy cập</div>;
+  }
   return (
     <div>
       <Navbar isBordered isBlurred={false}>
@@ -24,7 +33,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="mr-2">
               <Logo />
             </div>
-            <Chip color="danger" variant="flat">Quản trị viên</Chip>
+            <Chip color="danger" variant="flat">
+              Quản trị viên
+            </Chip>
           </div>
         </NavbarBrand>
         <NavbarContent as="div" className="items-center" justify="center">

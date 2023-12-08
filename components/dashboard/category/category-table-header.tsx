@@ -33,29 +33,31 @@ export default function CategoryTableHeader({
         <CardBody>
           <div className="flex flex-col md:flex-row gap-4">
             <Input
+              type="text"
+              id="category-search"
+              labelPlacement="outside"
+              placeholder="Tìm kiếm danh mục"
+              onChange={onChange}
               startContent={
                 <svg
-                  aria-hidden="true"
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
                   <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
                 </svg>
               }
-              type="text"
-              id="category-search"
-              placeholder="Tìm kiếm danh mục"
-              onChange={onChange}
               required
             />
             <AddCategoryModal />
-          </div>
+          </div>``
         </CardBody>
       </Card>
     </div>

@@ -18,7 +18,6 @@ export const POST = async (req: Request) => {
     },
   });
 
-  console.log(participant);
 
   if (participant) {
     return NextResponse.json(

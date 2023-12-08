@@ -44,7 +44,7 @@ export const addRating = async (
       userId,
     },
   });
-  revalidatePath(`/detail/${productId}`);
+  revalidatePath(`/p/${productId}`);
 };
 
 export const loginAction = async (

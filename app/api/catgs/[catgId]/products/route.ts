@@ -92,7 +92,6 @@ export async function GET(
         ],
       },
     });
-    console.log(category);
 
     return NextResponse.json(category);
   }

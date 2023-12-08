@@ -17,7 +17,6 @@ export default function DescriptionGenerator({
     if (!id) return;
     pusherClient.subscribe("new-product");
     pusherClient.bind("workflowRun.completed", (data: any) => {
-      console.log(data);
 
       setIsProcessing(false);
       setOutput(data.output.output);
@@ -32,7 +31,6 @@ export default function DescriptionGenerator({
     setIsProcessing(true);
     initDescription(getInput()).then((id) => {
       setId(id);
-      console.log(id);
     });
   };
 

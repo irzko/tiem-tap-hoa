@@ -19,6 +19,11 @@ export async function GET(req: NextRequest) {
           categoryName: true,
         },
       },
+      Review: {
+        select: {
+          rating: true,
+        },
+      },
     },
   });
 

@@ -133,7 +133,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest, url: string) {
-  console.log(url);
 
   // return NextResponse.json(
   //   await prisma.order.findMany({

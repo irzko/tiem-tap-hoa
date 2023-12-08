@@ -5,36 +5,52 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 export default function AdjustProdQuantity({
   cartId,
   quantity,
+  stockQuantity,
 }: {
   cartId: string;
   quantity: number;
+  stockQuantity: number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [quantityValue, setQuantityValue] = useState("");
+  useEffect(() => {
+    setQuantityValue(quantity.toString());
+  }, [quantity]);
 
   const handleDecrease = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       adjustProductQuantity(cartId, quantity - 1);
     }
   };
 
   const handleIncrease = () => {
-    adjustProductQuantity(cartId, quantity + 1);
+    if (quantity < stockQuantity) {
+      adjustProductQuantity(cartId, quantity + 1);
+    }
   };
 
   const handleBlur = () => {
-    adjustProductQuantity(cartId, parseInt(quantityValue));
+    if (quantityValue === "") {
+      adjustProductQuantity(cartId, 1);
+      setQuantityValue("1");
+    } else if (parseInt(quantityValue) < 1) {
+      adjustProductQuantity(cartId, 1);
+      setQuantityValue("1");
+    } else if (parseInt(quantityValue) > stockQuantity) {
+      adjustProductQuantity(cartId, stockQuantity);
+      setQuantityValue(stockQuantity.toString());
+    } else {
+      adjustProductQuantity(cartId, parseInt(quantityValue));
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const quantity = e.target.value;
-    if (parseInt(quantity) < 0) return;
+    // if (parseInt(quantityValue) < 1 || quantityValue !== "-") {
+    //   setQuantityValue("1");
+    // }
     setQuantityValue(quantity);
   };
-
-  const [quantityValue, setQuantityValue] = useState("");
-  useEffect(() => {
-    setQuantityValue(quantity.toString());
-  }, [quantity]);
 
   return (
     <ButtonGroup>
@@ -61,7 +77,7 @@ export default function AdjustProdQuantity({
         type="number"
         id={cartId}
         labelPlacement="outside"
-        min={0}
+        min={1}
         form="adjust-quantity"
         onBlur={handleBlur}
         classNames={{

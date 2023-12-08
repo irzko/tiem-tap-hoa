@@ -42,7 +42,7 @@ export default function ProductList({ products }: { products: IProduct[] }) {
               <div className="relative flex items-center gap-2">
                 <Tooltip content="Chi tiết">
                   <Link
-                    href={`/detail/${item.productId}`}
+                    href={`/p/${item.productId}`}
                     className="text-lg text-default-400 cursor-pointer active:opacity-50"
                   >
                     <svg
@@ -113,7 +113,10 @@ export default function ProductList({ products }: { products: IProduct[] }) {
                   </Link>
                 </Tooltip>
                 <Tooltip color="danger" content="Xóa sản phẩm">
-               <DeleteProductModal productId={item.productId} productName={item.productName} />
+                  <DeleteProductModal
+                    productId={item.productId}
+                    productName={item.productName}
+                  />
                 </Tooltip>
               </div>
             </TableCell>

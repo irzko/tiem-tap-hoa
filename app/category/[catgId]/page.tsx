@@ -62,7 +62,7 @@ export default async function Page({
           <h4 className="font-semibold">Đánh giá</h4>
           <div className="flex items-center space-x-2">
             <input type="checkbox" />
-            <span>4 sao trở lên</span>
+            <span>5 sao</span>
           </div>
           <Divider />
           <form className="space-y-2" action={filteringAction}>
